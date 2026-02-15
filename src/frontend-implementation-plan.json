@@ -1,104 +1,68 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Update Company Snapshot currency/percentage symbols and snapshot labels",
+  "title": "Remove Industry Growth from inputs, share links, and Actual Value output",
   "requirements": [
     {
-      "id": "REQ-12",
-      "summary": "Switch Company Snapshot currency labeling and currency-format helpers from USD ($) to INR (₹).",
+      "id": "REQ-1",
+      "summary": "Remove the Industry Growth field from the Company Snapshot form and from the inputs presets/model so it is no longer viewable/editable anywhere in the UI.",
       "acceptanceCriteria": [
-        "In the Company Snapshot form, the labels for Market Cap, Last Traded Price, Revenue Last Year, Net Profit Last Year, Revenue Last Quarter, and Net Profit Last Quarter show \"(₹)\" instead of \"($)\".",
-        "Any frontend formatting utility used to format currency amounts outputs INR (₹) instead of USD ($) (including large-number formatting if used).",
-        "No \"$\" currency symbol remains visible in the Company Snapshot section after the change (except inside user-entered values)."
+        "The Company Snapshot form no longer renders an input labeled \"Industry Growth (%)\".",
+        "No validation error can reference the removed Industry Growth field.",
+        "The example and default input sets no longer include an Industry Growth value in the UI."
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/DcfInputsForm.tsx",
           "operation": "modify",
-          "description": "Update Company Snapshot currency field labels/help text to use rupee symbol \"(₹)\" instead of \"($)\" for Market Cap, Last Traded Price, Revenue/Net Profit (Last Year/Last Quarter)."
-        },
-        {
-          "path": "frontend/src/lib/format.ts",
-          "operation": "modify",
-          "description": "Update currency-formatting helpers to output INR (₹) instead of USD ($), including any large-number currency abbreviations so they no longer hardcode \"$\"."
-        }
-      ]
-    },
-    {
-      "id": "REQ-13",
-      "summary": "Convert Promoter Pledge Quantity to a percentage field with % label, percent-style parsing/display, and 0–100% validation.",
-      "acceptanceCriteria": [
-        "The Company Snapshot field label reads \"Promoter Pledge Quantity (%)\" (spelled correctly as \"Promoter\").",
-        "The input behavior matches existing percentage fields (e.g., Industry Growth/Public Holding): users type a number like \"12.5\" and the stored value is treated consistently as a percent value for validation/shareable link.",
-        "Validation for this field rejects values outside 0%–100% using a clear English error message."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/DcfInputsForm.tsx",
-          "operation": "modify",
-          "description": "Update the Promoter Pledge Quantity input to behave like existing percent fields: label as \"Promoter Pledge Quantity (%)\", display using toPercentString, and parse using parsePercentInput."
-        },
-        {
-          "path": "frontend/src/features/dcf/validation.ts",
-          "operation": "modify",
-          "description": "Change promoterPledgeQuantity validation from non-negative numeric to percent-range validation (0%–100%) with a clear English error message."
-        },
-        {
-          "path": "frontend/src/hooks/useQueryInputs.ts",
-          "operation": "modify",
-          "description": "Keep the existing query parameter key for promoter pledge (\"pledge\"), but encode/decode it consistently as a percent-style stored value matching other percent fields; add backward-tolerant parsing so existing shared links do not break unexpectedly."
+          "description": "Remove the \"Industry Growth (%)\" input block (label, input, and field error rendering) and any associated parsing/formatting usage for the removed field."
         },
         {
           "path": "frontend/src/features/dcf/presets.ts",
           "operation": "modify",
-          "description": "Update DcfInputs defaults/examples for promoterPledgeQuantity to represent a percentage field consistently with other percent inputs (stored as a decimal), and adjust any comments accordingly."
-        }
-      ]
-    },
-    {
-      "id": "REQ-14",
-      "summary": "Rename the UI label from “Result Updated Since 6 Years” to “Result Updated Since 6 Months” without changing underlying state/link keys.",
-      "acceptanceCriteria": [
-        "The Company Snapshot form shows the label \"Result Updated Since 6 Months\".",
-        "The Yes/No control continues to work with the existing state key and shareable link behavior (existing URLs still load correctly)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/DcfInputsForm.tsx",
-          "operation": "modify",
-          "description": "Update the displayed label text to \"Result Updated Since 6 Months\" while keeping the existing state field/key (resultUpdatedSince6Years) unchanged so shareable link behavior remains compatible."
-        }
-      ]
-    },
-    {
-      "id": "REQ-15",
-      "summary": "Convert Net NPA (NBFC) to a percentage field with % label, percent-style parsing/display, and 0–100% validation while preserving the existing query key.",
-      "acceptanceCriteria": [
-        "The Company Snapshot field label reads \"Net NPA (NBFC) (%)\" (no currency symbol).",
-        "The input behavior matches existing percentage fields: users type a number like \"3.2\" to represent 3.2%.",
-        "Validation for this field rejects values outside 0%–100% using a clear English error message.",
-        "The shareable link encoding/decoding preserves the Net NPA value correctly under the existing query parameter key (no broken links)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/DcfInputsForm.tsx",
-          "operation": "modify",
-          "description": "Update Net NPA (NBFC) field to be a percentage input: label as \"Net NPA (NBFC) (%)\", display using toPercentString, and parse using parsePercentInput (remove any currency symbol usage)."
+          "description": "Remove the industryGrowth property from the DcfInputs interface and remove it from DEFAULT_INPUTS and EXAMPLE_INPUTS so the app compiles and the UI presets no longer include it."
         },
         {
           "path": "frontend/src/features/dcf/validation.ts",
           "operation": "modify",
-          "description": "Change netNpaNbfc validation to percent-range validation (0%–100%) with a clear English error message specific to Net NPA (NBFC)."
-        },
+          "description": "Remove the industryGrowth validation rule so no validation message can reference the removed field."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Remove Industry Growth from URL query parameter encoding and make decoding safely ignore legacy indGrowth links.",
+      "acceptanceCriteria": [
+        "Newly generated shareable links do not include the industry growth query parameter (currently named \"indGrowth\").",
+        "If a user opens an older link that contains \"indGrowth\", the app still loads successfully and ignores that value (or safely defaults it) without runtime errors."
+      ],
+      "file_operations": [
         {
           "path": "frontend/src/hooks/useQueryInputs.ts",
           "operation": "modify",
-          "description": "Preserve the existing query parameter key for Net NPA (\"npa\"), but encode/decode it consistently as a percentage-stored decimal like other percent fields; include backward-tolerant parsing to avoid breaking existing shared links."
+          "description": "Update query string sync to (1) stop encoding \"indGrowth\" in encodeInputsToQuery, (2) stop decoding it into inputs in parseInputsFromQuery (ignore if present), and (3) update the comment/docs for the naming convention to remove indGrowth."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Remove Industry Growth from Actual Value calculation and all Output Values UI copy/formulas so results no longer mention or depend on Industry Growth.",
+      "acceptanceCriteria": [
+        "The \"Actual Value\" button subtitle no longer mentions Growth (e.g., it reflects \"Capital + Assets ÷ Shares\" or equivalent).",
+        "The \"Actual Value Per Share\" description no longer mentions \"Industry Growth\".",
+        "The Actual Value calculation no longer depends on an Industry Growth input value; the app builds and runs with the Industry Growth field removed from the inputs model.",
+        "No part of the results UI displays a value labeled or derived from \"Industry Growth\"."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/dcf/calculations.ts",
+          "operation": "modify",
+          "description": "Remove industryGrowth from the HiddenCalculations contract and from calculateHiddenValues: eliminate the industryGrowth-dependent intermediate computations and update Total Market Cap to be computed from Initial capital return + asset (without any growth term), ensuring outputs still compute with the updated DcfInputs type."
         },
         {
-          "path": "frontend/src/features/dcf/presets.ts",
+          "path": "frontend/src/components/ResultsSection.tsx",
           "operation": "modify",
-          "description": "Update DcfInputs defaults/examples for netNpaNbfc to represent a percentage field consistently with other percent inputs (stored as a decimal), and update any comments describing the field."
+          "description": "Update the Actual Value computation to use the revised calculations output (no growth-derived values) and update all Output Values UI copy/formulas/descriptions to remove references to Growth/Industry Growth (button subtitle and card description)."
         }
       ]
     }

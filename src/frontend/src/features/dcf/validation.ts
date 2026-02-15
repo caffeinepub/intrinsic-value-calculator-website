@@ -41,10 +41,6 @@ export function validateInputs(inputs: DcfInputs): ValidationError[] {
     errors.push({ field: 'pbRatio', message: 'P/B ratio cannot be negative' });
   }
 
-  if (inputs.industryGrowth < 0 || inputs.industryGrowth > 1) {
-    errors.push({ field: 'industryGrowth', message: 'Industry growth must be between 0% and 100%' });
-  }
-
   if (inputs.publicHolding < 0 || inputs.publicHolding > 1) {
     errors.push({ field: 'publicHolding', message: 'Public holding must be between 0% and 100%' });
   }

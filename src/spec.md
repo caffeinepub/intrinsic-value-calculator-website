@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Update Company Snapshot UI labels and formatting to use INR (₹) for currency fields, add percent handling for specific fields, and correct a timeframe label.
+**Goal:** Remove the Industry Growth input and eliminate all related link encoding/decoding and output calculation/UI references.
 
 **Planned changes:**
-- Replace all visible "$" currency symbols with "₹" for Company Snapshot currency field labels/help text and any frontend currency-formatting helpers.
-- Update "Promoter Pledge Quantity" to behave and display as a percentage field, including a "(%)" label and 0–100 validation.
-- Rename the user-facing label "Result Updated Since 6 Years" to "Result Updated Since 6 Months" everywhere it appears while keeping existing state/link keys intact.
-- Update "Net NPA (NBFC)" to behave and display as a percentage field, including a "(%)" label and 0–100 validation while preserving existing shareable link parameter behavior.
+- Remove the “Industry Growth (%)” field/section from the Company Snapshot form, including any defaults/examples and any validation tied to it.
+- Update shareable-link query parameter handling to stop generating `indGrowth` and to safely ignore `indGrowth` when present in older links.
+- Update output calculations and results UI copy so “Actual Value” and “Actual Value Per Share” no longer reference or depend on Industry Growth, including any displayed formulas/descriptions.
 
-**User-visible outcome:** Company Snapshot shows rupee symbols for currency fields, percentage signs and proper validation for Promoter Pledge Quantity and Net NPA (NBFC), and the corrected "Result Updated Since 6 Months" label without breaking existing shared links.
+**User-visible outcome:** Users can no longer view or edit Industry Growth, shareable links no longer include an industry growth parameter (and older links still load), and results/“Actual Value” outputs no longer mention or use Industry Growth.

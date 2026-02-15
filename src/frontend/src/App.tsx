@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Toaster } from '@/components/ui/sonner';
 import { DcfInputsForm } from './components/DcfInputsForm';
 import { CalculatorActions } from './components/CalculatorActions';
+import { ResultsSection } from './components/ResultsSection';
 import { useQueryInputs } from './hooks/useQueryInputs';
 import { validateInputs } from './features/dcf/validation';
 import { DEFAULT_INPUTS, EXAMPLE_INPUTS } from './features/dcf/presets';
@@ -89,21 +90,26 @@ function App() {
         </div>
 
         {/* Single column layout */}
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-2xl font-bold mb-4">Company Information</h2>
-          {errors.length > 0 && (
-            <div className="mb-4 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-              <p className="text-sm font-medium text-destructive">
-                Please fix the following errors:
-              </p>
-              <ul className="mt-2 text-sm text-destructive list-disc list-inside">
-                {errors.map((error, i) => (
-                  <li key={i}>{error.message}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          <DcfInputsForm inputs={inputs} onChange={updateInputs} errors={errors} />
+        <div className="max-w-2xl mx-auto space-y-8">
+          <div>
+            <h2 className="text-2xl font-bold mb-4">Company Information</h2>
+            {errors.length > 0 && (
+              <div className="mb-4 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+                <p className="text-sm font-medium text-destructive">
+                  Please fix the following errors:
+                </p>
+                <ul className="mt-2 text-sm text-destructive list-disc list-inside">
+                  {errors.map((error, i) => (
+                    <li key={i}>{error.message}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <DcfInputsForm inputs={inputs} onChange={updateInputs} errors={errors} />
+          </div>
+
+          {/* Results Section */}
+          <ResultsSection inputs={inputs} />
         </div>
       </main>
 

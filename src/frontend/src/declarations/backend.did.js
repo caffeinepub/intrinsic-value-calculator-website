@@ -8,10 +8,44 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
-export const idlService = IDL.Service({});
+export const DcfInputs = IDL.Record({
+  'weightedAveCostOfCapital' : IDL.Float64,
+  'sharesOutstanding' : IDL.Float64,
+  'forecastedFCF' : IDL.Float64,
+  'terminalYears' : IDL.Int,
+  'perpetualGrowthRate' : IDL.Float64,
+});
+export const DcfOutputs = IDL.Record({
+  'totalMarketCap' : IDL.Float64,
+  'intrinsicPricePerShare' : IDL.Float64,
+  'actualPerShare' : IDL.Float64,
+  'totalShares' : IDL.Float64,
+});
+
+export const idlService = IDL.Service({
+  'processDcf' : IDL.Func([DcfInputs], [DcfOutputs], []),
+});
 
 export const idlInitArgs = [];
 
-export const idlFactory = ({ IDL }) => { return IDL.Service({}); };
+export const idlFactory = ({ IDL }) => {
+  const DcfInputs = IDL.Record({
+    'weightedAveCostOfCapital' : IDL.Float64,
+    'sharesOutstanding' : IDL.Float64,
+    'forecastedFCF' : IDL.Float64,
+    'terminalYears' : IDL.Int,
+    'perpetualGrowthRate' : IDL.Float64,
+  });
+  const DcfOutputs = IDL.Record({
+    'totalMarketCap' : IDL.Float64,
+    'intrinsicPricePerShare' : IDL.Float64,
+    'actualPerShare' : IDL.Float64,
+    'totalShares' : IDL.Float64,
+  });
+  
+  return IDL.Service({
+    'processDcf' : IDL.Func([DcfInputs], [DcfOutputs], []),
+  });
+};
 
 export const init = ({ IDL }) => { return []; };

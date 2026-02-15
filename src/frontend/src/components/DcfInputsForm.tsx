@@ -140,21 +140,6 @@ export function DcfInputsForm({ inputs, onChange, errors }: DcfInputsFormProps) 
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="industryGrowth">Industry Growth (%)</Label>
-            <Input
-              id="industryGrowth"
-              type="number"
-              value={toPercentString(inputs.industryGrowth)}
-              onChange={(e) => updateField('industryGrowth', parsePercentInput(e.target.value))}
-              placeholder="8"
-              step="0.1"
-            />
-            {getFieldError(errors, 'industryGrowth') && (
-              <p className="text-sm text-destructive">{getFieldError(errors, 'industryGrowth')}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
             <Label htmlFor="publicHolding">Public Holding (%)</Label>
             <Input
               id="publicHolding"

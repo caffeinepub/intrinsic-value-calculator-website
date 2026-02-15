@@ -8,7 +8,6 @@ export interface DcfInputs {
   revenueLastQuarter: number;
   netProfitLastQuarter: number;
   pbRatio: number; // Price to Book ratio
-  industryGrowth: number; // as decimal (0.10 = 10%)
   publicHolding: number; // as decimal (0.50 = 50%)
   promoterPledgeQuantity: number; // as decimal (0.125 = 12.5%)
   resultUpdatedSince6Years: boolean;
@@ -26,7 +25,6 @@ export const DEFAULT_INPUTS: DcfInputs = {
   revenueLastQuarter: 0,
   netProfitLastQuarter: 0,
   pbRatio: 0,
-  industryGrowth: 0,
   publicHolding: 0,
   promoterPledgeQuantity: 0,
   resultUpdatedSince6Years: false,
@@ -44,7 +42,6 @@ export const EXAMPLE_INPUTS: DcfInputs = {
   revenueLastQuarter: 13000000000, // ₹13B
   netProfitLastQuarter: 2100000000, // ₹2.1B
   pbRatio: 3.5,
-  industryGrowth: 0.08, // 8%
   publicHolding: 0.65, // 65%
   promoterPledgeQuantity: 0.125, // 12.5%
   resultUpdatedSince6Years: true,

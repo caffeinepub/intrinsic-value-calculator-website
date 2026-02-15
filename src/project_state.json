@@ -1,130 +1,32 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 9,
-  "summary": "Build an intrinsic value calculator website.",
-  "architectural_notes": [
-    "Use ₹ (INR) as the displayed currency symbol in the UI where amounts are shown/entered (presentation-only change unless calculation units are impacted)."
-  ],
+  "projectStateVersion": 3,
+  "summary": "New project",
+  "architectural_notes": [],
   "known_issues": [],
-  "isFixRequest": true,
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-create-a-single-page-intrinsic-value-calculator-website-that-lets-a-user-input-valuation-assumptions-and-computes-intrinsic-value-per-share-using-a-discounted-cash-flow-dcf-model-multi-year-projection-discounted-terminal-value",
-      "title": "Create a single-page intrinsic value calculator website that lets a user input valuation assumptions and computes intrinsic value per share using a Discounted Cash Flow (DCF) model (multi-year projection + discounted terminal value).",
+      "id": "feature-remove-the-industry-growth-input-field-section-from-the-company-snapshot-form-so-users-can-no-longer-view-or-edit-an-industry-growth-value",
+      "title": "Remove the Industry Growth input field/section from the Company Snapshot form so users can no longer view or edit an industry growth value.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-a-results-presentation-section-that-explains-the-computation-and-makes-it-easy-to-interpret-the-outcome",
-      "title": "Add a results presentation section that explains the computation and makes it easy to interpret the outcome.",
+      "id": "feature-remove-industry-growth-from-the-shareable-link-url-query-parameter-encoding-decoding-so-generated-links-no-longer-include-an-industry-growth-parameter-and-parsing-ignores-any-existing-industry-growth-parameter-without-breaking",
+      "title": "Remove Industry Growth from the shareable-link (URL query parameter) encoding/decoding so generated links no longer include an industry growth parameter and parsing ignores any existing industry growth parameter without breaking.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-provide-basic-usability-features-for-the-calculator-presets-reset-and-share-export",
-      "title": "Provide basic usability features for the calculator: presets, reset, and share/export.",
+      "id": "feature-update-the-output-calculations-and-output-values-ui-copy-so-industry-growth-is-not-included-anywhere-in-the-actual-value-computation-or-its-displayed-formula-description",
+      "title": "Update the output calculations and Output Values UI copy so Industry Growth is not included anywhere in the Actual Value computation or its displayed formula/description.",
       "reqIds": [
         "REQ-3"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-apply-a-coherent-visual-theme-across-the-site-layout-colors-typography-components-suitable-for-a-financial-tool-without-using-a-blue-purple-primary-palette",
-      "title": "Apply a coherent visual theme across the site (layout, colors, typography, components) suitable for a financial tool, without using a blue/purple primary palette.",
-      "reqIds": [
-        "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-the-required-generated-images-to-the-frontend-as-static-assets-and-use-them-in-the-ui-no-backend-image-routing",
-      "title": "Add the required generated images to the frontend as static assets and use them in the UI (no backend image routing).",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-extend-the-calculator-input-model-to-include-the-additional-company-stock-snapshot-fields-provided-by-the-user-share-name-market-cap-ltp-revenue-last-year-net-profit-last-year-revenue-last-quarter-net-profit-last-quarter-pb-ratio-industry-growth-public-holding-promoter-pledge-quantity-result-updated-since-6-years-psu-or-not-net-npa-nbfc",
-      "title": "Extend the calculator input model to include the additional company/stock snapshot fields provided by the user: Share Name, Market Cap, LTP, Revenue Last Year, Net Profit Last Year, Revenue Last Quarter, Net Profit Last Quarter, PB Ratio, Industry Growth, Public Holding, Promoter Pledge Quantity, Result Updated Since 6 Years, PSU Or Not, Net NPA (NBFC).",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-the-inputs-ui-to-collect-the-new-company-stock-snapshot-fields-with-clear-english-labels-and-appropriate-controls-text-input-for-share-name-numeric-inputs-for-amounts-ratios-percent-inputs-for-percentage-fields-boolean-yes-no-controls-for-result-updated-since-6-years-and-psu-or-not-and-a-numeric-input-for-net-npa-nbfc",
-      "title": "Update the inputs UI to collect the new company/stock snapshot fields with clear English labels and appropriate controls (text input for Share Name; numeric inputs for amounts/ratios; percent inputs for percentage fields; boolean yes/no controls for Result Updated Since 6 Years and PSU Or Not; and a numeric input for Net NPA (NBFC)).",
-      "reqIds": [
-        "REQ-7"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-input-validation-to-include-basic-sanity-checks-for-the-newly-added-fields-non-negative-checks-for-numeric-fields-percent-fields-within-a-reasonable-range-share-name-length-not-empty-when-provided-and-display-field-level-validation-messages-in-the-form-consistent-with-the-existing-validation-ui",
-      "title": "Update input validation to include basic sanity checks for the newly added fields (non-negative checks for numeric fields; percent fields within a reasonable range; Share Name length not empty when provided), and display field-level validation messages in the form consistent with the existing validation UI.",
-      "reqIds": [
-        "REQ-8"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-include-the-new-company-stock-snapshot-fields-in-the-existing-shareable-link-url-query-parameter-encoding-decoding-logic-so-that-copying-a-link-preserves-these-fields-when-the-page-is-reopened",
-      "title": "Include the new company/stock snapshot fields in the existing shareable link (URL query parameter) encoding/decoding logic so that copying a link preserves these fields when the page is reopened.",
-      "reqIds": [
-        "REQ-9"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-the-calculator-inputs-form-so-that-no-additional-duplicate-input-controls-including-any-empty-text-box-appear-under-the-net-npa-nbfc-field-in-the-company-snapshot-section",
-      "title": "Update the calculator inputs form so that no additional/duplicate input controls (including any empty text box) appear under the \"Net NPA (NBFC) ($)\" field in the Company Snapshot section.",
-      "reqIds": [
-        "REQ-10"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-if-any-fields-are-removed-to-satisfy-req-10-also-remove-their-corresponding-state-keys-usages-so-the-app-compiles-cleanly-including-dcfinputs-typing-defaults-examples-validation-and-shareable-link-query-encoding-decoding",
-      "title": "If any fields are removed to satisfy REQ-10, also remove their corresponding state keys/usages so the app compiles cleanly (including DcfInputs typing, defaults/examples, validation, and shareable-link query encoding/decoding).",
-      "reqIds": [
-        "REQ-11"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-replace-the-currency-symbol-with-the-rupee-symbol-for-all-company-snapshot-currency-fields-in-the-ui-labels-help-text-and-in-any-currency-formatting-helpers-used-by-the-ui",
-      "title": "Replace the \"$\" currency symbol with the \"₹\" rupee symbol for all Company Snapshot currency fields in the UI (labels/help text) and in any currency-formatting helpers used by the UI.",
-      "reqIds": [
-        "REQ-12"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-treat-promoter-pledge-quantity-as-a-percentage-field-and-display-a-percent-sign-for-it-in-the-company-snapshot-form",
-      "title": "Treat \"Promoter Pledge Quantity\" as a percentage field and display a percent sign for it in the Company Snapshot form.",
-      "reqIds": [
-        "REQ-13"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-the-user-facing-label-result-updated-since-6-years-to-result-updated-since-6-months-everywhere-it-appears-in-the-ui",
-      "title": "Update the user-facing label \"Result Updated Since 6 Years\" to \"Result Updated Since 6 Months\" everywhere it appears in the UI.",
-      "reqIds": [
-        "REQ-14"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-treat-net-npa-nbfc-as-a-percentage-field-and-display-a-percent-sign-for-it-in-the-company-snapshot-form",
-      "title": "Treat \"Net NPA (NBFC)\" as a percentage field and display a percent sign for it in the Company Snapshot form.",
-      "reqIds": [
-        "REQ-15"
       ],
       "version": 1
     }
@@ -132,49 +34,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Create an intrinsic value calculator website (inputs, calculation, and results UI).",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Update the calculator input form to include the specified company/stock fields (share name, market cap, LTP, revenue/profit last year & last quarter, PB ratio, industry growth, public holding, promoter pledge quantity, results updated since 6 years, PSU flag, net NPA for NBFC).",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-3",
-      "summary": "Update the calculator input form UI to remove any extra inputs/text box appearing below the NET NPA (NBFC) section.",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Change currency symbol from डॉलर ($) to रुपये (₹) across the relevant Company Snapshot fields/labels.",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-5",
-      "summary": "Display a % sign after the Promoter Pledge Quantity input/value (treat as percentage).",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-6",
-      "summary": "Update the 'Result Updated Since 6 Years' field/label to 'Result Updated Since 6 Months'.",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-7",
-      "summary": "Display a % sign after the 'Net NPA (NBFC)' input/value (treat as percentage).",
+      "summary": "Remove the \"industry growth\" section from the product/output",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "gameProjectType": "none",
-  "projectName": "Intrinsic Value Calculator Website",
+  "projectName": "Remove Industry Growth section from inputs and outputs",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

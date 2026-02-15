@@ -4,7 +4,7 @@ import { DcfInputs, DEFAULT_INPUTS } from '../features/dcf/presets';
 /**
  * Hook to sync calculator inputs with URL query string
  * Query parameter naming convention:
- * - Company Snapshot: name, mcap, ltp, revY, profY, revQ, profQ, pb, indGrowth, pubHold, pledge, res6y, psu, npa
+ * - Company Snapshot: name, mcap, ltp, revY, profY, revQ, profQ, pb, pubHold, pledge, res6y, psu, npa
  */
 export function useQueryInputs() {
   const [inputs, setInputs] = useState<DcfInputs>(() => {
@@ -55,7 +55,6 @@ function parseInputsFromQuery(params: URLSearchParams): DcfInputs {
     revenueLastQuarter: parseFloat(params.get('revQ') || String(DEFAULT_INPUTS.revenueLastQuarter)),
     netProfitLastQuarter: parseFloat(params.get('profQ') || String(DEFAULT_INPUTS.netProfitLastQuarter)),
     pbRatio: parseFloat(params.get('pb') || String(DEFAULT_INPUTS.pbRatio)),
-    industryGrowth: parseFloat(params.get('indGrowth') || String(DEFAULT_INPUTS.industryGrowth)),
     publicHolding: parseFloat(params.get('pubHold') || String(DEFAULT_INPUTS.publicHolding)),
     promoterPledgeQuantity: parsePercentValue(params.get('pledge'), DEFAULT_INPUTS.promoterPledgeQuantity),
     resultUpdatedSince6Years: params.get('res6y') === 'true' || DEFAULT_INPUTS.resultUpdatedSince6Years,
@@ -92,9 +91,6 @@ function encodeInputsToQuery(inputs: DcfInputs): URLSearchParams {
   if (inputs.pbRatio !== DEFAULT_INPUTS.pbRatio) {
     params.set('pb', inputs.pbRatio.toString());
   }
-  if (inputs.industryGrowth !== DEFAULT_INPUTS.industryGrowth) {
-    params.set('indGrowth', inputs.industryGrowth.toString());
-  }
   if (inputs.publicHolding !== DEFAULT_INPUTS.publicHolding) {
     params.set('pubHold', inputs.publicHolding.toString());
   }
@@ -110,6 +106,6 @@ function encodeInputsToQuery(inputs: DcfInputs): URLSearchParams {
   if (inputs.netNpaNbfc !== DEFAULT_INPUTS.netNpaNbfc) {
     params.set('npa', inputs.netNpaNbfc.toString());
   }
-  
+
   return params;
 }
