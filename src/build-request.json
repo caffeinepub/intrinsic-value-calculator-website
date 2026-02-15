@@ -1,0 +1,102 @@
+{
+  "kind": "build_request",
+  "title": "Update currency/percentage symbols and adjust snapshot field labels",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-12",
+      "text": "Replace the \"$\" currency symbol with the \"₹\" rupee symbol for all Company Snapshot currency fields in the UI (labels/help text) and in any currency-formatting helpers used by the UI.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Dollar sign change with rupees sign"
+        ]
+      },
+      "acceptanceCriteria": [
+        "In the Company Snapshot form, the labels for Market Cap, Last Traded Price, Revenue Last Year, Net Profit Last Year, Revenue Last Quarter, and Net Profit Last Quarter show \"(₹)\" instead of \"($)\".",
+        "Any frontend formatting utility used to format currency amounts outputs INR (₹) instead of USD ($) (including large-number formatting if used).",
+        "No \"$\" currency symbol remains visible in the Company Snapshot section after the change (except inside user-entered values)."
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "text": "Treat \"Promoter Pledge Quantity\" as a percentage field and display a percent sign for it in the Company Snapshot form.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Add % sign after promotor pledge quantity"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Company Snapshot field label reads \"Promoter Pledge Quantity (%)\" (spelled correctly as \"Promoter\").",
+        "The input behavior matches existing percentage fields (e.g., Industry Growth/Public Holding): users type a number like \"12.5\" and the stored value is treated consistently as a percent value for validation/shareable link.",
+        "Validation for this field rejects values outside 0%–100% using a clear English error message."
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "text": "Update the user-facing label \"Result Updated Since 6 Years\" to \"Result Updated Since 6 Months\" everywhere it appears in the UI.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Change result updated since 6 months"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Company Snapshot form shows the label \"Result Updated Since 6 Months\".",
+        "The Yes/No control continues to work with the existing state key and shareable link behavior (existing URLs still load correctly)."
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "text": "Treat \"Net NPA (NBFC)\" as a percentage field and display a percent sign for it in the Company Snapshot form.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Add % sign after NET NPA NBFC"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Company Snapshot field label reads \"Net NPA (NBFC) (%)\" (no currency symbol).",
+        "The input behavior matches existing percentage fields: users type a number like \"3.2\" to represent 3.2%.",
+        "Validation for this field rejects values outside 0%–100% using a clear English error message.",
+        "The shareable link encoding/decoding preserves the Net NPA value correctly under the existing query parameter key (no broken links)."
+      ]
+    }
+  ],
+  "constraints": [
+    "Frontend immutable paths must not be edited: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui/*.",
+    "Backend must remain a single Motoko actor; no backend changes are required for this request."
+  ],
+  "nonGoals": [
+    "Do not add new DCF calculation logic or results UI as part of this change.",
+    "Do not change Internet Identity authentication behavior.",
+    "Do not introduce new query-parameter names that would break existing shared links."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

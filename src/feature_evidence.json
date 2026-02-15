@@ -1,0 +1,84 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-replace-the-currency-symbol-with-the-rupee-symbol-for-all-company-snapshot-currency-fields-in-the-ui-labels-help-text-and-in-any-currency-formatting-helpers-used-by-the-ui",
+      "featureTitle": "Replace the \"$\" currency symbol with the \"₹\" rupee symbol for all Company Snapshot currency fields in the UI (labels/help text) and in any currency-formatting helpers used by the UI.",
+      "files": [
+        "frontend/src/components/DcfInputsForm.tsx",
+        "frontend/src/lib/format.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-12"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-treat-promoter-pledge-quantity-as-a-percentage-field-and-display-a-percent-sign-for-it-in-the-company-snapshot-form",
+      "featureTitle": "Treat \"Promoter Pledge Quantity\" as a percentage field and display a percent sign for it in the Company Snapshot form.",
+      "files": [
+        "frontend/src/components/DcfInputsForm.tsx",
+        "frontend/src/features/dcf/presets.ts",
+        "frontend/src/features/dcf/validation.ts",
+        "frontend/src/hooks/useQueryInputs.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-13"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-user-facing-label-result-updated-since-6-years-to-result-updated-since-6-months-everywhere-it-appears-in-the-ui",
+      "featureTitle": "Update the user-facing label \"Result Updated Since 6 Years\" to \"Result Updated Since 6 Months\" everywhere it appears in the UI.",
+      "files": [
+        "frontend/src/components/DcfInputsForm.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-14"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-treat-net-npa-nbfc-as-a-percentage-field-and-display-a-percent-sign-for-it-in-the-company-snapshot-form",
+      "featureTitle": "Treat \"Net NPA (NBFC)\" as a percentage field and display a percent sign for it in the Company Snapshot form.",
+      "files": [
+        "frontend/src/components/DcfInputsForm.tsx",
+        "frontend/src/features/dcf/presets.ts",
+        "frontend/src/features/dcf/validation.ts",
+        "frontend/src/hooks/useQueryInputs.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-15"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

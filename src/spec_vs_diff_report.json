@@ -1,0 +1,59 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-14T12:01:48.815Z",
+  "summary": "REQ-12 appears implemented: Company Snapshot currency labels shown in the diff were changed to (₹), and currency-formatting helpers were updated to output INR/₹. REQ-13 and REQ-15 have evidence for percent-type storage/validation and query parsing, but the required exact UI labels and percent-sign display are not visible in the provided truncated form diff. REQ-14’s label change to “6 Months” is not evidenced in the shown diff content.",
+  "missing_requirements": [
+    {
+      "id": "REQ-13",
+      "requirement": "Treat \"Promoter Pledge Quantity\" as a percentage field and display a percent sign for it in the Company Snapshot form (label must be \"Promoter Pledge Quantity (%)\").",
+      "reason": "While the data model, validation, and query parsing indicate this field is treated as a percent (0–1) internally, the diff content provided does not show the actual form label text or that the UI displays a percent sign for this field (the relevant section of the form is truncated).",
+      "evidence": [
+        "frontend/src/features/dcf/presets.ts",
+        "frontend/src/features/dcf/validation.ts",
+        "frontend/src/hooks/useQueryInputs.ts",
+        "frontend/src/components/DcfInputsForm.tsx (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "requirement": "Update the user-facing label \"Result Updated Since 6 Years\" to \"Result Updated Since 6 Months\" everywhere it appears in the UI, without changing the existing state key/shareable link behavior.",
+      "reason": "The diff does not show any occurrence of the label text being updated to \"6 Months\"; the form section where this label would appear is not visible in the provided truncated snippet.",
+      "evidence": [
+        "frontend/src/components/DcfInputsForm.tsx (truncated)",
+        "frontend/src/features/dcf/presets.ts",
+        "frontend/src/hooks/useQueryInputs.ts"
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "requirement": "Treat \"Net NPA (NBFC)\" as a percentage field and display a percent sign for it in the Company Snapshot form (label must be \"Net NPA (NBFC) (%)\").",
+      "reason": "The diff shows percent-range validation and percent-aware query parsing for netNpaNbfc, but the exact UI label \"Net NPA (NBFC) (%)\" and percent-sign display are not visible in the provided truncated form diff.",
+      "evidence": [
+        "frontend/src/features/dcf/presets.ts",
+        "frontend/src/features/dcf/validation.ts",
+        "frontend/src/hooks/useQueryInputs.ts",
+        "frontend/src/components/DcfInputsForm.tsx (truncated)"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Backward-compatible parsing for percentage query parameters (treat values > 1 as old whole-percent format and convert to decimal) for pledge and npa.",
+      "reason": "The request required preserving existing query parameter keys and not breaking existing shared links, but it did not explicitly request adding heuristic backward-compatibility conversion logic based on numeric magnitude.",
+      "evidence": [
+        "frontend/src/hooks/useQueryInputs.ts"
+      ]
+    }
+  ],
+  "confidence": 0.66,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/components/DcfInputsForm.tsx",
+    "frontend/src/features/dcf/presets.ts",
+    "frontend/src/features/dcf/validation.ts",
+    "frontend/src/hooks/useQueryInputs.ts",
+    "frontend/src/lib/format.ts",
+    "project_state.json"
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Update Company Snapshot currency/percentage symbols and snapshot labels",
+  "requirements": [
+    {
+      "id": "REQ-12",
+      "summary": "Switch Company Snapshot currency labeling and currency-format helpers from USD ($) to INR (₹).",
+      "acceptanceCriteria": [
+        "In the Company Snapshot form, the labels for Market Cap, Last Traded Price, Revenue Last Year, Net Profit Last Year, Revenue Last Quarter, and Net Profit Last Quarter show \"(₹)\" instead of \"($)\".",
+        "Any frontend formatting utility used to format currency amounts outputs INR (₹) instead of USD ($) (including large-number formatting if used).",
+        "No \"$\" currency symbol remains visible in the Company Snapshot section after the change (except inside user-entered values)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/DcfInputsForm.tsx",
+          "operation": "modify",
+          "description": "Update Company Snapshot currency field labels/help text to use rupee symbol \"(₹)\" instead of \"($)\" for Market Cap, Last Traded Price, Revenue/Net Profit (Last Year/Last Quarter)."
+        },
+        {
+          "path": "frontend/src/lib/format.ts",
+          "operation": "modify",
+          "description": "Update currency-formatting helpers to output INR (₹) instead of USD ($), including any large-number currency abbreviations so they no longer hardcode \"$\"."
+        }
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "summary": "Convert Promoter Pledge Quantity to a percentage field with % label, percent-style parsing/display, and 0–100% validation.",
+      "acceptanceCriteria": [
+        "The Company Snapshot field label reads \"Promoter Pledge Quantity (%)\" (spelled correctly as \"Promoter\").",
+        "The input behavior matches existing percentage fields (e.g., Industry Growth/Public Holding): users type a number like \"12.5\" and the stored value is treated consistently as a percent value for validation/shareable link.",
+        "Validation for this field rejects values outside 0%–100% using a clear English error message."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/DcfInputsForm.tsx",
+          "operation": "modify",
+          "description": "Update the Promoter Pledge Quantity input to behave like existing percent fields: label as \"Promoter Pledge Quantity (%)\", display using toPercentString, and parse using parsePercentInput."
+        },
+        {
+          "path": "frontend/src/features/dcf/validation.ts",
+          "operation": "modify",
+          "description": "Change promoterPledgeQuantity validation from non-negative numeric to percent-range validation (0%–100%) with a clear English error message."
+        },
+        {
+          "path": "frontend/src/hooks/useQueryInputs.ts",
+          "operation": "modify",
+          "description": "Keep the existing query parameter key for promoter pledge (\"pledge\"), but encode/decode it consistently as a percent-style stored value matching other percent fields; add backward-tolerant parsing so existing shared links do not break unexpectedly."
+        },
+        {
+          "path": "frontend/src/features/dcf/presets.ts",
+          "operation": "modify",
+          "description": "Update DcfInputs defaults/examples for promoterPledgeQuantity to represent a percentage field consistently with other percent inputs (stored as a decimal), and adjust any comments accordingly."
+        }
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "summary": "Rename the UI label from “Result Updated Since 6 Years” to “Result Updated Since 6 Months” without changing underlying state/link keys.",
+      "acceptanceCriteria": [
+        "The Company Snapshot form shows the label \"Result Updated Since 6 Months\".",
+        "The Yes/No control continues to work with the existing state key and shareable link behavior (existing URLs still load correctly)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/DcfInputsForm.tsx",
+          "operation": "modify",
+          "description": "Update the displayed label text to \"Result Updated Since 6 Months\" while keeping the existing state field/key (resultUpdatedSince6Years) unchanged so shareable link behavior remains compatible."
+        }
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "summary": "Convert Net NPA (NBFC) to a percentage field with % label, percent-style parsing/display, and 0–100% validation while preserving the existing query key.",
+      "acceptanceCriteria": [
+        "The Company Snapshot field label reads \"Net NPA (NBFC) (%)\" (no currency symbol).",
+        "The input behavior matches existing percentage fields: users type a number like \"3.2\" to represent 3.2%.",
+        "Validation for this field rejects values outside 0%–100% using a clear English error message.",
+        "The shareable link encoding/decoding preserves the Net NPA value correctly under the existing query parameter key (no broken links)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/DcfInputsForm.tsx",
+          "operation": "modify",
+          "description": "Update Net NPA (NBFC) field to be a percentage input: label as \"Net NPA (NBFC) (%)\", display using toPercentString, and parse using parsePercentInput (remove any currency symbol usage)."
+        },
+        {
+          "path": "frontend/src/features/dcf/validation.ts",
+          "operation": "modify",
+          "description": "Change netNpaNbfc validation to percent-range validation (0%–100%) with a clear English error message specific to Net NPA (NBFC)."
+        },
+        {
+          "path": "frontend/src/hooks/useQueryInputs.ts",
+          "operation": "modify",
+          "description": "Preserve the existing query parameter key for Net NPA (\"npa\"), but encode/decode it consistently as a percentage-stored decimal like other percent fields; include backward-tolerant parsing to avoid breaking existing shared links."
+        },
+        {
+          "path": "frontend/src/features/dcf/presets.ts",
+          "operation": "modify",
+          "description": "Update DcfInputs defaults/examples for netNpaNbfc to represent a percentage field consistently with other percent inputs (stored as a decimal), and update any comments describing the field."
+        }
+      ]
+    }
+  ]
+}

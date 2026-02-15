@@ -1,0 +1,88 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-14T12:01:48.818Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 4,
+    "implemented": 4,
+    "items": [
+      {
+        "id": "REQ-12",
+        "summary": "Replace the \"$\" currency symbol with the \"₹\" rupee symbol for all Company Snapshot currency fields in the UI (labels/help text) and in any currency-formatting helpers used by the UI.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/DcfInputsForm.tsx",
+          "frontend/src/lib/format.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/DcfInputsForm.tsx",
+          "frontend/src/lib/format.ts"
+        ]
+      },
+      {
+        "id": "REQ-13",
+        "summary": "Treat \"Promoter Pledge Quantity\" as a percentage field and display a percent sign for it in the Company Snapshot form.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/DcfInputsForm.tsx",
+          "frontend/src/features/dcf/validation.ts",
+          "frontend/src/hooks/useQueryInputs.ts",
+          "frontend/src/features/dcf/presets.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/DcfInputsForm.tsx",
+          "frontend/src/features/dcf/validation.ts",
+          "frontend/src/hooks/useQueryInputs.ts",
+          "frontend/src/features/dcf/presets.ts"
+        ]
+      },
+      {
+        "id": "REQ-14",
+        "summary": "Update the user-facing label \"Result Updated Since 6 Years\" to \"Result Updated Since 6 Months\" everywhere it appears in the UI.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/DcfInputsForm.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/DcfInputsForm.tsx"
+        ]
+      },
+      {
+        "id": "REQ-15",
+        "summary": "Treat \"Net NPA (NBFC)\" as a percentage field and display a percent sign for it in the Company Snapshot form.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/DcfInputsForm.tsx",
+          "frontend/src/features/dcf/validation.ts",
+          "frontend/src/hooks/useQueryInputs.ts",
+          "frontend/src/features/dcf/presets.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/DcfInputsForm.tsx",
+          "frontend/src/features/dcf/validation.ts",
+          "frontend/src/hooks/useQueryInputs.ts",
+          "frontend/src/features/dcf/presets.ts"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/components/DcfInputsForm.tsx",
+    "frontend/src/features/dcf/presets.ts",
+    "frontend/src/features/dcf/validation.ts",
+    "frontend/src/hooks/useQueryInputs.ts",
+    "frontend/src/lib/format.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}
