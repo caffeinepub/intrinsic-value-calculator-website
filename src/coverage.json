@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T16:02:36.876Z",
+  "generatedAt": "2026-02-16T13:57:25.477Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -12,41 +12,39 @@
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Remove the Industry Growth input field/section from the Company Snapshot form so users can no longer view or edit an industry growth value.",
+        "summary": "Stop using the backend-calculated result for Intrinsic Price and Actual Value outputs, and always compute both outputs using the existing frontend calculation functions (calculateIntrinsicPrice and calculateActualValue) so the displayed results match the previously-correct formula behavior.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/DcfInputsForm.tsx",
-          "frontend/src/features/dcf/presets.ts",
-          "frontend/src/features/dcf/validation.ts"
+          "frontend/src/components/ResultsSection.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/DcfInputsForm.tsx",
-          "frontend/src/features/dcf/presets.ts",
-          "frontend/src/features/dcf/validation.ts"
+          "frontend/src/components/ResultsSection.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Remove Industry Growth from the shareable-link (URL query parameter) encoding/decoding so generated links no longer include an industry growth parameter and parsing ignores any existing industry growth parameter without breaking.",
+        "summary": "Update the developer verification check flow to validate the restored frontend formulas (not backend-derived values), so running the dev check reflects the rolled-back calculation logic.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useQueryInputs.ts"
+          "frontend/src/features/dcf/devChecks.ts",
+          "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useQueryInputs.ts"
+          "frontend/src/features/dcf/devChecks.ts",
+          "frontend/src/App.tsx"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Update the output calculations and Output Values UI copy so Industry Growth is not included anywhere in the Actual Value computation or its displayed formula/description.",
+        "summary": "Ensure the backend calculation request does not block or degrade the user experience after the rollback (e.g., remove/disable backend loading and error UI states that are only relevant when backend results drive the displayed outputs).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/dcf/calculations.ts",
-          "frontend/src/components/ResultsSection.tsx"
+          "frontend/src/components/ResultsSection.tsx",
+          "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/dcf/calculations.ts",
-          "frontend/src/components/ResultsSection.tsx"
+          "frontend/src/components/ResultsSection.tsx",
+          "frontend/src/App.tsx"
         ]
       }
     ]
@@ -56,12 +54,9 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/DcfInputsForm.tsx",
+    "frontend/src/App.tsx",
     "frontend/src/components/ResultsSection.tsx",
-    "frontend/src/features/dcf/calculations.ts",
-    "frontend/src/features/dcf/presets.ts",
-    "frontend/src/features/dcf/validation.ts",
-    "frontend/src/hooks/useQueryInputs.ts",
+    "frontend/src/features/dcf/devChecks.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

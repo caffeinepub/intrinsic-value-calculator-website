@@ -13,12 +13,19 @@ export const DcfInputs = IDL.Record({
   'sharesOutstanding' : IDL.Float64,
   'forecastedFCF' : IDL.Float64,
   'terminalYears' : IDL.Int,
+  'actualSharePrice' : IDL.Float64,
+  'revenueLastYear' : IDL.Float64,
+  'revenueLastQuarter' : IDL.Float64,
   'perpetualGrowthRate' : IDL.Float64,
 });
 export const DcfOutputs = IDL.Record({
   'totalMarketCap' : IDL.Float64,
   'intrinsicPricePerShare' : IDL.Float64,
+  'adjustedValuation' : IDL.Float64,
   'actualPerShare' : IDL.Float64,
+  'riskDiscount' : IDL.Float64,
+  'profitability' : IDL.Float64,
+  'industryGrowth' : IDL.Float64,
   'totalShares' : IDL.Float64,
 });
 
@@ -34,12 +41,19 @@ export const idlFactory = ({ IDL }) => {
     'sharesOutstanding' : IDL.Float64,
     'forecastedFCF' : IDL.Float64,
     'terminalYears' : IDL.Int,
+    'actualSharePrice' : IDL.Float64,
+    'revenueLastYear' : IDL.Float64,
+    'revenueLastQuarter' : IDL.Float64,
     'perpetualGrowthRate' : IDL.Float64,
   });
   const DcfOutputs = IDL.Record({
     'totalMarketCap' : IDL.Float64,
     'intrinsicPricePerShare' : IDL.Float64,
+    'adjustedValuation' : IDL.Float64,
     'actualPerShare' : IDL.Float64,
+    'riskDiscount' : IDL.Float64,
+    'profitability' : IDL.Float64,
+    'industryGrowth' : IDL.Float64,
     'totalShares' : IDL.Float64,
   });
   

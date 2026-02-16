@@ -48,3 +48,23 @@ export const EXAMPLE_INPUTS: DcfInputs = {
   psuOrNot: false,
   netNpaNbfc: 0.032, // 3.2%
 };
+
+/**
+ * Verification preset for dev checks
+ * This preset is designed to produce specific expected outputs
+ */
+export const VERIFICATION_INPUTS: DcfInputs = {
+  shareName: 'Verification Test',
+  marketCap: 100000000000,
+  ltp: 100,
+  revenueLastYear: 40000000000,
+  netProfitLastYear: 5000000000,
+  revenueLastQuarter: 11000000000,
+  netProfitLastQuarter: 1400000000,
+  pbRatio: 2.5,
+  publicHolding: 0.60,
+  promoterPledgeQuantity: 0.10,
+  resultUpdatedSince6Years: true,
+  psuOrNot: false,
+  netNpaNbfc: 0.02,
+};

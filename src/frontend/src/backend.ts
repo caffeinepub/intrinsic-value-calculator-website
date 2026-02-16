@@ -92,7 +92,11 @@ export class ExternalBlob {
 export interface DcfOutputs {
     totalMarketCap: number;
     intrinsicPricePerShare: number;
+    adjustedValuation: number;
     actualPerShare: number;
+    riskDiscount: number;
+    profitability: number;
+    industryGrowth: number;
     totalShares: number;
 }
 export interface DcfInputs {
@@ -100,10 +104,13 @@ export interface DcfInputs {
     sharesOutstanding: number;
     forecastedFCF: number;
     terminalYears: bigint;
+    actualSharePrice: number;
+    revenueLastYear: number;
+    revenueLastQuarter: number;
     perpetualGrowthRate: number;
 }
 export interface backendInterface {
-    processDcf(_inputs: DcfInputs): Promise<DcfOutputs>;
+    processDcf(inputs: DcfInputs): Promise<DcfOutputs>;
 }
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}

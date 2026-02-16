@@ -5,9 +5,11 @@ import { CalculatorActions } from './components/CalculatorActions';
 import { ResultsSection } from './components/ResultsSection';
 import { useQueryInputs } from './hooks/useQueryInputs';
 import { validateInputs } from './features/dcf/validation';
-import { DEFAULT_INPUTS, EXAMPLE_INPUTS } from './features/dcf/presets';
+import { DEFAULT_INPUTS, EXAMPLE_INPUTS, VERIFICATION_INPUTS } from './features/dcf/presets';
+import { runDevCheck } from './features/dcf/devChecks';
 import { Calculator } from 'lucide-react';
 import { SiX, SiLinkedin, SiGithub } from 'react-icons/si';
+import { toast } from 'sonner';
 
 function App() {
   const { inputs, updateInputs, copyShareableLink } = useQueryInputs();
@@ -19,6 +21,28 @@ function App() {
 
   const handleReset = () => {
     updateInputs(DEFAULT_INPUTS);
+  };
+
+  const handleRunDevCheck = () => {
+    // Load verification inputs
+    updateInputs(VERIFICATION_INPUTS);
+    
+    // Run the check after a brief delay to allow state to update
+    setTimeout(() => {
+      const result = runDevCheck(VERIFICATION_INPUTS);
+      
+      if (result.passed) {
+        toast.success('Dev Check Passed! ✅', {
+          description: result.message,
+          duration: 5000,
+        });
+      } else {
+        toast.error('Dev Check Failed ❌', {
+          description: result.message,
+          duration: 5000,
+        });
+      }
+    }, 100);
   };
 
   return (
@@ -86,6 +110,7 @@ function App() {
             onUseExample={handleUseExample}
             onReset={handleReset}
             onCopyLink={copyShareableLink}
+            onRunDevCheck={handleRunDevCheck}
           />
         </div>
 

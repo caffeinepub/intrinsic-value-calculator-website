@@ -15,12 +15,19 @@ export interface DcfInputs {
   'sharesOutstanding' : number,
   'forecastedFCF' : number,
   'terminalYears' : bigint,
+  'actualSharePrice' : number,
+  'revenueLastYear' : number,
+  'revenueLastQuarter' : number,
   'perpetualGrowthRate' : number,
 }
 export interface DcfOutputs {
   'totalMarketCap' : number,
   'intrinsicPricePerShare' : number,
+  'adjustedValuation' : number,
   'actualPerShare' : number,
+  'riskDiscount' : number,
+  'profitability' : number,
+  'industryGrowth' : number,
   'totalShares' : number,
 }
 export interface _SERVICE {

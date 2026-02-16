@@ -44,6 +44,11 @@ export interface HiddenCalculations {
   initialAverageCapitalReturn: number;
   initialCapitalReturnPlusAsset: number;
   totalMarketCap: number;
+  // Industry Growth calculations
+  AA: number;
+  BB: number;
+  CC: number;
+  DD: number;
 }
 
 /**
@@ -89,6 +94,19 @@ export function calculateHiddenValues(inputs: DcfInputs): HiddenCalculations {
 
   // G = If(NET PROFIT quarterly>0, NET PROFIT quarterly, 0)
   const G = netProfitLastQuarter > 0 ? safeNum(netProfitLastQuarter) : 0;
+
+  // Industry Growth calculations
+  // AA = (Revenue last quarter * 4) - Revenue last year
+  const AA = safeNum(revenueLastQuarter) * 4 - safeNum(revenueLastYear);
+
+  // BB = AA * 100 / Revenue last year
+  const BB = safeDivide(safeNum(AA) * 100, safeNum(revenueLastYear));
+
+  // CC = BB / 2
+  const CC = safeNum(BB) / 2;
+
+  // DD = IF(CC > 0, CC, 0)
+  const DD = CC > 0 ? safeNum(CC) : 0;
 
   // K = 50 - public holding (convert from decimal to percentage)
   const K = 50 - safeNum(publicHolding) * 100;
@@ -154,5 +172,27 @@ export function calculateHiddenValues(inputs: DcfInputs): HiddenCalculations {
     initialAverageCapitalReturn: safeNum(initialAverageCapitalReturn),
     initialCapitalReturnPlusAsset: safeNum(initialCapitalReturnPlusAsset),
     totalMarketCap: safeNum(totalMarketCap),
+    AA: safeNum(AA),
+    BB: safeNum(BB),
+    CC: safeNum(CC),
+    DD: safeNum(DD),
   };
+}
+
+/**
+ * Calculate Intrinsic Price Per Share
+ * Formula: Total Market Cap / Total Shares
+ */
+export function calculateIntrinsicPrice(inputs: DcfInputs): number {
+  const calculations = calculateHiddenValues(inputs);
+  return safeDivide(calculations.totalMarketCap, calculations.totalShares);
+}
+
+/**
+ * Calculate Actual Value Per Share
+ * Formula: (Initial Capital + Assets) / Total Shares
+ */
+export function calculateActualValue(inputs: DcfInputs): number {
+  const calculations = calculateHiddenValues(inputs);
+  return safeDivide(calculations.initialCapitalReturnPlusAsset, calculations.totalShares);
 }

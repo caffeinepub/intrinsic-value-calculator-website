@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DcfInputs } from '@/features/dcf/presets';
-import { calculateHiddenValues } from '@/features/dcf/calculations';
+import { calculateIntrinsicPrice, calculateActualValue } from '@/features/dcf/calculations';
 import { formatCurrency } from '@/lib/format';
 import { useCountUp } from '@/hooks/useCountUp';
 import { TrendingUp, DollarSign, Sparkles } from 'lucide-react';
@@ -27,19 +27,13 @@ export function ResultsSection({ inputs }: ResultsSectionProps) {
   const handleCalculate = (type: OutputType) => {
     if (!type) return;
 
-    const calculations = calculateHiddenValues(inputs);
-    
     let value = 0;
+    
+    // Always use frontend calculations
     if (type === 'intrinsic') {
-      // Intrinsic Price = Total Market Cap / Total Shares
-      value = calculations.totalShares > 0 
-        ? calculations.totalMarketCap / calculations.totalShares 
-        : 0;
+      value = calculateIntrinsicPrice(inputs);
     } else if (type === 'actual') {
-      // Actual = (Initial capital + asset) / Total Shares
-      value = calculations.totalShares > 0
-        ? calculations.initialCapitalReturnPlusAsset / calculations.totalShares
-        : 0;
+      value = calculateActualValue(inputs);
     }
 
     setOutputValue(value);

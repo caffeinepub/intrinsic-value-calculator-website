@@ -1,11 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Remove the Industry Growth input and eliminate all related link encoding/decoding and output calculation/UI references.
+**Goal:** Roll back the latest pricing/formula change by restoring frontend-only calculation for Intrinsic Price and Actual Value, ensuring displayed results match the previously-correct behavior.
 
 **Planned changes:**
-- Remove the “Industry Growth (%)” field/section from the Company Snapshot form, including any defaults/examples and any validation tied to it.
-- Update shareable-link query parameter handling to stop generating `indGrowth` and to safely ignore `indGrowth` when present in older links.
-- Update output calculations and results UI copy so “Actual Value” and “Actual Value Per Share” no longer reference or depend on Industry Growth, including any displayed formulas/descriptions.
+- Update result rendering so “Intrinsic Price” always uses `calculateIntrinsicPrice(inputs)` and “Actual Value” always uses `calculateActualValue(inputs)`, ignoring any `backendResult` fields for displayed values.
+- Remove the “✓ Calculated by backend” indicator from the results UI since backend-derived values will no longer be used for display.
+- Update the developer verification (“Run Dev Check”) flow to compute AA/BB/CC/DD and Intrinsic/Actual values using the same frontend formula functions used in the UI (e.g., `calculateHiddenValues`, `calculateIntrinsicPrice`, `calculateActualValue`) rather than backend results.
+- Adjust/disable backend-loading and backend-error UI states that would otherwise block or degrade the experience when calculating/displaying results, while keeping existing form/actions (Use Example, Reset, Copy Shareable Link) unchanged.
 
-**User-visible outcome:** Users can no longer view or edit Industry Growth, shareable links no longer include an industry growth parameter (and older links still load), and results/“Actual Value” outputs no longer mention or use Industry Growth.
+**User-visible outcome:** Clicking “Intrinsic Price” or “Actual Value” immediately shows values computed by the frontend formulas (no backend-calculated indicator or blocking backend loading), and the dev check validates the same restored frontend calculations without requiring backend results.

@@ -1,35 +1,32 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T16:02:36.874Z",
-  "summary": "All three requested removals appear to be implemented: Industry Growth is removed from the inputs model/presets and validation, removed from URL query encoding/decoding (with legacy indGrowth implicitly ignored), and removed from the Actual Value calculation and related UI copy. However, the diff also appears to include broader UI/UX changes (e.g., removing a Calculated Values card and adding animated/interactive output buttons) that were not explicitly requested and may violate the non-goal of avoiding unrelated redesign.",
+  "generatedAt": "2026-02-16T13:57:25.474Z",
+  "summary": "REQ-1 and REQ-2 appear implemented by switching Intrinsic/Actual outputs and dev checks to frontend calculation functions. REQ-3 appears largely satisfied in ResultsSection by removing any backend-driven loading/error UI for those outputs. The diff also introduces multiple UI/UX changes (hero/marketing content, emojis in user-facing toasts) that were not requested and may conflict with constraints.",
   "missing_requirements": [],
   "hallucinated_features": [
     {
-      "description": "Removal of the \"Calculated Values\" card/section from the inputs UI (not requested; requirement only asked to remove Industry Growth).",
-      "reason": "BuildRequest explicitly limits changes to removing Industry Growth references and says not to redesign unrelated parts; removing an entire Calculated Values section is an additional functional/UI change.",
+      "description": "Major new/changed marketing-style header and hero section content (illustration, copy about organizing company information, social icons), unrelated to the rollback of pricing/formula usage.",
+      "reason": "BuildRequest focuses on restoring calculation outputs and removing backend dependency for displayed values; it does not request a redesign or new hero/branding content.",
       "evidence": [
-        "frontend-file-summaries.txt (\"DcfInputsForm.tsx\": \"the Calculated Values card has been removed\")"
+        "frontend/src/App.tsx"
       ]
     },
     {
-      "description": "Redesign of the results UI into two interactive buttons with animated count-up effects and added iconography (TrendingUp/DollarSign/Sparkles).",
-      "reason": "REQ-3 requires only updating Actual Value copy/formula to remove Industry Growth; the new interaction pattern/animation appears to be additional behavior beyond the scope of removing Industry Growth.",
+      "description": "User-facing toast messages include emoji characters (✅/❌), and dev-check console logs include emoji markers.",
+      "reason": "Constraint says to use English for user-facing text; emojis are not requested and are added to user-facing notifications (toasts).",
       "evidence": [
-        "frontend/src/components/ResultsSection.tsx",
-        "frontend-file-summaries.txt (\"ResultsSection.tsx\": \"two interactive buttons... animated count-up effects\")"
+        "frontend/src/App.tsx",
+        "frontend/src/features/dcf/devChecks.ts"
       ]
     }
   ],
   "confidence": 0.74,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/components/DcfInputsForm.tsx",
+    "frontend/src/App.tsx",
     "frontend/src/components/ResultsSection.tsx",
-    "frontend/src/features/dcf/calculations.ts",
-    "frontend/src/features/dcf/presets.ts",
-    "frontend/src/features/dcf/validation.ts",
-    "frontend/src/hooks/useQueryInputs.ts",
+    "frontend/src/features/dcf/devChecks.ts",
     "project_state.json"
   ]
 }
