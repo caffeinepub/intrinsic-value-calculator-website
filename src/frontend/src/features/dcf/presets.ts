@@ -28,7 +28,7 @@ export const DEFAULT_INPUTS: DcfInputs = {
   pbRatio: 0,
   publicHolding: 0,
   promoterPledgeQuantity: 0,
-  resultUpdatedSince6Years: false,
+  resultUpdatedSince6Years: true,
   psuOrNot: false,
   netNpaNbfc: 0,
   industryGrowthPercent: 0,

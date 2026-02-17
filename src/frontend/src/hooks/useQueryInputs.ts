@@ -45,6 +45,12 @@ function parseInputsFromQuery(params: URLSearchParams): DcfInputs {
     return parsed > 1 ? parsed / 100 : parsed;
   };
 
+  // Helper to parse boolean values with explicit parameter check
+  const parseBooleanValue = (paramName: string, defaultValue: boolean): boolean => {
+    if (!params.has(paramName)) return defaultValue;
+    return params.get(paramName) === 'true';
+  };
+
   return {
     // Company Snapshot fields
     shareName: params.get('name') || DEFAULT_INPUTS.shareName,
@@ -57,8 +63,8 @@ function parseInputsFromQuery(params: URLSearchParams): DcfInputs {
     pbRatio: parseFloat(params.get('pb') || String(DEFAULT_INPUTS.pbRatio)),
     publicHolding: parseFloat(params.get('pubHold') || String(DEFAULT_INPUTS.publicHolding)),
     promoterPledgeQuantity: parsePercentValue(params.get('pledge'), DEFAULT_INPUTS.promoterPledgeQuantity),
-    resultUpdatedSince6Years: params.get('res6y') === 'true' || DEFAULT_INPUTS.resultUpdatedSince6Years,
-    psuOrNot: params.get('psu') === 'true' || DEFAULT_INPUTS.psuOrNot,
+    resultUpdatedSince6Years: parseBooleanValue('res6y', DEFAULT_INPUTS.resultUpdatedSince6Years),
+    psuOrNot: parseBooleanValue('psu', DEFAULT_INPUTS.psuOrNot),
     netNpaNbfc: parsePercentValue(params.get('npa'), DEFAULT_INPUTS.netNpaNbfc),
     industryGrowthPercent: parseFloat(params.get('indGrowth') || String(DEFAULT_INPUTS.industryGrowthPercent)),
   };

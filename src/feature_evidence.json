@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-remove-the-view-formulas-section-from-the-ui-by-eliminating-the-view-formulas-action-and-ensuring-the-formulas-dialog-cannot-be-opened-from-the-app",
-      "featureTitle": "Remove the 'View Formulas' section from the UI by eliminating the 'View Formulas' action and ensuring the formulas dialog cannot be opened from the app.",
+      "featureId": "feature-set-the-default-value-of-the-result-updated-since-6-months-radio-field-to-yes-when-the-app-loads-with-no-url-parameters-i-e-update-the-default-inputs-so-this-boolean-is-true-by-default",
+      "featureTitle": "Set the default value of the \"Result Updated Since 6 Months\" radio field to \"Yes\" when the app loads with no URL parameters (i.e., update the default inputs so this boolean is true by default).",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/CalculatorActions.tsx"
+        "frontend/src/features/dcf/presets.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -17,7 +16,26 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-4"
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-url-query-parsing-encoding-behavior-for-the-result-updated-since-6-months-field-so-that-an-explicit-url-value-of-false-e-g-res6y-false-is-respected-even-after-the-default-becomes-true-while-keeping-the-existing-query-parameter-name-res6y-unchanged",
+      "featureTitle": "Update URL query parsing/encoding behavior for the \"Result Updated Since 6 Months\" field so that an explicit URL value of false (e.g., `res6y=false`) is respected even after the default becomes true, while keeping the existing query parameter name `res6y` unchanged.",
+      "files": [
+        "frontend/src/hooks/useQueryInputs.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
       ],
       "confidence": "high"
     }

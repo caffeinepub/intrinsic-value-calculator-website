@@ -4,13 +4,21 @@
   "summary": "New project",
   "architectural_notes": [],
   "known_issues": [],
-  "isFixRequest": true,
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-remove-the-view-formulas-section-from-the-ui-by-eliminating-the-view-formulas-action-and-ensuring-the-formulas-dialog-cannot-be-opened-from-the-app",
-      "title": "Remove the 'View Formulas' section from the UI by eliminating the 'View Formulas' action and ensuring the formulas dialog cannot be opened from the app.",
+      "id": "feature-set-the-default-value-of-the-result-updated-since-6-months-radio-field-to-yes-when-the-app-loads-with-no-url-parameters-i-e-update-the-default-inputs-so-this-boolean-is-true-by-default",
+      "title": "Set the default value of the \"Result Updated Since 6 Months\" radio field to \"Yes\" when the app loads with no URL parameters (i.e., update the default inputs so this boolean is true by default).",
       "reqIds": [
-        "REQ-4"
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-url-query-parsing-encoding-behavior-for-the-result-updated-since-6-months-field-so-that-an-explicit-url-value-of-false-e-g-res6y-false-is-respected-even-after-the-default-becomes-true-while-keeping-the-existing-query-parameter-name-res6y-unchanged",
+      "title": "Update URL query parsing/encoding behavior for the \"Result Updated Since 6 Months\" field so that an explicit URL value of false (e.g., `res6y=false`) is respected even after the default becomes true, while keeping the existing query parameter name `res6y` unchanged.",
+      "reqIds": [
+        "REQ-2"
       ],
       "version": 1
     }
@@ -18,11 +26,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Remove the 'View formulas' section from the page",
+      "summary": "Add/adjust field 'Result updated since 6 months' so its default value is 'Yes'",
       "reqIds": [],
       "status": "pending"
     }
   ],
+  "gameProjectType": "none",
   "projectName": "Company Snapshot Tool",
   "clarification_mode": "instant",
   "clarification_rounds": 0

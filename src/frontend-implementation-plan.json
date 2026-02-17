@@ -1,27 +1,36 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Remove 'View Formulas' UI",
+  "title": "Default Result Updated Since 6 Months to Yes + Respect Explicit res6y=false",
   "requirements": [
     {
-      "id": "REQ-4",
-      "summary": "Remove the 'View Formulas' action from the calculator action bar and ensure the 'All Formulas' dialog cannot be opened from the UI, without impacting other actions.",
+      "id": "REQ-1",
+      "summary": "Default the “Result Updated Since 6 Months” boolean input to true (Yes) on fresh load and on Reset.",
       "acceptanceCriteria": [
-        "The action bar no longer shows a button labeled \"View Formulas\".",
-        "The formulas dialog (titled \"All Formulas\") is not rendered or otherwise accessible through the UI.",
-        "All other calculator actions (Use Example, Reset, Copy Shareable Link, and Run Dev Check in development) continue to work as before.",
-        "The app compiles with no unused state/handlers/props related to the removed formulas UI."
+        "When the app is opened with no query string, the \"Result Updated Since 6 Months\" radio group renders with \"Yes\" selected.",
+        "Any \"Reset\" action that restores DEFAULT_INPUTS restores this field to \"Yes\" selected."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/features/dcf/presets.ts",
           "operation": "modify",
-          "description": "Remove all state and handlers related to opening the formulas dialog, stop passing any formulas-related props to CalculatorActions, and remove the FormulasDialog import and render so the dialog is no longer mounted or reachable from the UI."
-        },
+          "description": "Update DEFAULT_INPUTS so resultUpdatedSince6Years is true by default, ensuring initial load with no URL parameters and Reset (which restores DEFAULT_INPUTS) select “Yes”."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Fix URL query parsing/encoding so explicit res6y=false overrides the new default true while keeping parameter name res6y.",
+      "acceptanceCriteria": [
+        "With `?res6y=false` in the URL (along with any other parameter that triggers parsing), the \"Result Updated Since 6 Months\" radio group renders with \"No\" selected.",
+        "With `?res6y=true` in the URL (along with any other parameter that triggers parsing), the radio group renders with \"Yes\" selected.",
+        "Shareable link generation continues to use the `res6y` parameter name and correctly encodes the current selection."
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/components/CalculatorActions.tsx",
+          "path": "frontend/src/hooks/useQueryInputs.ts",
           "operation": "modify",
-          "description": "Remove the optional formulas action API (onShowFormulas) and the conditional rendering of the \"View Formulas\" button (including any now-unused icon imports), while keeping the existing behaviors for Use Example, Reset, Copy Shareable Link, and Run Dev Check unchanged."
+          "description": "Adjust parseInputsFromQuery logic for resultUpdatedSince6Years to: if the `res6y` param is present, parse strictly as true/false (so `res6y=false` is respected even when DEFAULT_INPUTS is true); otherwise fall back to DEFAULT_INPUTS. Keep encoding using the same `res6y` key and ensure links include `res6y=false` when the current value differs from the new default."
         }
       ]
     }

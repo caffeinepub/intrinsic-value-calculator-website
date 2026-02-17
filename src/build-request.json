@@ -1,36 +1,52 @@
 {
   "kind": "build_request",
-  "title": "Remove 'View Formulas' UI",
+  "title": "Default 'Result Updated Since 6 Months' to Yes",
   "projectName": "Company Snapshot Tool",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-4",
-      "text": "Remove the 'View Formulas' section from the UI by eliminating the 'View Formulas' action and ensuring the formulas dialog cannot be opened from the app.",
+      "id": "REQ-1",
+      "text": "Set the default value of the \"Result Updated Since 6 Months\" radio field to \"Yes\" when the app loads with no URL parameters (i.e., update the default inputs so this boolean is true by default).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-4"
         ],
         "quotes": [
-          "Remove section \nView formulas"
+          "Result updated since 6 months \nValue will be yes by default"
         ]
       },
       "acceptanceCriteria": [
-        "The action bar no longer shows a button labeled \"View Formulas\".",
-        "The formulas dialog (titled \"All Formulas\") is not rendered or otherwise accessible through the UI.",
-        "All other calculator actions (Use Example, Reset, Copy Shareable Link, and Run Dev Check in development) continue to work as before.",
-        "The app compiles with no unused state/handlers/props related to the removed formulas UI."
+        "When the app is opened with no query string, the \"Result Updated Since 6 Months\" radio group renders with \"Yes\" selected.",
+        "Any \"Reset\" action that restores DEFAULT_INPUTS restores this field to \"Yes\" selected."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Update URL query parsing/encoding behavior for the \"Result Updated Since 6 Months\" field so that an explicit URL value of false (e.g., `res6y=false`) is respected even after the default becomes true, while keeping the existing query parameter name `res6y` unchanged.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Value will be yes by default"
+        ]
+      },
+      "acceptanceCriteria": [
+        "With `?res6y=false` in the URL (along with any other parameter that triggers parsing), the \"Result Updated Since 6 Months\" radio group renders with \"No\" selected.",
+        "With `?res6y=true` in the URL (along with any other parameter that triggers parsing), the radio group renders with \"Yes\" selected.",
+        "Shareable link generation continues to use the `res6y` parameter name and correctly encodes the current selection."
       ]
     }
   ],
   "constraints": [
-    "Do not modify files under frontend/src/components/ui or any other immutable paths listed in SYSTEM_CONTEXT.",
-    "Use English for any user-facing text."
+    "Do not modify read-only frontend paths listed in SYSTEM_CONTEXT.immutablePaths.",
+    "Keep the existing URL query parameter key `res6y` for backward compatibility."
   ],
   "nonGoals": [
-    "Do not change any DCF calculation logic or validation rules.",
-    "Do not remove or refactor backend Motoko code as part of this change."
+    "Renaming the internal field `resultUpdatedSince6Years` to match the UI label text.",
+    "Changing validation rules or adding new calculation logic tied to this field."
   ],
   "imageRequirements": {
     "required": [],
