@@ -13,6 +13,7 @@ import type { Principal } from '@icp-sdk/core/principal';
 export interface DcfInputs {
   'weightedAveCostOfCapital' : number,
   'sharesOutstanding' : number,
+  'industryGrowthPercent' : number,
   'forecastedFCF' : number,
   'terminalYears' : bigint,
   'actualSharePrice' : number,
@@ -27,11 +28,27 @@ export interface DcfOutputs {
   'actualPerShare' : number,
   'riskDiscount' : number,
   'profitability' : number,
-  'industryGrowth' : number,
   'totalShares' : number,
 }
+export interface UserProfile {
+  'mobileNumber' : string,
+  'lastName' : string,
+  'firstName' : string,
+}
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
 export interface _SERVICE {
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'getAllUserProfiles' : ActorMethod<[], Array<[Principal, UserProfile]>>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getNumAllUserProfiles' : ActorMethod<[], [] | [bigint]>,
+  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
   'processDcf' : ActorMethod<[DcfInputs], DcfOutputs>,
+  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

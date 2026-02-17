@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Roll back the latest pricing/formula change by restoring frontend-only calculation for Intrinsic Price and Actual Value, ensuring displayed results match the previously-correct behavior.
+**Goal:** Remove the “View Formulas” UI so users can no longer access the formulas dialog.
 
 **Planned changes:**
-- Update result rendering so “Intrinsic Price” always uses `calculateIntrinsicPrice(inputs)` and “Actual Value” always uses `calculateActualValue(inputs)`, ignoring any `backendResult` fields for displayed values.
-- Remove the “✓ Calculated by backend” indicator from the results UI since backend-derived values will no longer be used for display.
-- Update the developer verification (“Run Dev Check”) flow to compute AA/BB/CC/DD and Intrinsic/Actual values using the same frontend formula functions used in the UI (e.g., `calculateHiddenValues`, `calculateIntrinsicPrice`, `calculateActualValue`) rather than backend results.
-- Adjust/disable backend-loading and backend-error UI states that would otherwise block or degrade the experience when calculating/displaying results, while keeping existing form/actions (Use Example, Reset, Copy Shareable Link) unchanged.
+- Remove the “View Formulas” action/button from the action bar.
+- Ensure the “All Formulas” dialog is not rendered and cannot be opened anywhere in the UI.
+- Clean up any now-unused state, handlers, or props related to the removed formulas UI while keeping all other calculator actions working as-is.
 
-**User-visible outcome:** Clicking “Intrinsic Price” or “Actual Value” immediately shows values computed by the frontend formulas (no backend-calculated indicator or blocking backend loading), and the dev check validates the same restored frontend calculations without requiring backend results.
+**User-visible outcome:** The app no longer shows a “View Formulas” button and users cannot open the “All Formulas” dialog; all other existing actions continue to function normally.

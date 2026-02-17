@@ -1,63 +1,27 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Rollback displayed DCF outputs to frontend formulas and update dev verification flow",
+  "title": "Remove 'View Formulas' UI",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Always compute Intrinsic Price and Actual Value using frontend formula functions and remove backend-derived result display indicators.",
+      "id": "REQ-4",
+      "summary": "Remove the 'View Formulas' action from the calculator action bar and ensure the 'All Formulas' dialog cannot be opened from the UI, without impacting other actions.",
       "acceptanceCriteria": [
-        "Clicking “Intrinsic Price” always uses calculateIntrinsicPrice(inputs) to compute the value, regardless of whether backendResult exists.",
-        "Clicking “Actual Value” always uses calculateActualValue(inputs) to compute the value, regardless of whether backendResult exists.",
-        "The UI no longer shows the '✓ Calculated by backend' indicator in ResultsSection when rendering the result (since backend is no longer used for the displayed values)."
+        "The action bar no longer shows a button labeled \"View Formulas\".",
+        "The formulas dialog (titled \"All Formulas\") is not rendered or otherwise accessible through the UI.",
+        "All other calculator actions (Use Example, Reset, Copy Shareable Link, and Run Dev Check in development) continue to work as before.",
+        "The app compiles with no unused state/handlers/props related to the removed formulas UI."
       ],
       "file_operations": [
-        {
-          "path": "frontend/src/components/ResultsSection.tsx",
-          "operation": "modify",
-          "description": "Remove usage of backendResult for displayed Intrinsic/Actual outputs; update handleCalculate to always call calculateIntrinsicPrice(inputs) and calculateActualValue(inputs). Remove the '✓ Calculated by backend' indicator and any conditional rendering tied to backendResult for displayed values."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Update the dev verification check to compute from the restored frontend formulas (hidden values + intrinsic/actual) without depending on backend results.",
-      "acceptanceCriteria": [
-        "runDevCheck no longer derives AA/BB/CC/DD or Intrinsic/Actual from backendResult fields.",
-        "Dev check results are computed from the same frontend formulas used for display (calculateHiddenValues / calculateIntrinsicPrice / calculateActualValue).",
-        "The dev check UI action (Run Dev Check) continues to function in development mode without requiring backend results."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/features/dcf/devChecks.ts",
-          "operation": "modify",
-          "description": "Refactor runDevCheck to accept inputs (use VERIFICATION_INPUTS or a provided DcfInputs argument) and compute AA/BB/CC/DD via calculateHiddenValues plus intrinsic/actual via calculateIntrinsicPrice/calculateActualValue. Remove dependency on backend types/fields and adjust console logging/messages to reflect frontend-based verification."
-        },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update the Run Dev Check flow to call the refactored runDevCheck using frontend inputs/formulas (no backendResult waiting, no backend-loading toast gate). Keep the existing development-only button behavior and toast reporting, using English user-facing text."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Ensure backend calculation querying/loading/error states do not block or degrade formula-based UX after rollback.",
-      "acceptanceCriteria": [
-        "ResultsSection does not show a blocking “Calculating values from backend...” loading card when the user clicks Intrinsic Price or Actual Value.",
-        "Backend query errors (if any) do not prevent the frontend formulas from producing results.",
-        "No regressions to the existing input form and action buttons behavior (Use Example, Reset, Copy Shareable Link)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/ResultsSection.tsx",
-          "operation": "modify",
-          "description": "Remove/disable backend-driven loading and error UI states (e.g., the blocking loading card and backend error card) so formula calculations remain instant and unblocked. Ensure action buttons are not disabled due to backend loading, and results can be displayed solely from frontend calculations."
+          "description": "Remove all state and handlers related to opening the formulas dialog, stop passing any formulas-related props to CalculatorActions, and remove the FormulasDialog import and render so the dialog is no longer mounted or reachable from the UI."
         },
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/components/CalculatorActions.tsx",
           "operation": "modify",
-          "description": "Stop fetching backend calculation results purely to support dev checks, so the app no longer introduces backend-loading dependencies that could degrade UX post-rollback. Preserve existing behaviors for Use Example, Reset, and Copy Shareable Link actions."
+          "description": "Remove the optional formulas action API (onShowFormulas) and the conditional rendering of the \"View Formulas\" button (including any now-unused icon imports), while keeping the existing behaviors for Use Example, Reset, Copy Shareable Link, and Run Dev Check unchanged."
         }
       ]
     }

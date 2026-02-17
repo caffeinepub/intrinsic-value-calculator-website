@@ -13,6 +13,7 @@ export interface DcfInputs {
   resultUpdatedSince6Years: boolean;
   psuOrNot: boolean; // Public Sector Undertaking
   netNpaNbfc: number; // Net Non-Performing Assets for NBFC, as decimal (0.032 = 3.2%)
+  industryGrowthPercent: number; // J - Industry growth percentage (5 = 5%)
 }
 
 export const DEFAULT_INPUTS: DcfInputs = {
@@ -30,6 +31,7 @@ export const DEFAULT_INPUTS: DcfInputs = {
   resultUpdatedSince6Years: false,
   psuOrNot: false,
   netNpaNbfc: 0,
+  industryGrowthPercent: 0,
 };
 
 export const EXAMPLE_INPUTS: DcfInputs = {
@@ -47,6 +49,7 @@ export const EXAMPLE_INPUTS: DcfInputs = {
   resultUpdatedSince6Years: true,
   psuOrNot: false,
   netNpaNbfc: 0.032, // 3.2%
+  industryGrowthPercent: 5, // 5%
 };
 
 /**
@@ -67,4 +70,5 @@ export const VERIFICATION_INPUTS: DcfInputs = {
   resultUpdatedSince6Years: true,
   psuOrNot: false,
   netNpaNbfc: 0.02,
+  industryGrowthPercent: 5,
 };

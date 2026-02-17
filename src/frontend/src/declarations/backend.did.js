@@ -8,9 +8,20 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
+export const UserProfile = IDL.Record({
+  'mobileNumber' : IDL.Text,
+  'lastName' : IDL.Text,
+  'firstName' : IDL.Text,
+});
 export const DcfInputs = IDL.Record({
   'weightedAveCostOfCapital' : IDL.Float64,
   'sharesOutstanding' : IDL.Float64,
+  'industryGrowthPercent' : IDL.Float64,
   'forecastedFCF' : IDL.Float64,
   'terminalYears' : IDL.Int,
   'actualSharePrice' : IDL.Float64,
@@ -25,20 +36,47 @@ export const DcfOutputs = IDL.Record({
   'actualPerShare' : IDL.Float64,
   'riskDiscount' : IDL.Float64,
   'profitability' : IDL.Float64,
-  'industryGrowth' : IDL.Float64,
   'totalShares' : IDL.Float64,
 });
 
 export const idlService = IDL.Service({
-  'processDcf' : IDL.Func([DcfInputs], [DcfOutputs], []),
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'getAllUserProfiles' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(IDL.Principal, UserProfile))],
+      ['query'],
+    ),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getNumAllUserProfiles' : IDL.Func([], [IDL.Opt(IDL.Nat)], ['query']),
+  'getUserProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(UserProfile)],
+      ['query'],
+    ),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'processDcf' : IDL.Func([DcfInputs], [DcfOutputs], ['query']),
+  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
 });
 
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
+  const UserProfile = IDL.Record({
+    'mobileNumber' : IDL.Text,
+    'lastName' : IDL.Text,
+    'firstName' : IDL.Text,
+  });
   const DcfInputs = IDL.Record({
     'weightedAveCostOfCapital' : IDL.Float64,
     'sharesOutstanding' : IDL.Float64,
+    'industryGrowthPercent' : IDL.Float64,
     'forecastedFCF' : IDL.Float64,
     'terminalYears' : IDL.Int,
     'actualSharePrice' : IDL.Float64,
@@ -53,12 +91,28 @@ export const idlFactory = ({ IDL }) => {
     'actualPerShare' : IDL.Float64,
     'riskDiscount' : IDL.Float64,
     'profitability' : IDL.Float64,
-    'industryGrowth' : IDL.Float64,
     'totalShares' : IDL.Float64,
   });
   
   return IDL.Service({
-    'processDcf' : IDL.Func([DcfInputs], [DcfOutputs], []),
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'getAllUserProfiles' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Principal, UserProfile))],
+        ['query'],
+      ),
+    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getNumAllUserProfiles' : IDL.Func([], [IDL.Opt(IDL.Nat)], ['query']),
+    'getUserProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'processDcf' : IDL.Func([DcfInputs], [DcfOutputs], ['query']),
+    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   });
 };
 

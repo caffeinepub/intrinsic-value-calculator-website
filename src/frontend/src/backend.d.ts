@@ -14,12 +14,12 @@ export interface DcfOutputs {
     actualPerShare: number;
     riskDiscount: number;
     profitability: number;
-    industryGrowth: number;
     totalShares: number;
 }
 export interface DcfInputs {
     weightedAveCostOfCapital: number;
     sharesOutstanding: number;
+    industryGrowthPercent: number;
     forecastedFCF: number;
     terminalYears: bigint;
     actualSharePrice: number;
@@ -27,6 +27,24 @@ export interface DcfInputs {
     revenueLastQuarter: number;
     perpetualGrowthRate: number;
 }
+export interface UserProfile {
+    mobileNumber: string;
+    lastName: string;
+    firstName: string;
+}
+export enum UserRole {
+    admin = "admin",
+    user = "user",
+    guest = "guest"
+}
 export interface backendInterface {
+    assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    getAllUserProfiles(): Promise<Array<[Principal, UserProfile]>>;
+    getCallerUserProfile(): Promise<UserProfile | null>;
+    getCallerUserRole(): Promise<UserRole>;
+    getNumAllUserProfiles(): Promise<bigint | null>;
+    getUserProfile(user: Principal): Promise<UserProfile | null>;
+    isCallerAdmin(): Promise<boolean>;
     processDcf(inputs: DcfInputs): Promise<DcfOutputs>;
+    saveCallerUserProfile(profile: UserProfile): Promise<void>;
 }

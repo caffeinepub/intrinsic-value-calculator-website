@@ -3,32 +3,14 @@
   "projectStateVersion": 3,
   "summary": "New project",
   "architectural_notes": [],
-  "known_issues": [
-    "Latest formula update produces incorrect results; needs rollback to previous correct formula"
-  ],
+  "known_issues": [],
   "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-stop-using-the-backend-calculated-result-for-intrinsic-price-and-actual-value-outputs-and-always-compute-both-outputs-using-the-existing-frontend-calculation-functions-calculateintrinsicprice-and-calculateactualvalue-so-the-displayed-results-match-the-previously-correct-formula-behavior",
-      "title": "Stop using the backend-calculated result for Intrinsic Price and Actual Value outputs, and always compute both outputs using the existing frontend calculation functions (calculateIntrinsicPrice and calculateActualValue) so the displayed results match the previously-correct formula behavior.",
+      "id": "feature-remove-the-view-formulas-section-from-the-ui-by-eliminating-the-view-formulas-action-and-ensuring-the-formulas-dialog-cannot-be-opened-from-the-app",
+      "title": "Remove the 'View Formulas' section from the UI by eliminating the 'View Formulas' action and ensuring the formulas dialog cannot be opened from the app.",
       "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-the-developer-verification-check-flow-to-validate-the-restored-frontend-formulas-not-backend-derived-values-so-running-the-dev-check-reflects-the-rolled-back-calculation-logic",
-      "title": "Update the developer verification check flow to validate the restored frontend formulas (not backend-derived values), so running the dev check reflects the rolled-back calculation logic.",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-ensure-the-backend-calculation-request-does-not-block-or-degrade-the-user-experience-after-the-rollback-e-g-remove-disable-backend-loading-and-error-ui-states-that-are-only-relevant-when-backend-results-drive-the-displayed-outputs",
-      "title": "Ensure the backend calculation request does not block or degrade the user experience after the rollback (e.g., remove/disable backend loading and error UI states that are only relevant when backend results drive the displayed outputs).",
-      "reqIds": [
-        "REQ-3"
+        "REQ-4"
       ],
       "version": 1
     }
@@ -36,12 +18,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Undo/rollback the latest formula change because the generated result is totally wrong",
+      "summary": "Remove the 'View formulas' section from the page",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Rollback latest pricing/formula change and restore correct calculation outputs",
+  "projectName": "Company Snapshot Tool",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

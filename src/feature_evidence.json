@@ -2,58 +2,22 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-stop-using-the-backend-calculated-result-for-intrinsic-price-and-actual-value-outputs-and-always-compute-both-outputs-using-the-existing-frontend-calculation-functions-calculateintrinsicprice-and-calculateactualvalue-so-the-displayed-results-match-the-previously-correct-formula-behavior",
-      "featureTitle": "Stop using the backend-calculated result for Intrinsic Price and Actual Value outputs, and always compute both outputs using the existing frontend calculation functions (calculateIntrinsicPrice and calculateActualValue) so the displayed results match the previously-correct formula behavior.",
-      "files": [
-        "frontend/src/components/ResultsSection.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-the-developer-verification-check-flow-to-validate-the-restored-frontend-formulas-not-backend-derived-values-so-running-the-dev-check-reflects-the-rolled-back-calculation-logic",
-      "featureTitle": "Update the developer verification check flow to validate the restored frontend formulas (not backend-derived values), so running the dev check reflects the rolled-back calculation logic.",
+      "featureId": "feature-remove-the-view-formulas-section-from-the-ui-by-eliminating-the-view-formulas-action-and-ensuring-the-formulas-dialog-cannot-be-opened-from-the-app",
+      "featureTitle": "Remove the 'View Formulas' section from the UI by eliminating the 'View Formulas' action and ensuring the formulas dialog cannot be opened from the app.",
       "files": [
         "frontend/src/App.tsx",
-        "frontend/src/features/dcf/devChecks.ts"
+        "frontend/src/components/CalculatorActions.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-ensure-the-backend-calculation-request-does-not-block-or-degrade-the-user-experience-after-the-rollback-e-g-remove-disable-backend-loading-and-error-ui-states-that-are-only-relevant-when-backend-results-drive-the-displayed-outputs",
-      "featureTitle": "Ensure the backend calculation request does not block or degrade the user experience after the rollback (e.g., remove/disable backend loading and error UI states that are only relevant when backend results drive the displayed outputs).",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/ResultsSection.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
+        "REQ-4"
       ],
       "confidence": "high"
     }

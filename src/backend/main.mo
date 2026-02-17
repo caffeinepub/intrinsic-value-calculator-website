@@ -1,9 +1,22 @@
 import Float "mo:core/Float";
 import Int "mo:core/Int";
-import Nat64 "mo:core/Nat64";
+import Map "mo:core/Map";
+import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
+import MixinAuthorization "authorization/MixinAuthorization";
+import AccessControl "authorization/access-control";
+import Nat "mo:core/Nat";
+import Iter "mo:core/Iter";
 
 actor {
+  // User Profile Types
+  public type UserProfile = {
+    mobileNumber : Text;
+    firstName : Text;
+    lastName : Text;
+  };
+
+  // DCF Calculation Types
   type DcfInputs = {
     sharesOutstanding : Float;
     forecastedFCF : Float;
@@ -13,6 +26,7 @@ actor {
     actualSharePrice : Float;
     revenueLastQuarter : Float;
     revenueLastYear : Float;
+    industryGrowthPercent : Float;
   };
 
   type DcfOutputs = {
@@ -20,59 +34,56 @@ actor {
     totalMarketCap : Float;
     intrinsicPricePerShare : Float;
     actualPerShare : Float;
-    industryGrowth : Float;
     profitability : Float;
     riskDiscount : Float;
     adjustedValuation : Float;
   };
 
-  public func processDcf(inputs : DcfInputs) : async DcfOutputs {
-    // Step 1: Validate Inputs
-    validateInputs(inputs);
+  // Storage for User Profiles
+  let userProfiles = Map.empty<Principal, UserProfile>();
 
-    // Step 2: Calculate Growth and Discount Factors
-    let discountRate = 1.0 + inputs.weightedAveCostOfCapital;
-    let growthRate = 1.0 + inputs.perpetualGrowthRate;
-    let netRate = discountRate - growthRate;
+  // Authorization State
+  let accessControlState = AccessControl.initState();
+  include MixinAuthorization(accessControlState);
 
-    let terminalValue = inputs.forecastedFCF * (inputs.sharesOutstanding + 1) * growthRate / netRate;
-    let presentValueTerminal = calculatePresentValueTerminal(
-      terminalValue,
-      discountRate,
-      inputs.terminalYears.toNat().toFloat(),
-    );
-
-    let totalAnnualPV = calculateTotalAnnualPV(inputs, discountRate);
-    let totalMarketCap = totalAnnualPV + presentValueTerminal;
-
-    // Calculate Industry Growth (DD) = if (CC > 0) CC else 0
-    let aa = (inputs.revenueLastQuarter * 4) - inputs.revenueLastYear; // revenue growth of last 4 quarters as input for growth calculation
-    let bb = aa * 100 / inputs.revenueLastYear; // calculate % "normalized growth"/ YoY growth
-    let cc = bb / 2; // divide this by 2 to reflect that this relative growth rate will slow down and eventually resemble the standard GDP
-    let dd = if (cc > 0) { cc } else { 0.0 };
-    let industryGrowth = dd / 100; // Convert to percentage
-
-    let profitability = 0.15;
-    let riskDiscount = 1.05;
-    let adjustedValuation = industryGrowth * profitability / riskDiscount;
-
-    {
-      totalShares = inputs.sharesOutstanding;
-      totalMarketCap;
-      intrinsicPricePerShare = totalMarketCap / inputs.sharesOutstanding;
-      actualPerShare = inputs.actualSharePrice; // Use provided actual share price
-      industryGrowth;
-      profitability;
-      riskDiscount;
-      adjustedValuation;
+  // User Profile APIs
+  public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can save profiles");
     };
+    userProfiles.add(caller, profile);
   };
 
-  func calculatePresentValueTerminal(
-    terminalValue : Float,
-    discountRate : Float,
-    discountPower : Float,
-  ) : Float {
+  public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can fetch their profiles");
+    };
+    userProfiles.get(caller);
+  };
+
+  public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
+    if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Can only view your own profile");
+    };
+    userProfiles.get(user);
+  };
+
+  public query ({ caller }) func getAllUserProfiles() : async [(Principal, UserProfile)] {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can fetch all profiles");
+    };
+    userProfiles.toArray();
+  };
+
+  public query ({ caller }) func getNumAllUserProfiles() : async ?Nat {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Can only view your own profile count");
+    };
+    ?userProfiles.size();
+  };
+
+  // DCF Calculation Helper Functions
+  func calculatePresentValueTerminal(terminalValue : Float, discountRate : Float, discountPower : Float) : Float {
     terminalValue / (discountRate ** discountPower);
   };
 
@@ -92,22 +103,71 @@ actor {
 
   func validateInputs(inputs : DcfInputs) {
     if (inputs.sharesOutstanding <= 0) {
-      Runtime.trap("Shares outstanding must be a positive number. {\"code\":40}");
+      Runtime.trap(
+        "Shares outstanding must be a positive number. {\"code\":40}",
+      );
     };
     if (inputs.forecastedFCF <= 0) {
-      Runtime.trap("Forecasted FCF must be a positive number. {\"code\":41}");
+      Runtime.trap(
+        "Forecasted FCF must be a positive number. {\"code\":41}",
+      );
     };
     if (inputs.terminalYears <= 0) {
-      Runtime.trap("Terminal years must be a positive number. {\"code\":42}");
+      Runtime.trap(
+        "Terminal years must be a positive number. {\"code\":42}",
+      );
     };
-    if (inputs.perpetualGrowthRate < 0 or inputs.perpetualGrowthRate >= 1) {
-      Runtime.trap("Perpetual growth rate percentage must be between 0 and 1 (exclusive). {\"code\":43}");
+    if (
+      inputs.perpetualGrowthRate < 0 or inputs.perpetualGrowthRate >= 1
+    ) {
+      Runtime.trap(
+        "Perpetual growth rate percentage must be between 0 and 1 (exclusive). {\"code\":43}",
+      );
     };
-    if (inputs.weightedAveCostOfCapital <= 0 or inputs.weightedAveCostOfCapital > 1) {
-      Runtime.trap("Weighted average cost of capital must be above 0 and at most 1. {\"code\":44}");
+    if (
+      inputs.weightedAveCostOfCapital <= 0 or inputs.weightedAveCostOfCapital > 1
+    ) {
+      Runtime.trap(
+        "Weighted average cost of capital must be above 0 and at most 1. {\"code\":44}",
+      );
     };
     if (inputs.actualSharePrice <= 0) {
-      Runtime.trap("Actual share price must be a positive number. {\"code\":45}");
+      Runtime.trap(
+        "Actual share price must be a positive number. {\"code\":45}",
+      );
+    };
+  };
+
+  // DCF Calculation API
+  public query ({ caller }) func processDcf(inputs : DcfInputs) : async DcfOutputs {
+    validateInputs(inputs);
+
+    let discountRate = 1.0 + inputs.weightedAveCostOfCapital;
+    let growthRate = 1.0 + inputs.perpetualGrowthRate;
+    let netRate = discountRate - growthRate;
+
+    let terminalValue = inputs.forecastedFCF * (inputs.sharesOutstanding + 1) * growthRate / netRate;
+    let presentValueTerminal = calculatePresentValueTerminal(
+      terminalValue,
+      discountRate,
+      inputs.terminalYears.toNat().toFloat(),
+    );
+
+    let totalAnnualPV = calculateTotalAnnualPV(inputs, discountRate);
+    let totalMarketCap = totalAnnualPV + presentValueTerminal;
+
+    let profitability = 0.15;
+    let riskDiscount = 1.05;
+    let adjustedValuation = 0.0;
+
+    {
+      totalShares = inputs.sharesOutstanding;
+      totalMarketCap;
+      intrinsicPricePerShare = totalMarketCap / inputs.sharesOutstanding;
+      actualPerShare = inputs.actualSharePrice;
+      profitability;
+      riskDiscount;
+      adjustedValuation;
     };
   };
 };

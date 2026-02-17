@@ -1,50 +1,26 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-16T13:57:25.477Z",
+  "generatedAt": "2026-02-17T18:04:15.041Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 3,
+    "total": 1,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-1",
-        "summary": "Stop using the backend-calculated result for Intrinsic Price and Actual Value outputs, and always compute both outputs using the existing frontend calculation functions (calculateIntrinsicPrice and calculateActualValue) so the displayed results match the previously-correct formula behavior.",
+        "id": "REQ-4",
+        "summary": "Remove the 'View Formulas' section from the UI by eliminating the 'View Formulas' action and ensuring the formulas dialog cannot be opened from the app.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/ResultsSection.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/components/CalculatorActions.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/ResultsSection.tsx"
-        ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Update the developer verification check flow to validate the restored frontend formulas (not backend-derived values), so running the dev check reflects the rolled-back calculation logic.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/features/dcf/devChecks.ts",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/features/dcf/devChecks.ts",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Ensure the backend calculation request does not block or degrade the user experience after the rollback (e.g., remove/disable backend loading and error UI states that are only relevant when backend results drive the displayed outputs).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/ResultsSection.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/ResultsSection.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/components/CalculatorActions.tsx"
         ]
       }
     ]
@@ -55,8 +31,7 @@
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/App.tsx",
-    "frontend/src/components/ResultsSection.tsx",
-    "frontend/src/features/dcf/devChecks.ts",
+    "frontend/src/components/CalculatorActions.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

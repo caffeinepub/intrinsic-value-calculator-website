@@ -53,6 +53,10 @@ export function validateInputs(inputs: DcfInputs): ValidationError[] {
     errors.push({ field: 'netNpaNbfc', message: 'Net NPA (NBFC) must be between 0% and 100%' });
   }
 
+  if (inputs.industryGrowthPercent < 0 || inputs.industryGrowthPercent > 100) {
+    errors.push({ field: 'industryGrowthPercent', message: 'Industry growth percentage must be between 0% and 100%' });
+  }
+
   return errors;
 }
 

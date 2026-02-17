@@ -1,47 +1,54 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { DcfInputs } from '@/features/dcf/presets';
 import { calculateIntrinsicPrice, calculateActualValue } from '@/features/dcf/calculations';
 import { formatCurrency } from '@/lib/format';
 import { useCountUp } from '@/hooks/useCountUp';
-import { TrendingUp, DollarSign, Sparkles } from 'lucide-react';
+import { TrendingUp, Sparkles, AlertCircle } from 'lucide-react';
 
 interface ResultsSectionProps {
   inputs: DcfInputs;
 }
 
-type OutputType = 'intrinsic' | 'actual' | null;
-
 export function ResultsSection({ inputs }: ResultsSectionProps) {
-  const [activeOutput, setActiveOutput] = useState<OutputType>(null);
-  const [outputValue, setOutputValue] = useState(0);
+  const [intrinsicValue, setIntrinsicValue] = useState<number | null>(null);
+  const [actualValue, setActualValue] = useState<number | null>(null);
+  const [calculating, setCalculating] = useState(false);
 
-  const animatedValue = useCountUp({
+  const animatedIntrinsic = useCountUp({
     start: 0,
-    end: outputValue,
+    end: intrinsicValue ?? 0,
     duration: 1500,
     decimals: 2,
   });
 
-  const handleCalculate = (type: OutputType) => {
-    if (!type) return;
+  const animatedActual = useCountUp({
+    start: 0,
+    end: actualValue ?? 0,
+    duration: 1500,
+    decimals: 2,
+  });
 
-    let value = 0;
-    
-    // Always use frontend calculations
-    if (type === 'intrinsic') {
-      value = calculateIntrinsicPrice(inputs);
-    } else if (type === 'actual') {
-      value = calculateActualValue(inputs);
-    }
-
-    setOutputValue(value);
-    setActiveOutput(type);
+  const handleCalculateBoth = () => {
+    setCalculating(true);
+    const intrinsic = calculateIntrinsicPrice(inputs);
+    const actual = calculateActualValue(inputs);
+    setIntrinsicValue(intrinsic);
+    setActualValue(actual);
+    setTimeout(() => setCalculating(false), 1500);
   };
 
-  const isIntrinsicActive = activeOutput === 'intrinsic';
-  const isActualActive = activeOutput === 'actual';
+  const hasCalculated = intrinsicValue !== null && actualValue !== null;
+
+  // Determine display order: lower value first, higher value second
+  const displayLowerValue = hasCalculated && intrinsicValue !== null && actualValue !== null
+    ? (intrinsicValue <= actualValue ? animatedIntrinsic : animatedActual)
+    : 0;
+  
+  const displayHigherValue = hasCalculated && intrinsicValue !== null && actualValue !== null
+    ? (intrinsicValue <= actualValue ? animatedActual : animatedIntrinsic)
+    : 0;
 
   return (
     <div className="space-y-6">
@@ -52,77 +59,54 @@ export function ResultsSection({ inputs }: ResultsSectionProps) {
         </p>
       </div>
 
-      {/* Action Buttons */}
-      <div className="grid sm:grid-cols-2 gap-4">
+      {/* Combined Action Button */}
+      <div className="space-y-4">
         <Button
           size="lg"
-          variant={isIntrinsicActive ? 'default' : 'outline'}
-          onClick={() => handleCalculate('intrinsic')}
-          className="h-auto py-6 flex flex-col items-center gap-2 relative overflow-hidden group"
+          variant={hasCalculated ? 'default' : 'outline'}
+          onClick={handleCalculateBoth}
+          className="w-full h-auto py-6 flex flex-col items-center gap-2 relative overflow-hidden group"
         >
           <TrendingUp className="h-6 w-6" />
-          <span className="text-lg font-semibold">Intrinsic Price</span>
-          <span className="text-xs opacity-70">Market Cap ÷ Total Shares</span>
-          {isIntrinsicActive && (
+          <span className="text-lg font-semibold">BUY PRICE ~ TARGET PRICE</span>
+          <span className="text-xs opacity-70">Calculate both metrics</span>
+          {calculating && (
             <div className="absolute inset-0 bg-primary/10 animate-pulse" />
           )}
         </Button>
-
-        <Button
-          size="lg"
-          variant={isActualActive ? 'default' : 'outline'}
-          onClick={() => handleCalculate('actual')}
-          className="h-auto py-6 flex flex-col items-center gap-2 relative overflow-hidden group"
-        >
-          <DollarSign className="h-6 w-6" />
-          <span className="text-lg font-semibold">Actual Value</span>
-          <span className="text-xs opacity-70">Capital + Assets ÷ Shares</span>
-          {isActualActive && (
-            <div className="absolute inset-0 bg-primary/10 animate-pulse" />
-          )}
-        </Button>
+        
+        {hasCalculated && (
+          <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-background">
+            <CardContent className="py-6">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-primary">
+                  {formatCurrency(displayLowerValue)} ~ {formatCurrency(displayHigherValue)}
+                </div>
+              </div>
+              {(intrinsicValue === 0 || actualValue === 0) && (
+                <div className="mt-4 flex items-start gap-2 text-xs text-amber-600 dark:text-amber-500 bg-amber-50 dark:bg-amber-950/20 p-3 rounded">
+                  <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                  <span>
+                    {intrinsicValue === 0 && actualValue === 0
+                      ? 'Both results are zero. Please verify your input values.'
+                      : intrinsicValue === 0
+                      ? 'Intrinsic Price is zero. Please verify your input values.'
+                      : 'Actual Value is zero. Please verify your input values.'}
+                  </span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
 
-      {/* Result Display */}
-      {activeOutput && (
-        <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-background animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-primary animate-pulse" />
-              <CardTitle>
-                {activeOutput === 'intrinsic' ? 'Intrinsic Price Per Share' : 'Actual Value Per Share'}
-              </CardTitle>
-            </div>
-            <CardDescription>
-              {activeOutput === 'intrinsic' 
-                ? 'Calculated as Total Market Cap divided by Total Shares'
-                : 'Calculated as (Initial Capital + Assets) divided by Total Shares'
-              }
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="relative">
-              <div className="text-5xl font-bold text-primary animate-in zoom-in duration-700">
-                {formatCurrency(animatedValue)}
-              </div>
-              <div className="absolute -inset-4 bg-primary/5 rounded-lg blur-xl -z-10 animate-pulse" />
-            </div>
-            
-            {outputValue === 0 && (
-              <p className="mt-4 text-sm text-muted-foreground">
-                ⚠️ Result is zero. Please check your input values.
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {!activeOutput && (
+      {/* Placeholder when no calculations yet */}
+      {!hasCalculated && (
         <Card className="border-dashed">
           <CardContent className="py-12 text-center">
             <Sparkles className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
             <p className="text-muted-foreground">
-              Click a button above to calculate and reveal the output value
+              Click the button above to calculate and reveal both output values
             </p>
           </CardContent>
         </Card>
