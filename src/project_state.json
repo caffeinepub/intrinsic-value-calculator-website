@@ -7,32 +7,16 @@
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-set-the-default-value-of-the-result-updated-since-6-months-radio-field-to-yes-when-the-app-loads-with-no-url-parameters-i-e-update-the-default-inputs-so-this-boolean-is-true-by-default",
-      "title": "Set the default value of the \"Result Updated Since 6 Months\" radio field to \"Yes\" when the app loads with no URL parameters (i.e., update the default inputs so this boolean is true by default).",
+      "id": "feature-add-a-visible-section-in-the-main-app-page-that-lets-the-user-access-the-app-s-draft-url-copy-it-and-manage-save-their-live-url-locally-by-rendering-the-existing-livesitesection-component-within-the-app-layout",
+      "title": "Add a visible section in the main app page that lets the user access the app’s Draft URL (copy it) and manage/save their Live URL locally, by rendering the existing LiveSiteSection component within the App layout.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
-    },
-    {
-      "id": "feature-update-url-query-parsing-encoding-behavior-for-the-result-updated-since-6-months-field-so-that-an-explicit-url-value-of-false-e-g-res6y-false-is-respected-even-after-the-default-becomes-true-while-keeping-the-existing-query-parameter-name-res6y-unchanged",
-      "title": "Update URL query parsing/encoding behavior for the \"Result Updated Since 6 Months\" field so that an explicit URL value of false (e.g., `res6y=false`) is respected even after the default becomes true, while keeping the existing query parameter name `res6y` unchanged.",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
     }
   ],
-  "new_feature_requests": [
-    {
-      "id": "AR-1",
-      "summary": "Add/adjust field 'Result updated since 6 months' so its default value is 'Yes'",
-      "reqIds": [],
-      "status": "pending"
-    }
-  ],
-  "gameProjectType": "none",
-  "projectName": "Company Snapshot Tool",
+  "new_feature_requests": [],
+  "projectName": "Intri",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

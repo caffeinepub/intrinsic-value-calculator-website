@@ -1,35 +1,24 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-17T18:12:54.150Z",
+  "generatedAt": "2026-02-18T12:14:40.602Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 2,
+    "total": 1,
+    "implemented": 1,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Set the default value of the \"Result Updated Since 6 Months\" radio field to \"Yes\" when the app loads with no URL parameters (i.e., update the default inputs so this boolean is true by default).",
+        "summary": "Add a visible section in the main app page that lets the user access the app’s Draft URL (copy it) and manage/save their Live URL locally, by rendering the existing LiveSiteSection component within the App layout.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/dcf/presets.ts"
+          "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/dcf/presets.ts"
-        ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Update URL query parsing/encoding behavior for the \"Result Updated Since 6 Months\" field so that an explicit URL value of false (e.g., `res6y=false`) is respected even after the default becomes true, while keeping the existing query parameter name `res6y` unchanged.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useQueryInputs.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useQueryInputs.ts"
+          "frontend/src/App.tsx"
         ]
       }
     ]
@@ -39,8 +28,7 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/features/dcf/presets.ts",
-    "frontend/src/hooks/useQueryInputs.ts",
+    "frontend/src/App.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

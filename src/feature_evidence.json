@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-set-the-default-value-of-the-result-updated-since-6-months-radio-field-to-yes-when-the-app-loads-with-no-url-parameters-i-e-update-the-default-inputs-so-this-boolean-is-true-by-default",
-      "featureTitle": "Set the default value of the \"Result Updated Since 6 Months\" radio field to \"Yes\" when the app loads with no URL parameters (i.e., update the default inputs so this boolean is true by default).",
+      "featureId": "feature-add-a-visible-section-in-the-main-app-page-that-lets-the-user-access-the-app-s-draft-url-copy-it-and-manage-save-their-live-url-locally-by-rendering-the-existing-livesitesection-component-within-the-app-layout",
+      "featureTitle": "Add a visible section in the main app page that lets the user access the app’s Draft URL (copy it) and manage/save their Live URL locally, by rendering the existing LiveSiteSection component within the App layout.",
       "files": [
-        "frontend/src/features/dcf/presets.ts"
+        "frontend/src/App.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -17,25 +17,6 @@
       ],
       "testIds": [
         "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-url-query-parsing-encoding-behavior-for-the-result-updated-since-6-months-field-so-that-an-explicit-url-value-of-false-e-g-res6y-false-is-respected-even-after-the-default-becomes-true-while-keeping-the-existing-query-parameter-name-res6y-unchanged",
-      "featureTitle": "Update URL query parsing/encoding behavior for the \"Result Updated Since 6 Months\" field so that an explicit URL value of false (e.g., `res6y=false`) is respected even after the default becomes true, while keeping the existing query parameter name `res6y` unchanged.",
-      "files": [
-        "frontend/src/hooks/useQueryInputs.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
       ],
       "confidence": "high"
     }

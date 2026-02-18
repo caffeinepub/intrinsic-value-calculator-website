@@ -1,36 +1,22 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Default Result Updated Since 6 Months to Yes + Respect Explicit res6y=false",
+  "title": "Make Draft URL accessible from main app page",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Default the “Result Updated Since 6 Months” boolean input to true (Yes) on fresh load and on Reset.",
+      "summary": "Render the existing LiveSiteSection in the main App layout so users can copy the Draft URL and manage a locally-saved Live URL via the existing UI flows.",
       "acceptanceCriteria": [
-        "When the app is opened with no query string, the \"Result Updated Since 6 Months\" radio group renders with \"Yes\" selected.",
-        "Any \"Reset\" action that restores DEFAULT_INPUTS restores this field to \"Yes\" selected."
+        "The main page renders the existing LiveSiteSection (frontend/src/components/LiveSiteSection.tsx) somewhere sensible (e.g., below the calculator/actions or above the footer).",
+        "The Draft URL is visible and can be copied via the provided UI, showing success/error toasts as currently implemented.",
+        "The Live URL input/save/clear/copy/open flows work as currently implemented, and the saved live URL persists via localStorage across page reloads.",
+        "All user-facing text remains in English."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/features/dcf/presets.ts",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update DEFAULT_INPUTS so resultUpdatedSince6Years is true by default, ensuring initial load with no URL parameters and Reset (which restores DEFAULT_INPUTS) select “Yes”."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Fix URL query parsing/encoding so explicit res6y=false overrides the new default true while keeping parameter name res6y.",
-      "acceptanceCriteria": [
-        "With `?res6y=false` in the URL (along with any other parameter that triggers parsing), the \"Result Updated Since 6 Months\" radio group renders with \"No\" selected.",
-        "With `?res6y=true` in the URL (along with any other parameter that triggers parsing), the radio group renders with \"Yes\" selected.",
-        "Shareable link generation continues to use the `res6y` parameter name and correctly encodes the current selection."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueryInputs.ts",
-          "operation": "modify",
-          "description": "Adjust parseInputsFromQuery logic for resultUpdatedSince6Years to: if the `res6y` param is present, parse strictly as true/false (so `res6y=false` is respected even when DEFAULT_INPUTS is true); otherwise fall back to DEFAULT_INPUTS. Keep encoding using the same `res6y` key and ensure links include `res6y=false` when the current value differs from the new default."
+          "description": "Import and render the existing LiveSiteSection component within the App page layout (place it in a sensible location such as below CalculatorActions and/or below ResultsSection, while keeping the current single-column spacing). Ensure it uses the existing toast/Toaster behavior already present in the app and does not introduce any publish-to-live functionality beyond the current informational UI. Verify the component's usage instructions before implementing."
         }
       ]
     }

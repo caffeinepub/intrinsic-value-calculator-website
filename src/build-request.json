@@ -1,52 +1,36 @@
 {
   "kind": "build_request",
-  "title": "Default 'Result Updated Since 6 Months' to Yes",
-  "projectName": "Company Snapshot Tool",
+  "title": "Make draft URL accessible in the app UI",
+  "projectName": "Intri",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Set the default value of the \"Result Updated Since 6 Months\" radio field to \"Yes\" when the app loads with no URL parameters (i.e., update the default inputs so this boolean is true by default).",
+      "text": "Add a visible section in the main app page that lets the user access the app’s Draft URL (copy it) and manage/save their Live URL locally, by rendering the existing LiveSiteSection component within the App layout.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-2"
         ],
         "quotes": [
-          "Result updated since 6 months \nValue will be yes by default"
+          "Do ready my draft"
         ]
       },
       "acceptanceCriteria": [
-        "When the app is opened with no query string, the \"Result Updated Since 6 Months\" radio group renders with \"Yes\" selected.",
-        "Any \"Reset\" action that restores DEFAULT_INPUTS restores this field to \"Yes\" selected."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Update URL query parsing/encoding behavior for the \"Result Updated Since 6 Months\" field so that an explicit URL value of false (e.g., `res6y=false`) is respected even after the default becomes true, while keeping the existing query parameter name `res6y` unchanged.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "Value will be yes by default"
-        ]
-      },
-      "acceptanceCriteria": [
-        "With `?res6y=false` in the URL (along with any other parameter that triggers parsing), the \"Result Updated Since 6 Months\" radio group renders with \"No\" selected.",
-        "With `?res6y=true` in the URL (along with any other parameter that triggers parsing), the radio group renders with \"Yes\" selected.",
-        "Shareable link generation continues to use the `res6y` parameter name and correctly encodes the current selection."
+        "The main page renders the existing LiveSiteSection (frontend/src/components/LiveSiteSection.tsx) somewhere sensible (e.g., below the calculator/actions or above the footer).",
+        "The Draft URL is visible and can be copied via the provided UI, showing success/error toasts as currently implemented.",
+        "The Live URL input/save/clear/copy/open flows work as currently implemented, and the saved live URL persists via localStorage across page reloads.",
+        "All user-facing text remains in English."
       ]
     }
   ],
   "constraints": [
-    "Do not modify read-only frontend paths listed in SYSTEM_CONTEXT.immutablePaths.",
-    "Keep the existing URL query parameter key `res6y` for backward compatibility."
+    "Do not edit files under frontend/src/components/ui or any other paths listed in frontend.immutablePaths.",
+    "Do not implement actual publishing/deployment to Live from within the app; publishing remains an external step via the Caffeine dashboard as described in the UI."
   ],
   "nonGoals": [
-    "Renaming the internal field `resultUpdatedSince6Years` to match the UI label text.",
-    "Changing validation rules or adding new calculation logic tied to this field."
+    "Fixing or diagnosing the Caffeine platform deployment error itself (outside the app code).",
+    "Adding new authentication providers or third-party integrations."
   ],
   "imageRequirements": {
     "required": [],

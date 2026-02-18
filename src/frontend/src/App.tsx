@@ -3,6 +3,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { DcfInputsForm } from './components/DcfInputsForm';
 import { CalculatorActions } from './components/CalculatorActions';
 import { ResultsSection } from './components/ResultsSection';
+import { LiveSiteSection } from './components/LiveSiteSection';
 import { useQueryInputs } from './hooks/useQueryInputs';
 import { validateInputs } from './features/dcf/validation';
 import { DEFAULT_INPUTS, EXAMPLE_INPUTS, VERIFICATION_INPUTS } from './features/dcf/presets';
@@ -55,7 +56,7 @@ function App() {
               <Calculator className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Company Snapshot Tool</h1>
+              <h1 className="text-2xl font-bold">Intri</h1>
               <p className="text-sm text-muted-foreground">
                 Track and analyze company financial metrics
               </p>
@@ -70,7 +71,7 @@ function App() {
           <div className="grid lg:grid-cols-2 gap-8 items-center">
             <div className="space-y-4">
               <h2 className="text-4xl font-bold leading-tight">
-                Organize Company Information
+                Find BUY and TARGET Price
               </h2>
               <p className="text-lg text-muted-foreground">
                 Keep track of key financial metrics, market data, and company fundamentals in one place.
@@ -135,6 +136,9 @@ function App() {
 
           {/* Results Section */}
           <ResultsSection inputs={inputs} />
+
+          {/* Live Site Section */}
+          <LiveSiteSection />
         </div>
       </main>
 

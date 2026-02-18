@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Default the “Result Updated Since 6 Months” field to “Yes” while ensuring URL query values for `res6y` still override the default when explicitly provided.
+**Goal:** Make the app’s Draft URL easily accessible from the main UI and allow users to manage/save their Live URL locally.
 
 **Planned changes:**
-- Update the app’s default inputs so the “Result Updated Since 6 Months” radio field is `Yes` when the app loads with no URL parameters.
-- Ensure any “Reset” behavior that restores default inputs also restores this field to `Yes`.
-- Adjust URL query parsing/encoding for `res6y` so explicit `res6y=false` is respected (and `res6y=true` remains supported), while keeping the parameter name `res6y` unchanged for backward compatibility.
+- Render the existing `LiveSiteSection` component within the main `App` page layout in a sensible location.
+- Ensure the Draft URL is visible in that section and can be copied using the existing UI behavior (including success/error toasts).
+- Keep the existing Live URL input/save/clear/copy/open behavior and persist the saved Live URL via `localStorage` across reloads.
 
-**User-visible outcome:** On a fresh load, the “Result Updated Since 6 Months” option is preselected as “Yes”; shared links using `res6y=true/false` correctly reflect and restore the selected value.
+**User-visible outcome:** Users can view and copy the Draft URL from the main page, and can save/manage a Live URL in the app (persisting between visits) using the existing controls.

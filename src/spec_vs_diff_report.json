@@ -1,32 +1,29 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-17T18:12:54.147Z",
-  "summary": "REQ-1 and REQ-2 appear implemented: the default for the boolean backing the \"Result Updated Since 6 Months\" field is set to true in DEFAULT_INPUTS, and URL parsing now explicitly checks for presence of `res6y` so `res6y=false` overrides the new default while keeping the `res6y` key. The diff also includes additional, unrelated changes (not requested) around an `industryGrowthPercent/indGrowth` field and project state bookkeeping.",
+  "generatedAt": "2026-02-18T12:14:40.598Z",
+  "summary": "REQ-1 appears implemented by importing and including the existing LiveSiteSection component in the main App layout. No evidence in the provided diff summary suggests changes to the LiveSiteSection behavior itself; the change is focused on surfacing it in the UI. Some ancillary metadata/documentation files were modified that were not part of the BuildRequest requirements.",
   "missing_requirements": [],
   "hallucinated_features": [
     {
-      "description": "Added/introduced an `industryGrowthPercent` input field and associated `indGrowth` URL query parameter handling (plus related parsing/encoding), which is not part of the requested change.",
-      "reason": "BuildRequest only asks to default the existing \"Result Updated Since 6 Months\" to Yes and ensure `res6y=false` is respected; it does not request adding new input fields or URL params.",
-      "evidence": [
-        "frontend/src/features/dcf/presets.ts (adds `industryGrowthPercent` to DcfInputs and presets)",
-        "frontend/src/hooks/useQueryInputs.ts (parses/encodes `indGrowth`; query param comment includes `indGrowth`)",
-        "frontend-file-summaries.txt (mentions \"new indGrowth parameter\" and \"new industryGrowthPercent field\")"
-      ]
-    },
-    {
-      "description": "Updated `project_state.json` with new_feature_requests entries (AR-1/AR-2/AR-3) unrelated to app runtime behavior requirements.",
-      "reason": "The BuildRequest does not ask for any project state tracking file updates.",
+      "description": "Updated internal project tracking metadata (project_state.json) to add/track the feature request status.",
+      "reason": "The BuildRequest only asked to render an existing UI section in the main app page; it did not request changes to project tracking/metadata files.",
       "evidence": [
         "project_state.json"
       ]
+    },
+    {
+      "description": "Updated/maintained a repository-wide frontend file summary document.",
+      "reason": "The BuildRequest did not ask for documentation or inventory updates; this file is not needed to satisfy REQ-1.",
+      "evidence": [
+        "frontend-file-summaries.txt"
+      ]
     }
   ],
-  "confidence": 0.68,
+  "confidence": 0.74,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/features/dcf/presets.ts",
-    "frontend/src/hooks/useQueryInputs.ts",
+    "frontend/src/App.tsx",
     "project_state.json"
   ]
 }

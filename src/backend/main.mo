@@ -140,6 +140,10 @@ actor {
 
   // DCF Calculation API
   public query ({ caller }) func processDcf(inputs : DcfInputs) : async DcfOutputs {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can perform DCF calculations");
+    };
+
     validateInputs(inputs);
 
     let discountRate = 1.0 + inputs.weightedAveCostOfCapital;
