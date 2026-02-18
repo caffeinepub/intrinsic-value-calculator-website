@@ -73,3 +73,23 @@
     }
 }
 
+@layer utilities {
+    .hero-headline-gradient {
+        background: linear-gradient(135deg, 
+            oklch(var(--primary)) 0%, 
+            oklch(var(--accent)) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .hero-headline-glow {
+        text-shadow: 0 0 40px oklch(var(--primary) / 0.15),
+                     0 0 20px oklch(var(--accent) / 0.1);
+    }
+    
+    .dark .hero-headline-glow {
+        text-shadow: 0 0 50px oklch(var(--primary) / 0.25),
+                     0 0 30px oklch(var(--accent) / 0.15);
+    }
+}

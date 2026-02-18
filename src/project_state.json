@@ -4,13 +4,13 @@
   "summary": "New project",
   "architectural_notes": [],
   "known_issues": [],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-add-a-visible-section-in-the-main-app-page-that-lets-the-user-access-the-app-s-draft-url-copy-it-and-manage-save-their-live-url-locally-by-rendering-the-existing-livesitesection-component-within-the-app-layout",
-      "title": "Add a visible section in the main app page that lets the user access the app’s Draft URL (copy it) and manage/save their Live URL locally, by rendering the existing LiveSiteSection component within the App layout.",
+      "id": "feature-undo-the-most-recently-added-capital-return-cr-output-section-by-removing-the-capital-return-card-and-its-supporting-state-calculation-from-the-output-values-area-so-that-only-the-buy-target-price-outputs-are-shown-after-calculation",
+      "title": "Undo the most recently added \"Capital Return (CR)\" output section by removing the Capital Return card and its supporting state/calculation from the Output Values area, so that only the Buy/Target price outputs are shown after calculation.",
       "reqIds": [
-        "REQ-1"
+        "REQ-2"
       ],
       "version": 1
     }

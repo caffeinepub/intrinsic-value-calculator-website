@@ -1,36 +1,34 @@
 {
   "kind": "build_request",
-  "title": "Make draft URL accessible in the app UI",
+  "title": "Undo Capital Return section from Output Values",
   "projectName": "Intri",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Add a visible section in the main app page that lets the user access the app’s Draft URL (copy it) and manage/save their Live URL locally, by rendering the existing LiveSiteSection component within the App layout.",
+      "id": "REQ-2",
+      "text": "Undo the most recently added \"Capital Return (CR)\" output section by removing the Capital Return card and its supporting state/calculation from the Output Values area, so that only the Buy/Target price outputs are shown after calculation.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-4"
         ],
         "quotes": [
-          "Do ready my draft"
+          "Undo last section"
         ]
       },
       "acceptanceCriteria": [
-        "The main page renders the existing LiveSiteSection (frontend/src/components/LiveSiteSection.tsx) somewhere sensible (e.g., below the calculator/actions or above the footer).",
-        "The Draft URL is visible and can be copied via the provided UI, showing success/error toasts as currently implemented.",
-        "The Live URL input/save/clear/copy/open flows work as currently implemented, and the saved live URL persists via localStorage across page reloads.",
-        "All user-facing text remains in English."
+        "After clicking \"Calculate Buy & Target price\", the UI shows the Buy and Target price cards but does not show any \"Capital Return (CR)\" section/card.",
+        "Results calculation continues to work without runtime errors or TypeScript build errors (no unused imports/state related to Capital Return remain in ResultsSection).",
+        "The app no longer computes or stores Capital Return values as part of the calculate action (i.e., remove the CR-specific state and formula extraction used only for that removed section)."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui or any other paths listed in frontend.immutablePaths.",
-    "Do not implement actual publishing/deployment to Live from within the app; publishing remains an external step via the Caffeine dashboard as described in the UI."
+    "Do not edit files under frontend/src/components/ui or any other paths listed as immutable in SYSTEM_CONTEXT."
   ],
   "nonGoals": [
-    "Fixing or diagnosing the Caffeine platform deployment error itself (outside the app code).",
-    "Adding new authentication providers or third-party integrations."
+    "Do not change DCF formulas, validation rules, or numeric formatting behavior beyond what is necessary to remove the Capital Return section UI.",
+    "Do not add new features or new result sections."
   ],
   "imageRequirements": {
     "required": [],

@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-visible-section-in-the-main-app-page-that-lets-the-user-access-the-app-s-draft-url-copy-it-and-manage-save-their-live-url-locally-by-rendering-the-existing-livesitesection-component-within-the-app-layout",
-      "featureTitle": "Add a visible section in the main app page that lets the user access the app’s Draft URL (copy it) and manage/save their Live URL locally, by rendering the existing LiveSiteSection component within the App layout.",
+      "featureId": "feature-undo-the-most-recently-added-capital-return-cr-output-section-by-removing-the-capital-return-card-and-its-supporting-state-calculation-from-the-output-values-area-so-that-only-the-buy-target-price-outputs-are-shown-after-calculation",
+      "featureTitle": "Undo the most recently added \"Capital Return (CR)\" output section by removing the Capital Return card and its supporting state/calculation from the Output Values area, so that only the Buy/Target price outputs are shown after calculation.",
       "files": [
-        "frontend/src/App.tsx"
+        "frontend/src/components/ResultsSection.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -16,7 +16,7 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-1"
+        "REQ-2"
       ],
       "confidence": "high"
     }

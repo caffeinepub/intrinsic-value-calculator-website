@@ -3,7 +3,6 @@ import { Toaster } from '@/components/ui/sonner';
 import { DcfInputsForm } from './components/DcfInputsForm';
 import { CalculatorActions } from './components/CalculatorActions';
 import { ResultsSection } from './components/ResultsSection';
-import { LiveSiteSection } from './components/LiveSiteSection';
 import { useQueryInputs } from './hooks/useQueryInputs';
 import { validateInputs } from './features/dcf/validation';
 import { DEFAULT_INPUTS, EXAMPLE_INPUTS, VERIFICATION_INPUTS } from './features/dcf/presets';
@@ -65,44 +64,6 @@ function App() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="border-b bg-gradient-to-b from-card to-background">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
-            <div className="space-y-4">
-              <h2 className="text-4xl font-bold leading-tight">
-                Find BUY and TARGET Price
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                Keep track of key financial metrics, market data, and company fundamentals in one place.
-                Share snapshots with colleagues using shareable links.
-              </p>
-              <div className="flex flex-wrap gap-4 pt-4">
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
-                  <span>Financial metrics</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
-                  <span>Market data</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
-                  <span>Shareable links</span>
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <img
-                src="/assets/generated/ivc-hero.dim_1600x900.png"
-                alt="Company Snapshot Tool Illustration"
-                className="w-full h-auto rounded-lg shadow-lg"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Actions */}
@@ -136,9 +97,6 @@ function App() {
 
           {/* Results Section */}
           <ResultsSection inputs={inputs} />
-
-          {/* Live Site Section */}
-          <LiveSiteSection />
         </div>
       </main>
 

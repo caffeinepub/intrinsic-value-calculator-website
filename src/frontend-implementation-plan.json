@@ -1,22 +1,21 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Make Draft URL accessible from main app page",
+  "title": "Remove Capital Return (CR) from Output Values",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Render the existing LiveSiteSection in the main App layout so users can copy the Draft URL and manage a locally-saved Live URL via the existing UI flows.",
+      "id": "REQ-2",
+      "summary": "Remove the Capital Return (CR) output card and all CR-specific state/extraction from the Output Values calculation flow so only Buy/Target price outputs are shown.",
       "acceptanceCriteria": [
-        "The main page renders the existing LiveSiteSection (frontend/src/components/LiveSiteSection.tsx) somewhere sensible (e.g., below the calculator/actions or above the footer).",
-        "The Draft URL is visible and can be copied via the provided UI, showing success/error toasts as currently implemented.",
-        "The Live URL input/save/clear/copy/open flows work as currently implemented, and the saved live URL persists via localStorage across page reloads.",
-        "All user-facing text remains in English."
+        "After clicking \"Calculate Buy & Target price\", the UI shows the Buy and Target price cards but does not show any \"Capital Return (CR)\" section/card.",
+        "Results calculation continues to work without runtime errors or TypeScript build errors (no unused imports/state related to Capital Return remain in ResultsSection).",
+        "The app no longer computes or stores Capital Return values as part of the calculate action (i.e., remove the CR-specific state and formula extraction used only for that removed section)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/components/ResultsSection.tsx",
           "operation": "modify",
-          "description": "Import and render the existing LiveSiteSection component within the App page layout (place it in a sensible location such as below CalculatorActions and/or below ResultsSection, while keeping the current single-column spacing). Ensure it uses the existing toast/Toaster behavior already present in the app and does not introduce any publish-to-live functionality beyond the current informational UI. Verify the component's usage instructions before implementing."
+          "description": "Remove Capital Return UI rendering and related CR-specific state (CapitalReturnValues/crValues) from ResultsSection; remove CapitalReturnSection and calculateAllFormulas imports; update the calculate handler to only compute and store intrinsic/actual values and continue rendering only BuyTargetPriceCards after calculation."
         }
       ]
     }

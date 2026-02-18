@@ -3,9 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { DcfInputs } from '@/features/dcf/presets';
 import { calculateIntrinsicPrice, calculateActualValue } from '@/features/dcf/calculations';
-import { formatCurrency } from '@/lib/format';
 import { useCountUp } from '@/hooks/useCountUp';
-import { TrendingUp, Sparkles, AlertCircle } from 'lucide-react';
+import { TrendingUp, Sparkles } from 'lucide-react';
+import { BuyTargetPriceCards } from './BuyTargetPriceCards';
 
 interface ResultsSectionProps {
   inputs: DcfInputs;
@@ -34,6 +34,7 @@ export function ResultsSection({ inputs }: ResultsSectionProps) {
     setCalculating(true);
     const intrinsic = calculateIntrinsicPrice(inputs);
     const actual = calculateActualValue(inputs);
+    
     setIntrinsicValue(intrinsic);
     setActualValue(actual);
     setTimeout(() => setCalculating(false), 1500);
@@ -41,14 +42,24 @@ export function ResultsSection({ inputs }: ResultsSectionProps) {
 
   const hasCalculated = intrinsicValue !== null && actualValue !== null;
 
-  // Determine display order: lower value first, higher value second
-  const displayLowerValue = hasCalculated && intrinsicValue !== null && actualValue !== null
-    ? (intrinsicValue <= actualValue ? animatedIntrinsic : animatedActual)
+  // Determine Buy (lower) and Target (higher) prices
+  const buyPrice = hasCalculated && intrinsicValue !== null && actualValue !== null
+    ? Math.min(animatedIntrinsic, animatedActual)
     : 0;
   
-  const displayHigherValue = hasCalculated && intrinsicValue !== null && actualValue !== null
-    ? (intrinsicValue <= actualValue ? animatedActual : animatedIntrinsic)
+  const targetPrice = hasCalculated && intrinsicValue !== null && actualValue !== null
+    ? Math.max(animatedIntrinsic, animatedActual)
     : 0;
+
+  // Warning logic
+  const showWarning = hasCalculated && (intrinsicValue === 0 || actualValue === 0);
+  const warningMessage = showWarning
+    ? intrinsicValue === 0 && actualValue === 0
+      ? 'Both Buy price and Target price are zero. Please verify your input values.'
+      : intrinsicValue === 0
+      ? 'Buy price is zero (Intrinsic Price calculation). Please verify your input values.'
+      : 'Target price is zero (Actual Value calculation). Please verify your input values.'
+    : undefined;
 
   return (
     <div className="space-y-6">
@@ -68,7 +79,7 @@ export function ResultsSection({ inputs }: ResultsSectionProps) {
           className="w-full h-auto py-6 flex flex-col items-center gap-2 relative overflow-hidden group"
         >
           <TrendingUp className="h-6 w-6" />
-          <span className="text-lg font-semibold">BUY PRICE ~ TARGET PRICE</span>
+          <span className="text-lg font-semibold">Calculate Buy & Target price</span>
           <span className="text-xs opacity-70">Calculate both metrics</span>
           {calculating && (
             <div className="absolute inset-0 bg-primary/10 animate-pulse" />
@@ -76,27 +87,12 @@ export function ResultsSection({ inputs }: ResultsSectionProps) {
         </Button>
         
         {hasCalculated && (
-          <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-background">
-            <CardContent className="py-6">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary">
-                  {formatCurrency(displayLowerValue)} ~ {formatCurrency(displayHigherValue)}
-                </div>
-              </div>
-              {(intrinsicValue === 0 || actualValue === 0) && (
-                <div className="mt-4 flex items-start gap-2 text-xs text-amber-600 dark:text-amber-500 bg-amber-50 dark:bg-amber-950/20 p-3 rounded">
-                  <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                  <span>
-                    {intrinsicValue === 0 && actualValue === 0
-                      ? 'Both results are zero. Please verify your input values.'
-                      : intrinsicValue === 0
-                      ? 'Intrinsic Price is zero. Please verify your input values.'
-                      : 'Actual Value is zero. Please verify your input values.'}
-                  </span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <BuyTargetPriceCards
+            buyPrice={buyPrice}
+            targetPrice={targetPrice}
+            showWarning={showWarning}
+            warningMessage={warningMessage}
+          />
         )}
       </div>
 
