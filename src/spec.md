@@ -1,13 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Remove the formulas section and industry growth percentage field from the DCF calculator.
+**Goal:** Review and fix Google Analytics implementation to ensure proper tracking while maintaining all existing user-facing functionality.
 
 **Planned changes:**
-- Remove the "View formulas" button and FormulasDialog component from the calculator interface
-- Remove the "Industry Growth Percentage" input field from the DCF inputs form
-- Remove the industryGrowthPercent field from the DcfInputs interface and all preset configurations
-- Update backend DcfInput type to remove industryGrowthPercent field
-- Remove all references to industryGrowthPercent from formulas and calculation logic
+- Verify Google Analytics tracking code is correctly installed in frontend HTML with proper GA4 tracking ID format (G-XXXXXXXXXX)
+- Ensure tracking implementation includes full HTTPS URL format for Internet Computer deployment domain
+- Confirm no user-visible UI elements or functionality are affected by the Analytics implementation
 
-**User-visible outcome:** The calculator no longer displays the formulas dialog button or the industry growth percentage input field, resulting in a simplified interface.
+**User-visible outcome:** No visible changes to the application. Analytics tracking works correctly in the background without affecting user experience or functionality.

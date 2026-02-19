@@ -1,123 +1,74 @@
 {
   "kind": "build_request",
-  "title": "Remove formulas section and industry growth percentage field",
+  "title": "Review and fix Google Analytics implementation",
+  "projectName": "Intri",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Remove the 'View formulas' button from the CalculatorActions component",
+      "text": "Verify that Google Analytics tracking code is properly installed in the frontend HTML with correct GA4 tracking ID format (G-XXXXXXXXXX)",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-last"
         ],
         "quotes": [
-          "Remove section View formulas"
+          "You can check but make sure No effect will be for user"
         ]
       },
       "acceptanceCriteria": [
-        "The 'View formulas' button is no longer visible in the calculator actions",
-        "The FormulasDialog component is no longer rendered or accessible"
+        "Google Analytics tracking code exists in frontend/index.html",
+        "Tracking ID follows GA4 format (G-XXXXXXXXXX)",
+        "Tracking code is placed in the correct location (head section)",
+        "No duplicate tracking codes exist"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Remove the FormulasDialog component instantiation and related state from App.tsx",
+      "text": "Ensure the tracking implementation includes the full HTTPS URL format for the Internet Computer deployment domain",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "Remove section View formulas"
+          "msg-last"
         ]
       },
       "acceptanceCriteria": [
-        "FormulasDialog is not imported or used in App.tsx",
-        "Any state managing the formulas dialog visibility is removed"
+        "Google Analytics configuration includes proper domain settings",
+        "URL format includes https:// protocol",
+        "Internet Computer canister URL format is correctly handled"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Remove the 'Industry Growth Percentage' field from the DcfInputsForm component",
+      "text": "Verify that no user-visible UI elements or functionality are affected by the Analytics implementation review",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-last"
         ],
         "quotes": [
-          "Remove the text and button of Industry growth percentage"
+          "make sure No effect will be for user"
         ]
       },
       "acceptanceCriteria": [
-        "The input field for industry growth percentage is not displayed in the form",
-        "No label or description text for industry growth percentage is visible"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Remove the industryGrowthPercent field from the DcfInputs interface in presets.ts and all preset configurations (DEFAULT_INPUTS, EXAMPLE_INPUTS, VERIFICATION_INPUTS)",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "Remove the text and button of Industry growth percentage"
-        ]
-      },
-      "acceptanceCriteria": [
-        "DcfInputs interface no longer includes industryGrowthPercent property",
-        "All preset input objects do not contain industryGrowthPercent values",
-        "TypeScript compilation succeeds without errors"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Update the backend DcfInput record type in main.mo to remove the industryGrowthPercent field",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "Remove the text and button of Industry growth percentage"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend DcfInput type definition does not include industryGrowthPercent",
-        "All backend calculation functions using DcfInput work correctly without this field",
-        "Backend compiles successfully"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Remove any references to industryGrowthPercent from the formulas registry and calculation logic in formulas.ts",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "Remove the text and button of Industry growth percentage"
-        ]
-      },
-      "acceptanceCriteria": [
-        "No formula definitions reference industryGrowthPercent",
-        "All calculations work correctly without the industryGrowthPercent input",
-        "No console errors or undefined value warnings appear"
+        "No changes to any UI components or layouts",
+        "No changes to user interactions or functionality",
+        "Analytics code runs silently in the background",
+        "Application behavior remains identical to current version"
       ]
     }
   ],
   "constraints": [
-    "Preserve all other DCF calculation inputs and functionality",
-    "Maintain existing validation logic for remaining fields",
-    "Keep the calculator's overall layout and styling intact"
+    "Do not modify any user-facing UI components or functionality",
+    "Do not change application behavior or user experience",
+    "Only review and fix Analytics tracking implementation",
+    "Maintain all existing features exactly as they are"
   ],
   "nonGoals": [
-    "Modifying any other calculator features or inputs",
-    "Changing the styling or design of remaining components",
-    "Adding new functionality"
+    "Adding new analytics features or dashboards",
+    "Implementing custom tracking events",
+    "Adding other analytics providers",
+    "Modifying any backend functionality"
   ],
   "imageRequirements": {
     "required": [],

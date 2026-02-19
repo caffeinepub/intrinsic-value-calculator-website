@@ -1,82 +1,55 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Remove formulas section and industry growth percentage field",
+  "title": "Review and fix Google Analytics implementation",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Remove the 'View formulas' button from the CalculatorActions component",
+      "summary": "Verify that Google Analytics tracking code is properly installed in the frontend HTML with correct GA4 tracking ID format (G-XXXXXXXXXX)",
       "acceptanceCriteria": [
-        "The 'View formulas' button is no longer visible in the calculator actions",
-        "The FormulasDialog component is no longer rendered or accessible"
+        "Google Analytics tracking code exists in frontend/index.html",
+        "Tracking ID follows GA4 format (G-XXXXXXXXXX)",
+        "Tracking code is placed in the correct location (head section)",
+        "No duplicate tracking codes exist"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/CalculatorActions.tsx",
+          "path": "frontend/index.html",
           "operation": "modify",
-          "description": "Remove the 'View formulas' button from the action buttons section and its click handler that triggers the formulas dialog"
+          "description": "Review and verify Google Analytics GA4 tracking code installation in the head section. Ensure the tracking ID follows the correct G-XXXXXXXXXX format, verify proper placement in the HTML document head, and check for any duplicate tracking code instances. If the tracking code is missing or incorrectly formatted, add or correct it using the standard GA4 implementation pattern with gtag.js."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Remove the FormulasDialog component instantiation and related state from App.tsx",
+      "summary": "Ensure the tracking implementation includes the full HTTPS URL format for the Internet Computer deployment domain",
       "acceptanceCriteria": [
-        "FormulasDialog is not imported or used in App.tsx",
-        "Any state managing the formulas dialog visibility is removed"
+        "Google Analytics configuration includes proper domain settings",
+        "URL format includes https:// protocol",
+        "Internet Computer canister URL format is correctly handled"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/index.html",
           "operation": "modify",
-          "description": "Remove the FormulasDialog import, remove the showFormulas state and setShowFormulas state setter, remove the FormulasDialog component instantiation, and remove the setShowFormulas prop passed to CalculatorActions"
+          "description": "Review Google Analytics configuration to ensure it properly handles the Internet Computer canister deployment URL format with HTTPS protocol. Verify that any domain or URL configuration in the gtag.js setup correctly references the full https:// URL format and handles the .ic0.app or .icp0.io domain structure appropriately. Update configuration if needed to ensure proper tracking across the IC infrastructure."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Remove the 'Industry Growth Percentage' field from the DcfInputsForm component",
+      "summary": "Verify that no user-visible UI elements or functionality are affected by the Analytics implementation review",
       "acceptanceCriteria": [
-        "The input field for industry growth percentage is not displayed in the form",
-        "No label or description text for industry growth percentage is visible"
+        "No changes to any UI components or layouts",
+        "No changes to user interactions or functionality",
+        "Analytics code runs silently in the background",
+        "Application behavior remains identical to current version"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/DcfInputsForm.tsx",
+          "path": "frontend/index.html",
           "operation": "modify",
-          "description": "Remove the FormField component and associated input element for industryGrowthPercent, including its label, icon, and description text"
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Remove the industryGrowthPercent field from the DcfInputs interface and all preset configurations",
-      "acceptanceCriteria": [
-        "DcfInputs interface no longer includes industryGrowthPercent property",
-        "All preset input objects do not contain industryGrowthPercent values",
-        "TypeScript compilation succeeds without errors"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/features/dcf/presets.ts",
-          "operation": "modify",
-          "description": "Remove the industryGrowthPercent property from the DcfInputs interface definition and remove the industryGrowthPercent field from DEFAULT_INPUTS, EXAMPLE_INPUTS, and VERIFICATION_INPUTS preset objects"
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Remove any references to industryGrowthPercent from the formulas registry and calculation logic",
-      "acceptanceCriteria": [
-        "No formula definitions reference industryGrowthPercent",
-        "All calculations work correctly without the industryGrowthPercent input",
-        "No console errors or undefined value warnings appear"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/features/dcf/formulas.ts",
-          "operation": "modify",
-          "description": "Search for and remove any formula definitions that reference industryGrowthPercent in their expressions or value calculations, ensuring all remaining formulas compile and execute correctly"
+          "description": "Verify that the Google Analytics implementation exists only in the head section as a script tag and does not introduce any visible UI elements, loading indicators, or modify application behavior. Ensure the tracking code runs asynchronously and silently without affecting page load performance or user experience. Confirm no inline styles, visible DOM elements, or blocking scripts are added that could impact the user interface."
         }
       ]
     }

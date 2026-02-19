@@ -1,100 +1,48 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-19T04:16:10.971Z",
+  "generatedAt": "2026-02-19T11:15:41.665Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 6,
-    "implemented": 5,
+    "total": 3,
+    "implemented": 0,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Remove the 'View formulas' button from the CalculatorActions component",
-        "status": "implemented",
+        "summary": "Verify that Google Analytics tracking code is properly installed in the frontend HTML with correct GA4 tracking ID format (G-XXXXXXXXXX)",
+        "status": "missing",
         "plannedFiles": [
-          "frontend/src/components/CalculatorActions.tsx"
+          "frontend/index.html"
         ],
-        "matchedFiles": [
-          "frontend/src/components/CalculatorActions.tsx"
-        ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Remove the FormulasDialog component instantiation and related state from App.tsx",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Remove the 'Industry Growth Percentage' field from the DcfInputsForm component",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/DcfInputsForm.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/DcfInputsForm.tsx"
-        ]
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Remove the industryGrowthPercent field from the DcfInputs interface in presets.ts and all preset configurations (DEFAULT_INPUTS, EXAMPLE_INPUTS, VERIFICATION_INPUTS)",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/features/dcf/presets.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/features/dcf/presets.ts"
-        ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Update the backend DcfInput record type in main.mo to remove the industryGrowthPercent field",
-        "status": "unknown",
-        "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-6",
-        "summary": "Remove any references to industryGrowthPercent from the formulas registry and calculation logic in formulas.ts",
-        "status": "implemented",
+        "id": "REQ-2",
+        "summary": "Ensure the tracking implementation includes the full HTTPS URL format for the Internet Computer deployment domain",
+        "status": "missing",
         "plannedFiles": [
-          "frontend/src/features/dcf/formulas.ts"
+          "frontend/index.html"
         ],
-        "matchedFiles": [
-          "frontend/src/features/dcf/formulas.ts"
-        ]
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Verify that no user-visible UI elements or functionality are affected by the Analytics implementation review",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/index.html"
+        ],
+        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
-    "caffeine.lock.json",
     "feature_evidence.json",
-    "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/CalculatorActions.tsx",
-    "frontend/src/components/DcfInputsForm.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/features/dcf/calculations.ts",
-    "frontend/src/features/dcf/formulas.ts",
-    "frontend/src/features/dcf/presets.ts",
-    "frontend/src/features/dcf/validation.ts",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/hooks/useQueryInputs.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

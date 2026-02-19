@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatCurrency } from '@/lib/format';
 import { Coins } from 'lucide-react';
 
 interface CapitalReturnSectionProps {
@@ -32,18 +31,12 @@ export function CapitalReturnSection({
             <span className="text-sm font-medium text-muted-foreground">
               Initial Capital Return Yearly
             </span>
-            <span className="text-lg font-bold text-foreground">
-              {formatCurrency(initialCapitalReturnYearly)}
-            </span>
           </div>
 
           {/* Initial Capital Return Quarterly */}
           <div className="flex justify-between items-center p-3 bg-card rounded-lg border">
             <span className="text-sm font-medium text-muted-foreground">
               Initial Capital Return Quarterly
-            </span>
-            <span className="text-lg font-bold text-foreground">
-              {formatCurrency(initialCapitalReturnQuarterly)}
             </span>
           </div>
 
@@ -52,18 +45,12 @@ export function CapitalReturnSection({
             <span className="text-sm font-medium text-muted-foreground">
               Initial Average Capital Return
             </span>
-            <span className="text-lg font-bold text-foreground">
-              {formatCurrency(initialAverageCapitalReturn)}
-            </span>
           </div>
 
           {/* Initial Capital Return + Asset */}
           <div className="flex justify-between items-center p-3 bg-accent/10 rounded-lg border-2 border-accent/30">
             <span className="text-sm font-semibold text-foreground">
               Initial Capital Return + Asset
-            </span>
-            <span className="text-xl font-bold text-accent">
-              {formatCurrency(initialCapitalReturnPlusAsset)}
             </span>
           </div>
         </div>

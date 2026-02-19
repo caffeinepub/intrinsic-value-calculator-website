@@ -1,75 +1,48 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
-  "existing_features": [
-    {
-      "id": "feature-remove-the-view-formulas-button-from-the-calculatoractions-component",
-      "title": "Remove the 'View formulas' button from the CalculatorActions component",
-      "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-remove-the-formulasdialog-component-instantiation-and-related-state-from-app-tsx",
-      "title": "Remove the FormulasDialog component instantiation and related state from App.tsx",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-remove-the-industry-growth-percentage-field-from-the-dcfinputsform-component",
-      "title": "Remove the 'Industry Growth Percentage' field from the DcfInputsForm component",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-remove-the-industrygrowthpercent-field-from-the-dcfinputs-interface-in-presets-ts-and-all-preset-configurations-default-inputs-example-inputs-verification-inputs",
-      "title": "Remove the industryGrowthPercent field from the DcfInputs interface in presets.ts and all preset configurations (DEFAULT_INPUTS, EXAMPLE_INPUTS, VERIFICATION_INPUTS)",
-      "reqIds": [
-        "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-remove-any-references-to-industrygrowthpercent-from-the-formulas-registry-and-calculation-logic-in-formulas-ts",
-      "title": "Remove any references to industryGrowthPercent from the formulas registry and calculation logic in formulas.ts",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    }
+  "summary": "Caffeine app with Google Analytics integration",
+  "architectural_notes": [
+    "Google Analytics tracking being integrated for traffic monitoring"
   ],
+  "known_issues": [
+    "Google Analytics shows URL as invalid - needs tracking code verification"
+  ],
+  "isFixRequest": true,
+  "existing_features": [],
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Remove 'View formulas' section",
+      "summary": "Review and fix Google Analytics implementation without affecting user experience",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Remove text and button for Industry growth percentage",
-      "reqIds": [],
+      "summary": "Verify that Google Analytics tracking code is properly installed in the frontend HTML with correct GA4 tracking ID format (G-XXXXXXXXXX)",
+      "reqIds": [
+        "REQ-1"
+      ],
       "status": "pending"
     },
     {
-      "id": "AR-7",
-      "summary": "Update the backend DcfInput record type in main.mo to remove the industryGrowthPercent field",
+      "id": "AR-3",
+      "summary": "Ensure the tracking implementation includes the full HTTPS URL format for the Internet Computer deployment domain",
       "reqIds": [
-        "REQ-5"
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Verify that no user-visible UI elements or functionality are affected by the Analytics implementation review",
+      "reqIds": [
+        "REQ-3"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Remove formulas section and industry growth percentage field",
+  "projectName": "Caffeine",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

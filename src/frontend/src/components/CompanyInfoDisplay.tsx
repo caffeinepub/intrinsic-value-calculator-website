@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DcfInputs } from '@/features/dcf/presets';
-import { formatCurrency } from '@/lib/format';
 import { Building2, TrendingUp, DollarSign, BarChart3, PiggyBank } from 'lucide-react';
 
 interface CompanyInfoDisplayProps {
@@ -30,7 +29,6 @@ export function CompanyInfoDisplay({ inputs }: CompanyInfoDisplayProps) {
                 <Building2 className="h-4 w-4" />
                 <span>Share Name</span>
               </div>
-              <p className="text-lg font-semibold">{inputs.shareName}</p>
             </div>
           )}
 
@@ -40,7 +38,6 @@ export function CompanyInfoDisplay({ inputs }: CompanyInfoDisplayProps) {
                 <BarChart3 className="h-4 w-4" />
                 <span>Market Cap</span>
               </div>
-              <p className="text-lg font-semibold">{formatCurrency(inputs.marketCap)}</p>
             </div>
           )}
 
@@ -50,7 +47,6 @@ export function CompanyInfoDisplay({ inputs }: CompanyInfoDisplayProps) {
                 <TrendingUp className="h-4 w-4" />
                 <span>Last Traded Price</span>
               </div>
-              <p className="text-lg font-semibold">{formatCurrency(inputs.ltp)}</p>
             </div>
           )}
 
@@ -60,7 +56,6 @@ export function CompanyInfoDisplay({ inputs }: CompanyInfoDisplayProps) {
                 <DollarSign className="h-4 w-4" />
                 <span>Revenue Last Year</span>
               </div>
-              <p className="text-lg font-semibold">{formatCurrency(inputs.revenueLastYear)}</p>
             </div>
           )}
 
@@ -70,7 +65,6 @@ export function CompanyInfoDisplay({ inputs }: CompanyInfoDisplayProps) {
                 <PiggyBank className="h-4 w-4" />
                 <span>Net Profit Last Year</span>
               </div>
-              <p className="text-lg font-semibold">{formatCurrency(inputs.netProfitLastYear)}</p>
             </div>
           )}
         </div>
