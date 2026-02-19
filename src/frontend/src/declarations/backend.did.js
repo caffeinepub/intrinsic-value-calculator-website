@@ -21,7 +21,6 @@ export const UserProfile = IDL.Record({
 export const DcfInputs = IDL.Record({
   'weightedAveCostOfCapital' : IDL.Float64,
   'sharesOutstanding' : IDL.Float64,
-  'industryGrowthPercent' : IDL.Float64,
   'forecastedFCF' : IDL.Float64,
   'terminalYears' : IDL.Int,
   'actualSharePrice' : IDL.Float64,
@@ -76,7 +75,6 @@ export const idlFactory = ({ IDL }) => {
   const DcfInputs = IDL.Record({
     'weightedAveCostOfCapital' : IDL.Float64,
     'sharesOutstanding' : IDL.Float64,
-    'industryGrowthPercent' : IDL.Float64,
     'forecastedFCF' : IDL.Float64,
     'terminalYears' : IDL.Int,
     'actualSharePrice' : IDL.Float64,

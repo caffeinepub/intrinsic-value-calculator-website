@@ -13,7 +13,6 @@ import type { Principal } from '@icp-sdk/core/principal';
 export interface DcfInputs {
   'weightedAveCostOfCapital' : number,
   'sharesOutstanding' : number,
-  'industryGrowthPercent' : number,
   'forecastedFCF' : number,
   'terminalYears' : bigint,
   'actualSharePrice' : number,

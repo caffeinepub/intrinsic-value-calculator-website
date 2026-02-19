@@ -101,7 +101,6 @@ export interface DcfOutputs {
 export interface DcfInputs {
     weightedAveCostOfCapital: number;
     sharesOutstanding: number;
-    industryGrowthPercent: number;
     forecastedFCF: number;
     terminalYears: bigint;
     actualSharePrice: number;

@@ -1,21 +1,82 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Remove Capital Return (CR) from Output Values",
+  "title": "Remove formulas section and industry growth percentage field",
   "requirements": [
     {
-      "id": "REQ-2",
-      "summary": "Remove the Capital Return (CR) output card and all CR-specific state/extraction from the Output Values calculation flow so only Buy/Target price outputs are shown.",
+      "id": "REQ-1",
+      "summary": "Remove the 'View formulas' button from the CalculatorActions component",
       "acceptanceCriteria": [
-        "After clicking \"Calculate Buy & Target price\", the UI shows the Buy and Target price cards but does not show any \"Capital Return (CR)\" section/card.",
-        "Results calculation continues to work without runtime errors or TypeScript build errors (no unused imports/state related to Capital Return remain in ResultsSection).",
-        "The app no longer computes or stores Capital Return values as part of the calculate action (i.e., remove the CR-specific state and formula extraction used only for that removed section)."
+        "The 'View formulas' button is no longer visible in the calculator actions",
+        "The FormulasDialog component is no longer rendered or accessible"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/ResultsSection.tsx",
+          "path": "frontend/src/components/CalculatorActions.tsx",
           "operation": "modify",
-          "description": "Remove Capital Return UI rendering and related CR-specific state (CapitalReturnValues/crValues) from ResultsSection; remove CapitalReturnSection and calculateAllFormulas imports; update the calculate handler to only compute and store intrinsic/actual values and continue rendering only BuyTargetPriceCards after calculation."
+          "description": "Remove the 'View formulas' button from the action buttons section and its click handler that triggers the formulas dialog"
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Remove the FormulasDialog component instantiation and related state from App.tsx",
+      "acceptanceCriteria": [
+        "FormulasDialog is not imported or used in App.tsx",
+        "Any state managing the formulas dialog visibility is removed"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Remove the FormulasDialog import, remove the showFormulas state and setShowFormulas state setter, remove the FormulasDialog component instantiation, and remove the setShowFormulas prop passed to CalculatorActions"
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Remove the 'Industry Growth Percentage' field from the DcfInputsForm component",
+      "acceptanceCriteria": [
+        "The input field for industry growth percentage is not displayed in the form",
+        "No label or description text for industry growth percentage is visible"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/DcfInputsForm.tsx",
+          "operation": "modify",
+          "description": "Remove the FormField component and associated input element for industryGrowthPercent, including its label, icon, and description text"
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Remove the industryGrowthPercent field from the DcfInputs interface and all preset configurations",
+      "acceptanceCriteria": [
+        "DcfInputs interface no longer includes industryGrowthPercent property",
+        "All preset input objects do not contain industryGrowthPercent values",
+        "TypeScript compilation succeeds without errors"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/dcf/presets.ts",
+          "operation": "modify",
+          "description": "Remove the industryGrowthPercent property from the DcfInputs interface definition and remove the industryGrowthPercent field from DEFAULT_INPUTS, EXAMPLE_INPUTS, and VERIFICATION_INPUTS preset objects"
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Remove any references to industryGrowthPercent from the formulas registry and calculation logic",
+      "acceptanceCriteria": [
+        "No formula definitions reference industryGrowthPercent",
+        "All calculations work correctly without the industryGrowthPercent input",
+        "No console errors or undefined value warnings appear"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/dcf/formulas.ts",
+          "operation": "modify",
+          "description": "Search for and remove any formula definitions that reference industryGrowthPercent in their expressions or value calculations, ensuring all remaining formulas compile and execute correctly"
         }
       ]
     }

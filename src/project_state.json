@@ -4,19 +4,72 @@
   "summary": "New project",
   "architectural_notes": [],
   "known_issues": [],
-  "isFixRequest": true,
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-undo-the-most-recently-added-capital-return-cr-output-section-by-removing-the-capital-return-card-and-its-supporting-state-calculation-from-the-output-values-area-so-that-only-the-buy-target-price-outputs-are-shown-after-calculation",
-      "title": "Undo the most recently added \"Capital Return (CR)\" output section by removing the Capital Return card and its supporting state/calculation from the Output Values area, so that only the Buy/Target price outputs are shown after calculation.",
+      "id": "feature-remove-the-view-formulas-button-from-the-calculatoractions-component",
+      "title": "Remove the 'View formulas' button from the CalculatorActions component",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-formulasdialog-component-instantiation-and-related-state-from-app-tsx",
+      "title": "Remove the FormulasDialog component instantiation and related state from App.tsx",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-remove-the-industry-growth-percentage-field-from-the-dcfinputsform-component",
+      "title": "Remove the 'Industry Growth Percentage' field from the DcfInputsForm component",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-industrygrowthpercent-field-from-the-dcfinputs-interface-in-presets-ts-and-all-preset-configurations-default-inputs-example-inputs-verification-inputs",
+      "title": "Remove the industryGrowthPercent field from the DcfInputs interface in presets.ts and all preset configurations (DEFAULT_INPUTS, EXAMPLE_INPUTS, VERIFICATION_INPUTS)",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-any-references-to-industrygrowthpercent-from-the-formulas-registry-and-calculation-logic-in-formulas-ts",
+      "title": "Remove any references to industryGrowthPercent from the formulas registry and calculation logic in formulas.ts",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
     }
   ],
-  "new_feature_requests": [],
-  "projectName": "Intri",
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Remove 'View formulas' section",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Remove text and button for Industry growth percentage",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Update the backend DcfInput record type in main.mo to remove the industryGrowthPercent field",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Remove formulas section and industry growth percentage field",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

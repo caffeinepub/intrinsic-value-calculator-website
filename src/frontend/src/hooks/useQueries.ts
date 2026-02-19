@@ -7,7 +7,7 @@ import type { DcfInputs as BackendDcfInputs } from '@/backend';
  * Map frontend DcfInputs to backend DcfInputs format
  */
 function mapToBackendInputs(inputs: DcfInputs): BackendDcfInputs {
-  const { marketCap, ltp, pbRatio, netProfitLastYear, revenueLastYear, revenueLastQuarter, industryGrowthPercent } = inputs;
+  const { marketCap, ltp, netProfitLastYear, revenueLastYear, revenueLastQuarter } = inputs;
   
   // Calculate total shares = Market cap / ltp
   const sharesOutstanding = ltp > 0 ? marketCap / ltp : 0;
@@ -29,7 +29,6 @@ function mapToBackendInputs(inputs: DcfInputs): BackendDcfInputs {
     actualSharePrice: ltp,
     revenueLastQuarter,
     revenueLastYear,
-    industryGrowthPercent,
   };
 }
 

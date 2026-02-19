@@ -3,6 +3,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { DcfInputsForm } from './components/DcfInputsForm';
 import { CalculatorActions } from './components/CalculatorActions';
 import { ResultsSection } from './components/ResultsSection';
+import { CompanyInfoDisplay } from './components/CompanyInfoDisplay';
 import { useQueryInputs } from './hooks/useQueryInputs';
 import { validateInputs } from './features/dcf/validation';
 import { DEFAULT_INPUTS, EXAMPLE_INPUTS, VERIFICATION_INPUTS } from './features/dcf/presets';
@@ -78,8 +79,12 @@ function App() {
 
         {/* Single column layout */}
         <div className="max-w-2xl mx-auto space-y-8">
+          {/* Company Info Display */}
+          <CompanyInfoDisplay inputs={inputs} />
+
+          {/* Input Form */}
           <div>
-            <h2 className="text-2xl font-bold mb-4">Company Information</h2>
+            <h2 className="text-2xl font-bold mb-4">Company Snapshot</h2>
             {errors.length > 0 && (
               <div className="mb-4 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
                 <p className="text-sm font-medium text-destructive">

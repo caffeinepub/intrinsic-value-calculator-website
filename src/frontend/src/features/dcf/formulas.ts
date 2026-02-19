@@ -41,7 +41,6 @@ export interface FormulasRegistry {
   totalShares: FormulaDefinition;
   bookValue: FormulaDefinition;
   initialGrowth: FormulaDefinition;
-  industryGrowth: FormulaDefinition;
   
   // Intermediate formulas (B-Q)
   B: FormulaDefinition;
@@ -89,7 +88,6 @@ export function calculateAllFormulas(inputs: DcfInputs): FormulasRegistry {
     resultUpdatedSince6Years,
     psuOrNot,
     netNpaNbfc,
-    industryGrowthPercent,
   } = inputs;
 
   // Total Shares = Market cap / LTP
@@ -117,15 +115,6 @@ export function calculateAllFormulas(inputs: DcfInputs): FormulasRegistry {
     expression: '(Revenue last quarter × 4) - Revenue last year',
     value: initialGrowthValue,
     description: 'Annualized quarterly revenue growth',
-  };
-
-  // Industry Growth = Market cap × Industry Growth % ÷ 100
-  const industryGrowthValue = safeNum(marketCap) * safeNum(industryGrowthPercent) / 100;
-  const industryGrowth: FormulaDefinition = {
-    name: 'Industry Growth',
-    expression: 'Market cap × Industry Growth % ÷ 100',
-    value: industryGrowthValue,
-    description: 'Industry-adjusted growth value',
   };
 
   // B = Revenue last year ÷ Market cap
@@ -329,7 +318,6 @@ export function calculateAllFormulas(inputs: DcfInputs): FormulasRegistry {
     totalShares,
     bookValue,
     initialGrowth,
-    industryGrowth,
     B,
     C,
     D,
@@ -364,7 +352,6 @@ export function getFormulasArray(inputs: DcfInputs): FormulaDefinition[] {
     registry.totalShares,
     registry.bookValue,
     registry.initialGrowth,
-    registry.industryGrowth,
     registry.B,
     registry.C,
     registry.D,

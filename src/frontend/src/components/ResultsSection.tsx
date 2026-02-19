@@ -64,9 +64,12 @@ export function ResultsSection({ inputs }: ResultsSectionProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold mb-2">Output Values</h2>
+        <h2 className="text-2xl font-bold mb-2">Company Information</h2>
         <p className="text-muted-foreground">
           Calculate per-share metrics based on your company snapshot
+        </p>
+        <p className="text-sm text-muted-foreground mt-1">
+          Value in Cr.
         </p>
       </div>
 

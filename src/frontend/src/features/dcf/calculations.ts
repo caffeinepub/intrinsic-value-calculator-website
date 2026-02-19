@@ -12,7 +12,6 @@ export interface HiddenCalculations {
   G: number;
   H: number;
   initialGrowth: number;
-  industryGrowth: number;
   K: number;
   L: number;
   M: number;
@@ -45,7 +44,6 @@ export function calculateHiddenValues(inputs: DcfInputs): HiddenCalculations {
     G: registry.G.value,
     H: registry.H.value,
     initialGrowth: registry.initialGrowth.value,
-    industryGrowth: registry.industryGrowth.value,
     K: registry.K.value,
     L: registry.L.value,
     M: registry.M.value,

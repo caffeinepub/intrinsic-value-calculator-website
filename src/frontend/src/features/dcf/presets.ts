@@ -7,17 +7,15 @@ export interface DcfInputs {
   netProfitLastYear: number;
   revenueLastQuarter: number;
   netProfitLastQuarter: number;
-  pbRatio: number; // Price to Book ratio
-  publicHolding: number; // as decimal (0.50 = 50%)
-  promoterPledgeQuantity: number; // as decimal (0.125 = 12.5%)
+  pbRatio: number; // Price to Book Ratio
+  publicHolding: number; // Stored as decimal (0-1)
+  promoterPledgeQuantity: number; // Stored as decimal (0-1)
   resultUpdatedSince6Years: boolean;
   psuOrNot: boolean; // Public Sector Undertaking
-  netNpaNbfc: number; // Net Non-Performing Assets for NBFC, as decimal (0.032 = 3.2%)
-  industryGrowthPercent: number; // J - Industry growth percentage (5 = 5%)
+  netNpaNbfc: number; // Net Non-Performing Assets (NBFC) - stored as decimal (0-1)
 }
 
 export const DEFAULT_INPUTS: DcfInputs = {
-  // Company Snapshot defaults
   shareName: '',
   marketCap: 0,
   ltp: 0,
@@ -31,44 +29,36 @@ export const DEFAULT_INPUTS: DcfInputs = {
   resultUpdatedSince6Years: true,
   psuOrNot: false,
   netNpaNbfc: 0,
-  industryGrowthPercent: 0,
 };
 
 export const EXAMPLE_INPUTS: DcfInputs = {
-  // Company Snapshot example values
   shareName: 'Example Corp',
-  marketCap: 150000000000, // ₹150B
+  marketCap: 150000000000, // 150B
   ltp: 150,
-  revenueLastYear: 50000000000, // ₹50B
-  netProfitLastYear: 8000000000, // ₹8B
-  revenueLastQuarter: 13000000000, // ₹13B
-  netProfitLastQuarter: 2100000000, // ₹2.1B
+  revenueLastYear: 50000000000, // 50B
+  netProfitLastYear: 8000000000, // 8B
+  revenueLastQuarter: 13000000000, // 13B
+  netProfitLastQuarter: 2100000000, // 2.1B
   pbRatio: 3.5,
   publicHolding: 0.65, // 65%
   promoterPledgeQuantity: 0.125, // 12.5%
   resultUpdatedSince6Years: true,
   psuOrNot: false,
   netNpaNbfc: 0.032, // 3.2%
-  industryGrowthPercent: 5, // 5%
 };
 
-/**
- * Verification preset for dev checks
- * This preset is designed to produce specific expected outputs
- */
 export const VERIFICATION_INPUTS: DcfInputs = {
   shareName: 'Verification Test',
-  marketCap: 100000000000,
+  marketCap: 100000000000, // 100B
   ltp: 100,
-  revenueLastYear: 40000000000,
-  netProfitLastYear: 5000000000,
-  revenueLastQuarter: 11000000000,
-  netProfitLastQuarter: 1400000000,
-  pbRatio: 2.5,
-  publicHolding: 0.60,
-  promoterPledgeQuantity: 0.10,
+  revenueLastYear: 40000000000, // 40B
+  netProfitLastYear: 6000000000, // 6B
+  revenueLastQuarter: 11000000000, // 11B
+  netProfitLastQuarter: 1600000000, // 1.6B
+  pbRatio: 3.0,
+  publicHolding: 0.60, // 60%
+  promoterPledgeQuantity: 0.10, // 10%
   resultUpdatedSince6Years: true,
   psuOrNot: false,
-  netNpaNbfc: 0.02,
-  industryGrowthPercent: 5,
+  netNpaNbfc: 0.025, // 2.5%
 };
