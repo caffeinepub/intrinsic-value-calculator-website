@@ -1,6 +1,6 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { formatCurrency } from '@/lib/format';
-import { TrendingDown, TrendingUp, AlertCircle } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
+import { formatCurrency } from "@/lib/format";
+import { AlertCircle, TrendingDown, TrendingUp } from "lucide-react";
 
 interface BuyTargetPriceCardsProps {
   buyPrice: number;

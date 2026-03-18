@@ -1,10 +1,16 @@
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Card, CardContent } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { DcfInputs } from '@/features/dcf/presets';
-import { getFormulasArray } from '@/features/dcf/formulas';
-import { formatNumber, formatCurrency } from '@/lib/format';
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { getFormulasArray } from "@/features/dcf/formulas";
+import type { DcfInputs } from "@/features/dcf/presets";
+import { formatCurrency, formatNumber } from "@/lib/format";
 
 interface FormulasDialogProps {
   open: boolean;
@@ -12,7 +18,11 @@ interface FormulasDialogProps {
   inputs: DcfInputs;
 }
 
-export function FormulasDialog({ open, onOpenChange, inputs }: FormulasDialogProps) {
+export function FormulasDialog({
+  open,
+  onOpenChange,
+  inputs,
+}: FormulasDialogProps) {
   const formulas = getFormulasArray(inputs);
 
   // Group formulas by category
@@ -21,7 +31,12 @@ export function FormulasDialog({ open, onOpenChange, inputs }: FormulasDialogPro
   const capitalReturnFormulas = formulas.slice(18, 22); // Capital return calculations
   const outputFormulas = formulas.slice(22); // Total Market Cap, Intrinsic Price, Actual Value
 
-  const renderFormulaCard = (formula: { name: string; expression: string; value: number; description?: string }) => (
+  const renderFormulaCard = (formula: {
+    name: string;
+    expression: string;
+    value: number;
+    description?: string;
+  }) => (
     <Card key={formula.name} className="bg-muted/30">
       <CardContent className="p-4">
         <div className="space-y-2">
@@ -29,19 +44,25 @@ export function FormulasDialog({ open, onOpenChange, inputs }: FormulasDialogPro
             <div className="flex-1">
               <h4 className="font-semibold text-sm">{formula.name}</h4>
               {formula.description && (
-                <p className="text-xs text-muted-foreground mt-1">{formula.description}</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {formula.description}
+                </p>
               )}
             </div>
             <div className="text-right">
               <p className="text-sm font-mono font-medium">
-                {formula.name.includes('Price') || formula.name.includes('Value') || formula.name.includes('Cap')
+                {formula.name.includes("Price") ||
+                formula.name.includes("Value") ||
+                formula.name.includes("Cap")
                   ? formatCurrency(formula.value)
                   : formatNumber(formula.value)}
               </p>
             </div>
           </div>
           <div className="pt-2 border-t border-border/50">
-            <p className="text-xs font-mono text-muted-foreground">{formula.expression}</p>
+            <p className="text-xs font-mono text-muted-foreground">
+              {formula.expression}
+            </p>
           </div>
         </div>
       </CardContent>
@@ -54,7 +75,8 @@ export function FormulasDialog({ open, onOpenChange, inputs }: FormulasDialogPro
         <DialogHeader>
           <DialogTitle>All Formulas</DialogTitle>
           <DialogDescription>
-            Complete list of formulas used in the Company Snapshot Tool with current calculated values
+            Complete list of formulas used in the Company Snapshot Tool with
+            current calculated values
           </DialogDescription>
         </DialogHeader>
 

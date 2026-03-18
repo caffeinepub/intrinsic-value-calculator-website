@@ -1,20 +1,42 @@
-import { useMemo } from 'react';
-import { Toaster } from '@/components/ui/sonner';
-import { DcfInputsForm } from './components/DcfInputsForm';
-import { CalculatorActions } from './components/CalculatorActions';
-import { ResultsSection } from './components/ResultsSection';
-import { CompanyInfoDisplay } from './components/CompanyInfoDisplay';
-import { useQueryInputs } from './hooks/useQueryInputs';
-import { validateInputs } from './features/dcf/validation';
-import { DEFAULT_INPUTS, EXAMPLE_INPUTS, VERIFICATION_INPUTS } from './features/dcf/presets';
-import { runDevCheck } from './features/dcf/devChecks';
-import { Calculator } from 'lucide-react';
-import { SiX, SiLinkedin, SiGithub } from 'react-icons/si';
-import { toast } from 'sonner';
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Toaster } from "@/components/ui/sonner";
+import { Textarea } from "@/components/ui/textarea";
+import { Calculator, Mail, MessageSquare, User } from "lucide-react";
+import { useMemo, useState } from "react";
+import { SiGithub, SiLinkedin, SiX } from "react-icons/si";
+import { toast } from "sonner";
+import { CalculatorActions } from "./components/CalculatorActions";
+import { CompanyInfoDisplay } from "./components/CompanyInfoDisplay";
+import { DcfInputsForm } from "./components/DcfInputsForm";
+import { ResultsSection } from "./components/ResultsSection";
+import { runDevCheck } from "./features/dcf/devChecks";
+import {
+  DEFAULT_INPUTS,
+  EXAMPLE_INPUTS,
+  VERIFICATION_INPUTS,
+} from "./features/dcf/presets";
+import { validateInputs } from "./features/dcf/validation";
+import { useQueryInputs } from "./hooks/useQueryInputs";
 
 function App() {
   const { inputs, updateInputs, copyShareableLink } = useQueryInputs();
   const errors = useMemo(() => validateInputs(inputs), [inputs]);
+
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [contactSubmitting, setContactSubmitting] = useState(false);
 
   const handleUseExample = () => {
     updateInputs(EXAMPLE_INPUTS);
@@ -25,25 +47,39 @@ function App() {
   };
 
   const handleRunDevCheck = () => {
-    // Load verification inputs
     updateInputs(VERIFICATION_INPUTS);
-    
-    // Run the check after a brief delay to allow state to update
     setTimeout(() => {
       const result = runDevCheck(VERIFICATION_INPUTS);
-      
       if (result.passed) {
-        toast.success('Dev Check Passed! ✅', {
+        toast.success("Dev Check Passed! ✅", {
           description: result.message,
           duration: 5000,
         });
       } else {
-        toast.error('Dev Check Failed ❌', {
+        toast.error("Dev Check Failed ❌", {
           description: result.message,
           duration: 5000,
         });
       }
     }, 100);
+  };
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (
+      !contactForm.name.trim() ||
+      !contactForm.email.trim() ||
+      !contactForm.message.trim()
+    ) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+    setContactSubmitting(true);
+    setTimeout(() => {
+      setContactSubmitting(false);
+      setContactForm({ name: "", email: "", message: "" });
+      toast.success("Message sent! We'll get back to you soon. 🙏");
+    }, 800);
   };
 
   return (
@@ -91,17 +127,125 @@ function App() {
                   Please fix the following errors:
                 </p>
                 <ul className="mt-2 text-sm text-destructive list-disc list-inside">
-                  {errors.map((error, i) => (
-                    <li key={i}>{error.message}</li>
+                  {errors.map((error) => (
+                    <li key={error.message}>{error.message}</li>
                   ))}
                 </ul>
               </div>
             )}
-            <DcfInputsForm inputs={inputs} onChange={updateInputs} errors={errors} />
+            <DcfInputsForm
+              inputs={inputs}
+              onChange={updateInputs}
+              errors={errors}
+            />
           </div>
 
           {/* Results Section */}
           <ResultsSection inputs={inputs} />
+
+          {/* Contact Us Section */}
+          <section data-ocid="contact.section">
+            <Card className="border-2">
+              <CardHeader className="text-center pb-2">
+                <div className="flex justify-center mb-3">
+                  <div className="p-3 bg-primary/10 rounded-full">
+                    <Mail className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+                <CardTitle className="text-2xl font-bold">Contact Us</CardTitle>
+                <CardDescription className="text-base">
+                  Have questions or feedback? We'd love to hear from you.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <form
+                  onSubmit={handleContactSubmit}
+                  className="space-y-5"
+                  data-ocid="contact.dialog"
+                >
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="contact-name"
+                      className="flex items-center gap-2"
+                    >
+                      <User className="h-4 w-4 text-muted-foreground" />
+                      Name
+                    </Label>
+                    <Input
+                      id="contact-name"
+                      data-ocid="contact.input"
+                      placeholder="Your full name"
+                      value={contactForm.name}
+                      onChange={(e) =>
+                        setContactForm((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="contact-email"
+                      className="flex items-center gap-2"
+                    >
+                      <Mail className="h-4 w-4 text-muted-foreground" />
+                      Email
+                    </Label>
+                    <Input
+                      id="contact-email"
+                      type="email"
+                      data-ocid="contact.input"
+                      placeholder="your@email.com"
+                      value={contactForm.email}
+                      onChange={(e) =>
+                        setContactForm((prev) => ({
+                          ...prev,
+                          email: e.target.value,
+                        }))
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="contact-message"
+                      className="flex items-center gap-2"
+                    >
+                      <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                      Message
+                    </Label>
+                    <Textarea
+                      id="contact-message"
+                      data-ocid="contact.textarea"
+                      placeholder="Write your message here..."
+                      rows={4}
+                      value={contactForm.message}
+                      onChange={(e) =>
+                        setContactForm((prev) => ({
+                          ...prev,
+                          message: e.target.value,
+                        }))
+                      }
+                      required
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={contactSubmitting}
+                    data-ocid="contact.submit_button"
+                  >
+                    {contactSubmitting ? "Sending..." : "Send Message"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </section>
         </div>
       </main>
 
@@ -110,10 +254,10 @@ function App() {
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} Built with ❤️ using{' '}
+              © {new Date().getFullYear()} Built with ❤️ using{" "}
               <a
                 href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(
-                  window.location.hostname
+                  window.location.hostname,
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"

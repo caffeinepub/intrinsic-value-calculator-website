@@ -1,11 +1,14 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { DcfInputs } from '@/features/dcf/presets';
-import { calculateIntrinsicPrice, calculateActualValue } from '@/features/dcf/calculations';
-import { useCountUp } from '@/hooks/useCountUp';
-import { TrendingUp, Sparkles } from 'lucide-react';
-import { BuyTargetPriceCards } from './BuyTargetPriceCards';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  calculateActualValue,
+  calculateIntrinsicPrice,
+} from "@/features/dcf/calculations";
+import type { DcfInputs } from "@/features/dcf/presets";
+import { useCountUp } from "@/hooks/useCountUp";
+import { Sparkles, TrendingUp } from "lucide-react";
+import { useState } from "react";
+import { BuyTargetPriceCards } from "./BuyTargetPriceCards";
 
 interface ResultsSectionProps {
   inputs: DcfInputs;
@@ -34,7 +37,7 @@ export function ResultsSection({ inputs }: ResultsSectionProps) {
     setCalculating(true);
     const intrinsic = calculateIntrinsicPrice(inputs);
     const actual = calculateActualValue(inputs);
-    
+
     setIntrinsicValue(intrinsic);
     setActualValue(actual);
     setTimeout(() => setCalculating(false), 1500);
@@ -43,22 +46,25 @@ export function ResultsSection({ inputs }: ResultsSectionProps) {
   const hasCalculated = intrinsicValue !== null && actualValue !== null;
 
   // Determine Buy (lower) and Target (higher) prices
-  const buyPrice = hasCalculated && intrinsicValue !== null && actualValue !== null
-    ? Math.min(animatedIntrinsic, animatedActual)
-    : 0;
-  
-  const targetPrice = hasCalculated && intrinsicValue !== null && actualValue !== null
-    ? Math.max(animatedIntrinsic, animatedActual)
-    : 0;
+  const buyPrice =
+    hasCalculated && intrinsicValue !== null && actualValue !== null
+      ? Math.min(animatedIntrinsic, animatedActual)
+      : 0;
+
+  const targetPrice =
+    hasCalculated && intrinsicValue !== null && actualValue !== null
+      ? Math.max(animatedIntrinsic, animatedActual)
+      : 0;
 
   // Warning logic
-  const showWarning = hasCalculated && (intrinsicValue === 0 || actualValue === 0);
+  const showWarning =
+    hasCalculated && (intrinsicValue === 0 || actualValue === 0);
   const warningMessage = showWarning
     ? intrinsicValue === 0 && actualValue === 0
-      ? 'Both Buy price and Target price are zero. Please verify your input values.'
+      ? "Both Buy price and Target price are zero. Please verify your input values."
       : intrinsicValue === 0
-      ? 'Buy price is zero (Intrinsic Price calculation). Please verify your input values.'
-      : 'Target price is zero (Actual Value calculation). Please verify your input values.'
+        ? "Buy price is zero (Intrinsic Price calculation). Please verify your input values."
+        : "Target price is zero (Actual Value calculation). Please verify your input values."
     : undefined;
 
   return (
@@ -68,27 +74,27 @@ export function ResultsSection({ inputs }: ResultsSectionProps) {
         <p className="text-muted-foreground">
           Calculate per-share metrics based on your company snapshot
         </p>
-        <p className="text-sm text-muted-foreground mt-1">
-          Value in Cr.
-        </p>
+        <p className="text-sm text-muted-foreground mt-1">Value in Cr.</p>
       </div>
 
       {/* Combined Action Button */}
       <div className="space-y-4">
         <Button
           size="lg"
-          variant={hasCalculated ? 'default' : 'outline'}
+          variant={hasCalculated ? "default" : "outline"}
           onClick={handleCalculateBoth}
           className="w-full h-auto py-6 flex flex-col items-center gap-2 relative overflow-hidden group"
         >
           <TrendingUp className="h-6 w-6" />
-          <span className="text-lg font-semibold">Calculate Buy & Target price</span>
+          <span className="text-lg font-semibold">
+            Calculate Buy & Target price
+          </span>
           <span className="text-xs opacity-70">Calculate both metrics</span>
           {calculating && (
             <div className="absolute inset-0 bg-primary/10 animate-pulse" />
           )}
         </Button>
-        
+
         {hasCalculated && (
           <BuyTargetPriceCards
             buyPrice={buyPrice}

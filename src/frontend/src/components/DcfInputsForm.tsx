@@ -1,10 +1,23 @@
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { DcfInputs } from '../features/dcf/presets';
-import { ValidationError, getFieldError } from '../features/dcf/validation';
-import { parseNumericInput, parsePercentInput, toPercentString } from '../lib/number';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import type { DcfInputs } from "../features/dcf/presets";
+import {
+  type ValidationError,
+  getFieldError,
+} from "../features/dcf/validation";
+import {
+  parseNumericInput,
+  parsePercentInput,
+  toPercentString,
+} from "../lib/number";
 
 interface DcfInputsFormProps {
   inputs: DcfInputs;
@@ -12,7 +25,11 @@ interface DcfInputsFormProps {
   errors: ValidationError[];
 }
 
-export function DcfInputsForm({ inputs, onChange, errors }: DcfInputsFormProps) {
+export function DcfInputsForm({
+  inputs,
+  onChange,
+  errors,
+}: DcfInputsFormProps) {
   const updateField = (field: keyof DcfInputs, value: any) => {
     onChange({ ...inputs, [field]: value });
   };
@@ -31,11 +48,13 @@ export function DcfInputsForm({ inputs, onChange, errors }: DcfInputsFormProps) 
               id="shareName"
               type="text"
               value={inputs.shareName}
-              onChange={(e) => updateField('shareName', e.target.value)}
+              onChange={(e) => updateField("shareName", e.target.value)}
               placeholder="Example Corp"
             />
-            {getFieldError(errors, 'shareName') && (
-              <p className="text-sm text-destructive">{getFieldError(errors, 'shareName')}</p>
+            {getFieldError(errors, "shareName") && (
+              <p className="text-sm text-destructive">
+                {getFieldError(errors, "shareName")}
+              </p>
             )}
           </div>
 
@@ -44,12 +63,16 @@ export function DcfInputsForm({ inputs, onChange, errors }: DcfInputsFormProps) 
             <Input
               id="marketCap"
               type="number"
-              value={inputs.marketCap || ''}
-              onChange={(e) => updateField('marketCap', parseNumericInput(e.target.value))}
+              value={inputs.marketCap || ""}
+              onChange={(e) =>
+                updateField("marketCap", parseNumericInput(e.target.value))
+              }
               placeholder="150000000000"
             />
-            {getFieldError(errors, 'marketCap') && (
-              <p className="text-sm text-destructive">{getFieldError(errors, 'marketCap')}</p>
+            {getFieldError(errors, "marketCap") && (
+              <p className="text-sm text-destructive">
+                {getFieldError(errors, "marketCap")}
+              </p>
             )}
           </div>
 
@@ -58,13 +81,17 @@ export function DcfInputsForm({ inputs, onChange, errors }: DcfInputsFormProps) 
             <Input
               id="ltp"
               type="number"
-              value={inputs.ltp || ''}
-              onChange={(e) => updateField('ltp', parseNumericInput(e.target.value))}
+              value={inputs.ltp || ""}
+              onChange={(e) =>
+                updateField("ltp", parseNumericInput(e.target.value))
+              }
               placeholder="150"
               step="0.01"
             />
-            {getFieldError(errors, 'ltp') && (
-              <p className="text-sm text-destructive">{getFieldError(errors, 'ltp')}</p>
+            {getFieldError(errors, "ltp") && (
+              <p className="text-sm text-destructive">
+                {getFieldError(errors, "ltp")}
+              </p>
             )}
           </div>
 
@@ -73,12 +100,19 @@ export function DcfInputsForm({ inputs, onChange, errors }: DcfInputsFormProps) 
             <Input
               id="revenueLastYear"
               type="number"
-              value={inputs.revenueLastYear || ''}
-              onChange={(e) => updateField('revenueLastYear', parseNumericInput(e.target.value))}
+              value={inputs.revenueLastYear || ""}
+              onChange={(e) =>
+                updateField(
+                  "revenueLastYear",
+                  parseNumericInput(e.target.value),
+                )
+              }
               placeholder="50000000000"
             />
-            {getFieldError(errors, 'revenueLastYear') && (
-              <p className="text-sm text-destructive">{getFieldError(errors, 'revenueLastYear')}</p>
+            {getFieldError(errors, "revenueLastYear") && (
+              <p className="text-sm text-destructive">
+                {getFieldError(errors, "revenueLastYear")}
+              </p>
             )}
           </div>
 
@@ -87,12 +121,19 @@ export function DcfInputsForm({ inputs, onChange, errors }: DcfInputsFormProps) 
             <Input
               id="netProfitLastYear"
               type="number"
-              value={inputs.netProfitLastYear || ''}
-              onChange={(e) => updateField('netProfitLastYear', parseNumericInput(e.target.value))}
+              value={inputs.netProfitLastYear || ""}
+              onChange={(e) =>
+                updateField(
+                  "netProfitLastYear",
+                  parseNumericInput(e.target.value),
+                )
+              }
               placeholder="8000000000"
             />
-            {getFieldError(errors, 'netProfitLastYear') && (
-              <p className="text-sm text-destructive">{getFieldError(errors, 'netProfitLastYear')}</p>
+            {getFieldError(errors, "netProfitLastYear") && (
+              <p className="text-sm text-destructive">
+                {getFieldError(errors, "netProfitLastYear")}
+              </p>
             )}
           </div>
 
@@ -101,26 +142,42 @@ export function DcfInputsForm({ inputs, onChange, errors }: DcfInputsFormProps) 
             <Input
               id="revenueLastQuarter"
               type="number"
-              value={inputs.revenueLastQuarter || ''}
-              onChange={(e) => updateField('revenueLastQuarter', parseNumericInput(e.target.value))}
+              value={inputs.revenueLastQuarter || ""}
+              onChange={(e) =>
+                updateField(
+                  "revenueLastQuarter",
+                  parseNumericInput(e.target.value),
+                )
+              }
               placeholder="13000000000"
             />
-            {getFieldError(errors, 'revenueLastQuarter') && (
-              <p className="text-sm text-destructive">{getFieldError(errors, 'revenueLastQuarter')}</p>
+            {getFieldError(errors, "revenueLastQuarter") && (
+              <p className="text-sm text-destructive">
+                {getFieldError(errors, "revenueLastQuarter")}
+              </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="netProfitLastQuarter">Net Profit Last Quarter (₹)</Label>
+            <Label htmlFor="netProfitLastQuarter">
+              Net Profit Last Quarter (₹)
+            </Label>
             <Input
               id="netProfitLastQuarter"
               type="number"
-              value={inputs.netProfitLastQuarter || ''}
-              onChange={(e) => updateField('netProfitLastQuarter', parseNumericInput(e.target.value))}
+              value={inputs.netProfitLastQuarter || ""}
+              onChange={(e) =>
+                updateField(
+                  "netProfitLastQuarter",
+                  parseNumericInput(e.target.value),
+                )
+              }
               placeholder="2100000000"
             />
-            {getFieldError(errors, 'netProfitLastQuarter') && (
-              <p className="text-sm text-destructive">{getFieldError(errors, 'netProfitLastQuarter')}</p>
+            {getFieldError(errors, "netProfitLastQuarter") && (
+              <p className="text-sm text-destructive">
+                {getFieldError(errors, "netProfitLastQuarter")}
+              </p>
             )}
           </div>
 
@@ -129,13 +186,17 @@ export function DcfInputsForm({ inputs, onChange, errors }: DcfInputsFormProps) 
             <Input
               id="pbRatio"
               type="number"
-              value={inputs.pbRatio || ''}
-              onChange={(e) => updateField('pbRatio', parseNumericInput(e.target.value))}
+              value={inputs.pbRatio || ""}
+              onChange={(e) =>
+                updateField("pbRatio", parseNumericInput(e.target.value))
+              }
               placeholder="3.5"
               step="0.1"
             />
-            {getFieldError(errors, 'pbRatio') && (
-              <p className="text-sm text-destructive">{getFieldError(errors, 'pbRatio')}</p>
+            {getFieldError(errors, "pbRatio") && (
+              <p className="text-sm text-destructive">
+                {getFieldError(errors, "pbRatio")}
+              </p>
             )}
           </div>
 
@@ -145,59 +206,84 @@ export function DcfInputsForm({ inputs, onChange, errors }: DcfInputsFormProps) 
               id="publicHolding"
               type="number"
               value={toPercentString(inputs.publicHolding)}
-              onChange={(e) => updateField('publicHolding', parsePercentInput(e.target.value))}
+              onChange={(e) =>
+                updateField("publicHolding", parsePercentInput(e.target.value))
+              }
               placeholder="65"
               step="0.1"
             />
-            {getFieldError(errors, 'publicHolding') && (
-              <p className="text-sm text-destructive">{getFieldError(errors, 'publicHolding')}</p>
+            {getFieldError(errors, "publicHolding") && (
+              <p className="text-sm text-destructive">
+                {getFieldError(errors, "publicHolding")}
+              </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="promoterPledgeQuantity">Promoter Pledge Quantity (%)</Label>
+            <Label htmlFor="promoterPledgeQuantity">
+              Promoter Pledge Quantity (%)
+            </Label>
             <Input
               id="promoterPledgeQuantity"
               type="number"
               value={toPercentString(inputs.promoterPledgeQuantity)}
-              onChange={(e) => updateField('promoterPledgeQuantity', parsePercentInput(e.target.value))}
+              onChange={(e) =>
+                updateField(
+                  "promoterPledgeQuantity",
+                  parsePercentInput(e.target.value),
+                )
+              }
               placeholder="12.5"
               step="0.1"
             />
-            {getFieldError(errors, 'promoterPledgeQuantity') && (
-              <p className="text-sm text-destructive">{getFieldError(errors, 'promoterPledgeQuantity')}</p>
+            {getFieldError(errors, "promoterPledgeQuantity") && (
+              <p className="text-sm text-destructive">
+                {getFieldError(errors, "promoterPledgeQuantity")}
+              </p>
             )}
           </div>
 
           <div className="space-y-2">
             <Label>Result Updated Since 6 Months</Label>
             <RadioGroup
-              value={inputs.resultUpdatedSince6Years ? 'yes' : 'no'}
-              onValueChange={(value) => updateField('resultUpdatedSince6Years', value === 'yes')}
+              value={inputs.resultUpdatedSince6Years ? "yes" : "no"}
+              onValueChange={(value) =>
+                updateField("resultUpdatedSince6Years", value === "yes")
+              }
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="yes" id="resultUpdated-yes" />
-                <Label htmlFor="resultUpdated-yes" className="font-normal cursor-pointer">
+                <Label
+                  htmlFor="resultUpdated-yes"
+                  className="font-normal cursor-pointer"
+                >
                   Yes
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="no" id="resultUpdated-no" />
-                <Label htmlFor="resultUpdated-no" className="font-normal cursor-pointer">
+                <Label
+                  htmlFor="resultUpdated-no"
+                  className="font-normal cursor-pointer"
+                >
                   No
                 </Label>
               </div>
             </RadioGroup>
-            {getFieldError(errors, 'resultUpdatedSince6Years') && (
-              <p className="text-sm text-destructive">{getFieldError(errors, 'resultUpdatedSince6Years')}</p>
+            {getFieldError(errors, "resultUpdatedSince6Years") && (
+              <p className="text-sm text-destructive">
+                {getFieldError(errors, "resultUpdatedSince6Years")}
+              </p>
             )}
           </div>
 
           <div className="space-y-2">
             <Label>PSU (Public Sector Undertaking)</Label>
             <RadioGroup
-              value={inputs.psuOrNot ? 'yes' : 'no'}
-              onValueChange={(value) => updateField('psuOrNot', value === 'yes')}
+              value={inputs.psuOrNot ? "yes" : "no"}
+              onValueChange={(value) =>
+                updateField("psuOrNot", value === "yes")
+              }
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="yes" id="psu-yes" />
@@ -212,8 +298,10 @@ export function DcfInputsForm({ inputs, onChange, errors }: DcfInputsFormProps) 
                 </Label>
               </div>
             </RadioGroup>
-            {getFieldError(errors, 'psuOrNot') && (
-              <p className="text-sm text-destructive">{getFieldError(errors, 'psuOrNot')}</p>
+            {getFieldError(errors, "psuOrNot") && (
+              <p className="text-sm text-destructive">
+                {getFieldError(errors, "psuOrNot")}
+              </p>
             )}
           </div>
 
@@ -223,12 +311,16 @@ export function DcfInputsForm({ inputs, onChange, errors }: DcfInputsFormProps) 
               id="netNpaNbfc"
               type="number"
               value={toPercentString(inputs.netNpaNbfc)}
-              onChange={(e) => updateField('netNpaNbfc', parsePercentInput(e.target.value))}
+              onChange={(e) =>
+                updateField("netNpaNbfc", parsePercentInput(e.target.value))
+              }
               placeholder="3.2"
               step="0.1"
             />
-            {getFieldError(errors, 'netNpaNbfc') && (
-              <p className="text-sm text-destructive">{getFieldError(errors, 'netNpaNbfc')}</p>
+            {getFieldError(errors, "netNpaNbfc") && (
+              <p className="text-sm text-destructive">
+                {getFieldError(errors, "netNpaNbfc")}
+              </p>
             )}
           </div>
         </CardContent>

@@ -1,5 +1,5 @@
-import { DcfInputs } from './presets';
-import { calculateAllFormulas } from './formulas';
+import { calculateAllFormulas } from "./formulas";
+import type { DcfInputs } from "./presets";
 
 export interface HiddenCalculations {
   totalShares: number;

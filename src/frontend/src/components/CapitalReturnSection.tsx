@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Coins } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Coins } from "lucide-react";
 
 interface CapitalReturnSectionProps {
   initialCapitalReturnYearly: number;
@@ -9,10 +9,10 @@ interface CapitalReturnSectionProps {
 }
 
 export function CapitalReturnSection({
-  initialCapitalReturnYearly,
-  initialCapitalReturnQuarterly,
-  initialAverageCapitalReturn,
-  initialCapitalReturnPlusAsset,
+  initialCapitalReturnYearly: _initialCapitalReturnYearly,
+  initialCapitalReturnQuarterly: _initialCapitalReturnQuarterly,
+  initialAverageCapitalReturn: _initialAverageCapitalReturn,
+  initialCapitalReturnPlusAsset: _initialCapitalReturnPlusAsset,
 }: CapitalReturnSectionProps) {
   return (
     <Card className="border-2 border-accent/20 bg-gradient-to-br from-accent/5 to-background">

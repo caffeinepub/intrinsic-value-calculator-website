@@ -4,13 +4,13 @@
  * @returns true if valid HTTP(S) URL, false otherwise
  */
 export function isValidHttpUrl(urlString: string): boolean {
-  if (!urlString || typeof urlString !== 'string') {
+  if (!urlString || typeof urlString !== "string") {
     return false;
   }
 
   try {
     const url = new URL(urlString.trim());
-    return url.protocol === 'http:' || url.protocol === 'https:';
+    return url.protocol === "http:" || url.protocol === "https:";
   } catch {
     return false;
   }
@@ -25,24 +25,24 @@ export async function safeCopyToClipboard(text: string): Promise<string> {
   // Check if clipboard API is available
   if (!navigator.clipboard) {
     throw new Error(
-      'Clipboard access is not available in your browser. Please copy the URL manually.'
+      "Clipboard access is not available in your browser. Please copy the URL manually.",
     );
   }
 
   try {
     await navigator.clipboard.writeText(text);
-    return 'Copied to clipboard!';
+    return "Copied to clipboard!";
   } catch (error) {
     // Handle permission denied or other clipboard errors
     if (error instanceof Error) {
-      if (error.name === 'NotAllowedError') {
+      if (error.name === "NotAllowedError") {
         throw new Error(
-          'Clipboard access was denied. Please allow clipboard permissions in your browser settings.'
+          "Clipboard access was denied. Please allow clipboard permissions in your browser settings.",
         );
       }
     }
     throw new Error(
-      'Failed to copy to clipboard. Please copy the URL manually.'
+      "Failed to copy to clipboard. Please copy the URL manually.",
     );
   }
 }
@@ -54,14 +54,16 @@ export async function safeCopyToClipboard(text: string): Promise<string> {
  */
 export function safeOpenUrl(url: string): boolean {
   if (!isValidHttpUrl(url)) {
-    throw new Error('Invalid URL. Please enter a valid http:// or https:// URL.');
+    throw new Error(
+      "Invalid URL. Please enter a valid http:// or https:// URL.",
+    );
   }
 
-  const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
-  
+  const newWindow = window.open(url, "_blank", "noopener,noreferrer");
+
   if (!newWindow) {
     throw new Error(
-      'Failed to open URL. Your browser may be blocking pop-ups. Please allow pop-ups for this site or copy the URL to open it manually.'
+      "Failed to open URL. Your browser may be blocking pop-ups. Please allow pop-ups for this site or copy the URL to open it manually.",
     );
   }
 

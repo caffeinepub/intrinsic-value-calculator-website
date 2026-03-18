@@ -16,7 +16,7 @@ export interface DcfInputs {
 }
 
 export const DEFAULT_INPUTS: DcfInputs = {
-  shareName: '',
+  shareName: "",
   marketCap: 0,
   ltp: 0,
   revenueLastYear: 0,
@@ -32,7 +32,7 @@ export const DEFAULT_INPUTS: DcfInputs = {
 };
 
 export const EXAMPLE_INPUTS: DcfInputs = {
-  shareName: 'Example Corp',
+  shareName: "Example Corp",
   marketCap: 150000000000, // 150B
   ltp: 150,
   revenueLastYear: 50000000000, // 50B
@@ -48,7 +48,7 @@ export const EXAMPLE_INPUTS: DcfInputs = {
 };
 
 export const VERIFICATION_INPUTS: DcfInputs = {
-  shareName: 'Verification Test',
+  shareName: "Verification Test",
   marketCap: 100000000000, // 100B
   ltp: 100,
   revenueLastYear: 40000000000, // 40B
@@ -56,8 +56,8 @@ export const VERIFICATION_INPUTS: DcfInputs = {
   revenueLastQuarter: 11000000000, // 11B
   netProfitLastQuarter: 1600000000, // 1.6B
   pbRatio: 3.0,
-  publicHolding: 0.60, // 60%
-  promoterPledgeQuantity: 0.10, // 10%
+  publicHolding: 0.6, // 60%
+  promoterPledgeQuantity: 0.1, // 10%
   resultUpdatedSince6Years: true,
   psuOrNot: false,
   netNpaNbfc: 0.025, // 2.5%

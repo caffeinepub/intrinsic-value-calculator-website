@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { RotateCcw, Sparkles, Link2, FlaskConical } from 'lucide-react';
-import { toast } from 'sonner';
+import { Button } from "@/components/ui/button";
+import { FlaskConical, Link2, RotateCcw, Sparkles } from "lucide-react";
+import { toast } from "sonner";
 
 interface CalculatorActionsProps {
   onUseExample: () => void;
@@ -16,9 +16,9 @@ export function CalculatorActions({
   onRunDevCheck,
 }: CalculatorActionsProps) {
   const handleCopyLink = () => {
-    const url = onCopyLink();
-    toast.success('Link copied to clipboard!', {
-      description: 'Share this link to preserve your current inputs',
+    const _url = onCopyLink();
+    toast.success("Link copied to clipboard!", {
+      description: "Share this link to preserve your current inputs",
     });
   };
 
@@ -39,7 +39,12 @@ export function CalculatorActions({
         Copy Shareable Link
       </Button>
       {isDevelopment && onRunDevCheck && (
-        <Button onClick={onRunDevCheck} variant="outline" size="sm" className="border-amber-500/50 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950">
+        <Button
+          onClick={onRunDevCheck}
+          variant="outline"
+          size="sm"
+          className="border-amber-500/50 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950"
+        >
           <FlaskConical className="h-4 w-4 mr-2" />
           Run Dev Check
         </Button>

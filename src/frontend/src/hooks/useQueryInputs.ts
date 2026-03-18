@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { DcfInputs, DEFAULT_INPUTS } from '../features/dcf/presets';
+import { useState } from "react";
+import { DEFAULT_INPUTS, type DcfInputs } from "../features/dcf/presets";
 
 /**
  * Hook to sync calculator inputs with URL query string
@@ -10,7 +10,7 @@ export function useQueryInputs() {
   const [inputs, setInputs] = useState<DcfInputs>(() => {
     // Try to load from URL on mount
     const params = new URLSearchParams(window.location.search);
-    if (params.has('name') || params.has('mcap')) {
+    if (params.has("name") || params.has("mcap")) {
       return parseInputsFromQuery(params);
     }
     return DEFAULT_INPUTS;
@@ -36,81 +36,109 @@ export function useQueryInputs() {
 
 function parseInputsFromQuery(params: URLSearchParams): DcfInputs {
   // Helper to parse percentage values with backward compatibility
-  const parsePercentValue = (paramValue: string | null, defaultValue: number): number => {
+  const parsePercentValue = (
+    paramValue: string | null,
+    defaultValue: number,
+  ): number => {
     if (!paramValue) return defaultValue;
-    const parsed = parseFloat(paramValue);
-    if (isNaN(parsed)) return defaultValue;
+    const parsed = Number.parseFloat(paramValue);
+    if (Number.isNaN(parsed)) return defaultValue;
     // If value is greater than 1, assume it's in old format (absolute number) and convert to decimal
     // Otherwise, treat as decimal percentage
     return parsed > 1 ? parsed / 100 : parsed;
   };
 
   // Helper to parse boolean values with explicit parameter check
-  const parseBooleanValue = (paramName: string, defaultValue: boolean): boolean => {
+  const parseBooleanValue = (
+    paramName: string,
+    defaultValue: boolean,
+  ): boolean => {
     if (!params.has(paramName)) return defaultValue;
-    return params.get(paramName) === 'true';
+    return params.get(paramName) === "true";
   };
 
   return {
     // Company Snapshot fields
-    shareName: params.get('name') || DEFAULT_INPUTS.shareName,
-    marketCap: parseFloat(params.get('mcap') || String(DEFAULT_INPUTS.marketCap)),
-    ltp: parseFloat(params.get('ltp') || String(DEFAULT_INPUTS.ltp)),
-    revenueLastYear: parseFloat(params.get('revY') || String(DEFAULT_INPUTS.revenueLastYear)),
-    netProfitLastYear: parseFloat(params.get('profY') || String(DEFAULT_INPUTS.netProfitLastYear)),
-    revenueLastQuarter: parseFloat(params.get('revQ') || String(DEFAULT_INPUTS.revenueLastQuarter)),
-    netProfitLastQuarter: parseFloat(params.get('profQ') || String(DEFAULT_INPUTS.netProfitLastQuarter)),
-    pbRatio: parseFloat(params.get('pb') || String(DEFAULT_INPUTS.pbRatio)),
-    publicHolding: parseFloat(params.get('pubHold') || String(DEFAULT_INPUTS.publicHolding)),
-    promoterPledgeQuantity: parsePercentValue(params.get('pledge'), DEFAULT_INPUTS.promoterPledgeQuantity),
-    resultUpdatedSince6Years: parseBooleanValue('res6y', DEFAULT_INPUTS.resultUpdatedSince6Years),
-    psuOrNot: parseBooleanValue('psu', DEFAULT_INPUTS.psuOrNot),
-    netNpaNbfc: parsePercentValue(params.get('npa'), DEFAULT_INPUTS.netNpaNbfc),
+    shareName: params.get("name") || DEFAULT_INPUTS.shareName,
+    marketCap: Number.parseFloat(
+      params.get("mcap") || String(DEFAULT_INPUTS.marketCap),
+    ),
+    ltp: Number.parseFloat(params.get("ltp") || String(DEFAULT_INPUTS.ltp)),
+    revenueLastYear: Number.parseFloat(
+      params.get("revY") || String(DEFAULT_INPUTS.revenueLastYear),
+    ),
+    netProfitLastYear: Number.parseFloat(
+      params.get("profY") || String(DEFAULT_INPUTS.netProfitLastYear),
+    ),
+    revenueLastQuarter: Number.parseFloat(
+      params.get("revQ") || String(DEFAULT_INPUTS.revenueLastQuarter),
+    ),
+    netProfitLastQuarter: Number.parseFloat(
+      params.get("profQ") || String(DEFAULT_INPUTS.netProfitLastQuarter),
+    ),
+    pbRatio: Number.parseFloat(
+      params.get("pb") || String(DEFAULT_INPUTS.pbRatio),
+    ),
+    publicHolding: Number.parseFloat(
+      params.get("pubHold") || String(DEFAULT_INPUTS.publicHolding),
+    ),
+    promoterPledgeQuantity: parsePercentValue(
+      params.get("pledge"),
+      DEFAULT_INPUTS.promoterPledgeQuantity,
+    ),
+    resultUpdatedSince6Years: parseBooleanValue(
+      "res6y",
+      DEFAULT_INPUTS.resultUpdatedSince6Years,
+    ),
+    psuOrNot: parseBooleanValue("psu", DEFAULT_INPUTS.psuOrNot),
+    netNpaNbfc: parsePercentValue(params.get("npa"), DEFAULT_INPUTS.netNpaNbfc),
   };
 }
 
 function encodeInputsToQuery(inputs: DcfInputs): URLSearchParams {
   const params = new URLSearchParams();
-  
+
   // Company Snapshot fields (only include non-default values to keep URLs shorter)
   if (inputs.shareName !== DEFAULT_INPUTS.shareName) {
-    params.set('name', inputs.shareName);
+    params.set("name", inputs.shareName);
   }
   if (inputs.marketCap !== DEFAULT_INPUTS.marketCap) {
-    params.set('mcap', inputs.marketCap.toString());
+    params.set("mcap", inputs.marketCap.toString());
   }
   if (inputs.ltp !== DEFAULT_INPUTS.ltp) {
-    params.set('ltp', inputs.ltp.toString());
+    params.set("ltp", inputs.ltp.toString());
   }
   if (inputs.revenueLastYear !== DEFAULT_INPUTS.revenueLastYear) {
-    params.set('revY', inputs.revenueLastYear.toString());
+    params.set("revY", inputs.revenueLastYear.toString());
   }
   if (inputs.netProfitLastYear !== DEFAULT_INPUTS.netProfitLastYear) {
-    params.set('profY', inputs.netProfitLastYear.toString());
+    params.set("profY", inputs.netProfitLastYear.toString());
   }
   if (inputs.revenueLastQuarter !== DEFAULT_INPUTS.revenueLastQuarter) {
-    params.set('revQ', inputs.revenueLastQuarter.toString());
+    params.set("revQ", inputs.revenueLastQuarter.toString());
   }
   if (inputs.netProfitLastQuarter !== DEFAULT_INPUTS.netProfitLastQuarter) {
-    params.set('profQ', inputs.netProfitLastQuarter.toString());
+    params.set("profQ", inputs.netProfitLastQuarter.toString());
   }
   if (inputs.pbRatio !== DEFAULT_INPUTS.pbRatio) {
-    params.set('pb', inputs.pbRatio.toString());
+    params.set("pb", inputs.pbRatio.toString());
   }
   if (inputs.publicHolding !== DEFAULT_INPUTS.publicHolding) {
-    params.set('pubHold', inputs.publicHolding.toString());
+    params.set("pubHold", inputs.publicHolding.toString());
   }
   if (inputs.promoterPledgeQuantity !== DEFAULT_INPUTS.promoterPledgeQuantity) {
-    params.set('pledge', inputs.promoterPledgeQuantity.toString());
+    params.set("pledge", inputs.promoterPledgeQuantity.toString());
   }
-  if (inputs.resultUpdatedSince6Years !== DEFAULT_INPUTS.resultUpdatedSince6Years) {
-    params.set('res6y', inputs.resultUpdatedSince6Years.toString());
+  if (
+    inputs.resultUpdatedSince6Years !== DEFAULT_INPUTS.resultUpdatedSince6Years
+  ) {
+    params.set("res6y", inputs.resultUpdatedSince6Years.toString());
   }
   if (inputs.psuOrNot !== DEFAULT_INPUTS.psuOrNot) {
-    params.set('psu', inputs.psuOrNot.toString());
+    params.set("psu", inputs.psuOrNot.toString());
   }
   if (inputs.netNpaNbfc !== DEFAULT_INPUTS.netNpaNbfc) {
-    params.set('npa', inputs.netNpaNbfc.toString());
+    params.set("npa", inputs.netNpaNbfc.toString());
   }
 
   return params;

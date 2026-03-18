@@ -1,13 +1,24 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DcfInputs } from '@/features/dcf/presets';
-import { Building2, TrendingUp, DollarSign, BarChart3, PiggyBank } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { DcfInputs } from "@/features/dcf/presets";
+import {
+  BarChart3,
+  Building2,
+  DollarSign,
+  PiggyBank,
+  TrendingUp,
+} from "lucide-react";
 
 interface CompanyInfoDisplayProps {
   inputs: DcfInputs;
 }
 
 export function CompanyInfoDisplay({ inputs }: CompanyInfoDisplayProps) {
-  const hasData = inputs.shareName || inputs.marketCap || inputs.ltp || inputs.revenueLastYear || inputs.netProfitLastYear;
+  const hasData =
+    inputs.shareName ||
+    inputs.marketCap ||
+    inputs.ltp ||
+    inputs.revenueLastYear ||
+    inputs.netProfitLastYear;
 
   if (!hasData) {
     return null;
@@ -50,23 +61,25 @@ export function CompanyInfoDisplay({ inputs }: CompanyInfoDisplayProps) {
             </div>
           )}
 
-          {inputs.revenueLastYear !== null && inputs.revenueLastYear !== undefined && (
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <DollarSign className="h-4 w-4" />
-                <span>Revenue Last Year</span>
+          {inputs.revenueLastYear !== null &&
+            inputs.revenueLastYear !== undefined && (
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <DollarSign className="h-4 w-4" />
+                  <span>Revenue Last Year</span>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {inputs.netProfitLastYear !== null && inputs.netProfitLastYear !== undefined && (
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <PiggyBank className="h-4 w-4" />
-                <span>Net Profit Last Year</span>
+          {inputs.netProfitLastYear !== null &&
+            inputs.netProfitLastYear !== undefined && (
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <PiggyBank className="h-4 w-4" />
+                  <span>Net Profit Last Year</span>
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
         <p className="text-xs text-muted-foreground mt-4 pt-4 border-t">
           Value in Cr.

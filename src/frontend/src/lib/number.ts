@@ -2,11 +2,11 @@
  * Safely parse a numeric input, treating empty strings as 0
  */
 export function parseNumericInput(value: string): number {
-  if (value === '' || value === null || value === undefined) {
+  if (value === "" || value === null || value === undefined) {
     return 0;
   }
-  const parsed = parseFloat(value);
-  return isNaN(parsed) ? 0 : parsed;
+  const parsed = Number.parseFloat(value);
+  return Number.isNaN(parsed) ? 0 : parsed;
 }
 
 /**
@@ -23,4 +23,3 @@ export function parsePercentInput(value: string): number {
 export function toPercentString(decimal: number): string {
   return (decimal * 100).toString();
 }
-
