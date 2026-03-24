@@ -60,6 +60,11 @@ actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
+  // Bootstrap: assign the owner's principal as admin directly into the role map
+  let ownerPrincipal = Principal.fromText("h5jag-iyh7k-ejbeh-phjli-5yywu-svez3-vzqsp-2jaln-zohyd-jbdqp-7qe");
+  accessControlState.userRoles.add(ownerPrincipal, #admin);
+  accessControlState.adminAssigned := true;
+
   // User Profile APIs
   public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
@@ -211,4 +216,3 @@ actor {
     };
   };
 };
-

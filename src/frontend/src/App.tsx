@@ -12,19 +12,17 @@ import {
   ChevronDown,
   ChevronUp,
   Lightbulb,
-  LogIn,
-  LogOut,
   Mail,
   Shield,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
+import { useMemo } from "react";
 import { SiGithub, SiLinkedin, SiX } from "react-icons/si";
 import { toast } from "sonner";
 import { AdminMessages } from "./components/AdminMessages";
 import { CalculatorActions } from "./components/CalculatorActions";
 import { CompanyInfoDisplay } from "./components/CompanyInfoDisplay";
 import { DcfInputsForm } from "./components/DcfInputsForm";
-import { ProfileForm } from "./components/ProfileForm";
 import { ResultsSection } from "./components/ResultsSection";
 import { runDevCheck } from "./features/dcf/devChecks";
 import {
@@ -33,8 +31,6 @@ import {
   VERIFICATION_INPUTS,
 } from "./features/dcf/presets";
 import { validateInputs } from "./features/dcf/validation";
-import { useActor } from "./hooks/useActor";
-import { useInternetIdentity } from "./hooks/useInternetIdentity";
 import { useQueryInputs } from "./hooks/useQueryInputs";
 
 const INTRI_IDEAS: { name: string; details?: string }[] = [
@@ -77,175 +73,11 @@ const TERMS = [
   },
 ];
 
-function LoginScreen() {
-  const { login, isLoggingIn, isInitializing } = useInternetIdentity();
-
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Calculator className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold">Intri</h1>
-              <p className="text-sm text-muted-foreground">
-                Track and analyze company financial metrics
-              </p>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="flex-1 flex items-center justify-center px-4 py-16">
-        <Card className="w-full max-w-md border-2 text-center">
-          <CardHeader>
-            <div className="flex justify-center mb-4">
-              <div className="p-4 bg-primary/10 rounded-full">
-                <LogIn className="h-8 w-8 text-primary" />
-              </div>
-            </div>
-            <CardTitle className="text-2xl font-bold">
-              Welcome to Intri
-            </CardTitle>
-            <CardDescription className="text-base">
-              Please login to access the Intrinsic Value Calculator.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Button
-              onClick={login}
-              disabled={isLoggingIn || isInitializing}
-              className="w-full"
-              size="lg"
-              data-ocid="login.primary_button"
-            >
-              {isLoggingIn ? "Logging in..." : "Login with Internet Identity"}
-            </Button>
-            <p className="text-xs text-muted-foreground">
-              Internet Identity is a secure, privacy-preserving login system. No
-              passwords required.
-            </p>
-          </CardContent>
-        </Card>
-      </main>
-
-      <footer className="border-t">
-        <div className="container mx-auto px-4 py-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} Intri &mdash; Built with{" "}
-            <a
-              href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              caffeine.ai
-            </a>
-          </p>
-        </div>
-      </footer>
-
-      <Toaster />
-    </div>
-  );
-}
-
 function App() {
   const { inputs, updateInputs, copyShareableLink } = useQueryInputs();
   const errors = useMemo(() => validateInputs(inputs), [inputs]);
   const [showAdmin, setShowAdmin] = useState(false);
   const [expandedIdea, setExpandedIdea] = useState<string | null>(null);
-  const { identity, clear, isInitializing } = useInternetIdentity();
-  const { actor, isFetching: isActorFetching } = useActor();
-
-  // Profile gate state: null = unknown, false = needs profile, true = has profile
-  const [profileStatus, setProfileStatus] = useState<boolean | null>(null);
-
-  const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
-
-  useEffect(() => {
-    if (!isAuthenticated || !actor || isActorFetching) return;
-    let cancelled = false;
-    const checkProfile = async () => {
-      try {
-        const profile = await actor.getCallerUserProfile();
-        if (!cancelled) {
-          setProfileStatus(profile !== null);
-        }
-      } catch {
-        // On error, allow through
-        if (!cancelled) setProfileStatus(true);
-      }
-    };
-    checkProfile();
-    return () => {
-      cancelled = true;
-    };
-  }, [isAuthenticated, actor, isActorFetching]);
-
-  // Show loading
-  if (isInitializing) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-muted-foreground text-sm">Loading...</div>
-      </div>
-    );
-  }
-
-  // Show login
-  if (!isAuthenticated) {
-    return <LoginScreen />;
-  }
-
-  // Checking profile
-  if (profileStatus === null) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-muted-foreground text-sm">Loading profile...</div>
-        <Toaster />
-      </div>
-    );
-  }
-
-  // Show profile form
-  if (profileStatus === false) {
-    return (
-      <>
-        <div className="min-h-screen bg-background flex flex-col">
-          <header className="border-b bg-card">
-            <div className="container mx-auto px-4 py-6">
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <Calculator className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold">Intri</h1>
-                    <p className="text-sm text-muted-foreground">
-                      Track and analyze company financial metrics
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={clear}
-                  className="flex items-center gap-2"
-                >
-                  <LogOut className="h-4 w-4" />
-                  Logout
-                </Button>
-              </div>
-            </div>
-          </header>
-          <ProfileForm onComplete={() => setProfileStatus(true)} />
-        </div>
-        <Toaster />
-      </>
-    );
-  }
 
   const handleUseExample = () => {
     updateInputs(EXAMPLE_INPUTS);
@@ -284,28 +116,16 @@ function App() {
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <Calculator className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold">Intri</h1>
-                <p className="text-sm text-muted-foreground">
-                  Track and analyze company financial metrics
-                </p>
-              </div>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <Calculator className="h-6 w-6 text-primary" />
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={clear}
-              className="flex items-center gap-2"
-              data-ocid="header.secondary_button"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </Button>
+            <div>
+              <h1 className="text-2xl font-bold">Intri</h1>
+              <p className="text-sm text-muted-foreground">
+                Track and analyze company financial metrics
+              </p>
+            </div>
           </div>
         </div>
       </header>
