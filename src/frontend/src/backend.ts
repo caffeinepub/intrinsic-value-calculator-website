@@ -98,6 +98,13 @@ export interface DcfOutputs {
     profitability: number;
     totalShares: number;
 }
+export interface ContactMessage {
+    id: bigint;
+    name: string;
+    email: string;
+    message: string;
+    timestamp: bigint;
+}
 export interface DcfInputs {
     weightedAveCostOfCapital: number;
     sharesOutstanding: number;
@@ -121,6 +128,7 @@ export enum UserRole {
 export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    getAllContactMessages(): Promise<Array<ContactMessage>>;
     getAllUserProfiles(): Promise<Array<[Principal, UserProfile]>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
@@ -129,6 +137,7 @@ export interface backendInterface {
     isCallerAdmin(): Promise<boolean>;
     processDcf(inputs: DcfInputs): Promise<DcfOutputs>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    submitContactMessage(name: string, email: string, message: string): Promise<void>;
 }
 import type { UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
@@ -158,6 +167,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n1(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async getAllContactMessages(): Promise<Array<ContactMessage>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllContactMessages();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllContactMessages();
             return result;
         }
     }
@@ -270,6 +293,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.saveCallerUserProfile(arg0);
+            return result;
+        }
+    }
+    async submitContactMessage(arg0: string, arg1: string, arg2: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.submitContactMessage(arg0, arg1, arg2);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.submitContactMessage(arg0, arg1, arg2);
             return result;
         }
     }

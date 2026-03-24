@@ -10,6 +10,13 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface ContactMessage {
+  'id' : bigint,
+  'name' : string,
+  'email' : string,
+  'message' : string,
+  'timestamp' : bigint,
+}
 export interface DcfInputs {
   'weightedAveCostOfCapital' : number,
   'sharesOutstanding' : number,
@@ -40,6 +47,7 @@ export type UserRole = { 'admin' : null } |
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'getAllContactMessages' : ActorMethod<[], Array<ContactMessage>>,
   'getAllUserProfiles' : ActorMethod<[], Array<[Principal, UserProfile]>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
@@ -48,6 +56,7 @@ export interface _SERVICE {
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'processDcf' : ActorMethod<[DcfInputs], DcfOutputs>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'submitContactMessage' : ActorMethod<[string, string, string], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

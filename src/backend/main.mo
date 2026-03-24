@@ -3,10 +3,11 @@ import Int "mo:core/Int";
 import Map "mo:core/Map";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
+import Iter "mo:core/Iter";
+import Nat "mo:core/Nat";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-import Nat "mo:core/Nat";
-import Iter "mo:core/Iter";
+import Time "mo:core/Time";
 
 
 
@@ -16,6 +17,15 @@ actor {
     mobileNumber : Text;
     firstName : Text;
     lastName : Text;
+  };
+
+  // Contact Message Types
+  public type ContactMessage = {
+    id : Nat;
+    name : Text;
+    email : Text;
+    message : Text;
+    timestamp : Int;
   };
 
   // DCF Calculation Types
@@ -40,7 +50,10 @@ actor {
     adjustedValuation : Float;
   };
 
-  // Storage for User Profiles
+  // Storage for User Profiles and Messages
+  var contactMessages = Map.empty<Nat, ContactMessage>();
+  var lastMessageId = 0;
+
   let userProfiles = Map.empty<Principal, UserProfile>();
 
   // Authorization State
@@ -81,6 +94,28 @@ actor {
       Runtime.trap("Unauthorized: Can only view your own profile count");
     };
     ?userProfiles.size();
+  };
+
+  // Contact Message APIs
+  public shared ({ caller }) func submitContactMessage(name : Text, email : Text, message : Text) : async () {
+    lastMessageId += 1;
+
+    let contactMessage : ContactMessage = {
+      id = lastMessageId;
+      name;
+      email;
+      message;
+      timestamp = Time.now();
+    };
+
+    contactMessages.add(lastMessageId, contactMessage);
+  };
+
+  public query ({ caller }) func getAllContactMessages() : async [ContactMessage] {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can fetch all contact messages");
+    };
+    contactMessages.values().toArray();
   };
 
   // DCF Calculation Helper Functions
@@ -176,3 +211,4 @@ actor {
     };
   };
 };
+

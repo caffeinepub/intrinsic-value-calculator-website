@@ -13,6 +13,13 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
+export const ContactMessage = IDL.Record({
+  'id' : IDL.Nat,
+  'name' : IDL.Text,
+  'email' : IDL.Text,
+  'message' : IDL.Text,
+  'timestamp' : IDL.Int,
+});
 export const UserProfile = IDL.Record({
   'mobileNumber' : IDL.Text,
   'lastName' : IDL.Text,
@@ -41,6 +48,7 @@ export const DcfOutputs = IDL.Record({
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'getAllContactMessages' : IDL.Func([], [IDL.Vec(ContactMessage)], ['query']),
   'getAllUserProfiles' : IDL.Func(
       [],
       [IDL.Vec(IDL.Tuple(IDL.Principal, UserProfile))],
@@ -57,6 +65,7 @@ export const idlService = IDL.Service({
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'processDcf' : IDL.Func([DcfInputs], [DcfOutputs], ['query']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'submitContactMessage' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
 });
 
 export const idlInitArgs = [];
@@ -66,6 +75,13 @@ export const idlFactory = ({ IDL }) => {
     'admin' : IDL.Null,
     'user' : IDL.Null,
     'guest' : IDL.Null,
+  });
+  const ContactMessage = IDL.Record({
+    'id' : IDL.Nat,
+    'name' : IDL.Text,
+    'email' : IDL.Text,
+    'message' : IDL.Text,
+    'timestamp' : IDL.Int,
   });
   const UserProfile = IDL.Record({
     'mobileNumber' : IDL.Text,
@@ -95,6 +111,11 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'getAllContactMessages' : IDL.Func(
+        [],
+        [IDL.Vec(ContactMessage)],
+        ['query'],
+      ),
     'getAllUserProfiles' : IDL.Func(
         [],
         [IDL.Vec(IDL.Tuple(IDL.Principal, UserProfile))],
@@ -111,6 +132,7 @@ export const idlFactory = ({ IDL }) => {
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'processDcf' : IDL.Func([DcfInputs], [DcfOutputs], ['query']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'submitContactMessage' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
   });
 };
 

@@ -6,14 +6,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Toaster } from "@/components/ui/sonner";
-import { Textarea } from "@/components/ui/textarea";
-import { Calculator, Mail, MessageSquare, User } from "lucide-react";
+import { Calculator, Lightbulb, Mail, Shield } from "lucide-react";
 import { useMemo, useState } from "react";
 import { SiGithub, SiLinkedin, SiX } from "react-icons/si";
 import { toast } from "sonner";
+import { AdminMessages } from "./components/AdminMessages";
 import { CalculatorActions } from "./components/CalculatorActions";
 import { CompanyInfoDisplay } from "./components/CompanyInfoDisplay";
 import { DcfInputsForm } from "./components/DcfInputsForm";
@@ -27,25 +25,54 @@ import {
 import { validateInputs } from "./features/dcf/validation";
 import { useQueryInputs } from "./hooks/useQueryInputs";
 
+const INTRI_IDEAS = [
+  "Eicher Motors",
+  "Dr. Reddy's",
+  "M&M",
+  "NMDC",
+  "Bajaj Finance",
+  "Reliance",
+  "Amara Raja Battery",
+  "CDSL",
+  "Adani Ports",
+  "Eternal",
+  "Adani Power",
+];
+
+const TERMS = [
+  {
+    title: "No Financial Advice",
+    body: "Intri is a financial calculator tool for informational purposes only. Nothing on this platform constitutes financial, investment, legal, or tax advice. Always consult a qualified financial advisor before making any investment decisions.",
+  },
+  {
+    title: "No Liability",
+    body: "Intri and its creators are not liable for any losses, damages, or financial outcomes resulting from the use of this tool. All calculations are based on user-supplied data and standard valuation models — results may not reflect actual market conditions.",
+  },
+  {
+    title: "Data Accuracy",
+    body: "The accuracy of results depends entirely on the data entered by the user. Intri does not verify, validate, or source any financial data independently. Users are solely responsible for ensuring their input data is correct and up to date.",
+  },
+  {
+    title: "Usage Terms",
+    body: "This tool is intended for personal and educational use only. Commercial redistribution or resale of calculated outputs without permission is prohibited. By using Intri, you agree to these terms.",
+  },
+  {
+    title: "Investment Risk",
+    body: "All investments carry risk. Past performance is not indicative of future results. Intrinsic value estimates are theoretical models and do not guarantee any actual price movement or return on investment.",
+  },
+];
+
 function App() {
   const { inputs, updateInputs, copyShareableLink } = useQueryInputs();
   const errors = useMemo(() => validateInputs(inputs), [inputs]);
-
-  const [contactForm, setContactForm] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [contactSubmitting, setContactSubmitting] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
 
   const handleUseExample = () => {
     updateInputs(EXAMPLE_INPUTS);
   };
-
   const handleReset = () => {
     updateInputs(DEFAULT_INPUTS);
   };
-
   const handleRunDevCheck = () => {
     updateInputs(VERIFICATION_INPUTS);
     setTimeout(() => {
@@ -64,27 +91,17 @@ function App() {
     }, 100);
   };
 
-  const handleContactSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (
-      !contactForm.name.trim() ||
-      !contactForm.email.trim() ||
-      !contactForm.message.trim()
-    ) {
-      toast.error("Please fill in all fields.");
-      return;
-    }
-    setContactSubmitting(true);
-    setTimeout(() => {
-      setContactSubmitting(false);
-      setContactForm({ name: "", email: "", message: "" });
-      toast.success("Message sent! We'll get back to you soon. 🙏");
-    }, 800);
-  };
+  if (showAdmin) {
+    return (
+      <>
+        <AdminMessages onBack={() => setShowAdmin(false)} />
+        <Toaster />
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-3">
@@ -101,9 +118,7 @@ function App() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {/* Actions */}
         <div className="mb-6">
           <CalculatorActions
             onUseExample={handleUseExample}
@@ -113,12 +128,9 @@ function App() {
           />
         </div>
 
-        {/* Single column layout */}
         <div className="max-w-2xl mx-auto space-y-8">
-          {/* Company Info Display */}
           <CompanyInfoDisplay inputs={inputs} />
 
-          {/* Input Form */}
           <div>
             <h2 className="text-2xl font-bold mb-4">Company Snapshot</h2>
             {errors.length > 0 && (
@@ -140,13 +152,44 @@ function App() {
             />
           </div>
 
-          {/* Results Section */}
           <ResultsSection inputs={inputs} />
 
-          {/* Contact Us Section */}
+          <section data-ocid="intri-ideas.section">
+            <Card className="border-2">
+              <CardHeader className="text-center">
+                <div className="flex justify-center mb-3">
+                  <div className="p-3 bg-primary/10 rounded-full">
+                    <Lightbulb className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+                <CardTitle className="text-2xl font-bold">
+                  Intri Ideas
+                </CardTitle>
+                <CardDescription className="text-base">
+                  Smart recommendations to guide your investment decisions.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  {INTRI_IDEAS.map((idea, index) => (
+                    <li
+                      key={idea}
+                      className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                    >
+                      <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">
+                        {index + 1}
+                      </span>
+                      <span className="font-medium">{idea}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          </section>
+
           <section data-ocid="contact.section">
             <Card className="border-2">
-              <CardHeader className="text-center pb-2">
+              <CardHeader className="text-center">
                 <div className="flex justify-center mb-3">
                   <div className="p-3 bg-primary/10 rounded-full">
                     <Mail className="h-6 w-6 text-primary" />
@@ -154,111 +197,76 @@ function App() {
                 </div>
                 <CardTitle className="text-2xl font-bold">Contact Us</CardTitle>
                 <CardDescription className="text-base">
-                  Have questions or feedback? We'd love to hear from you.
+                  Have questions or feedback? Reach out to us directly.
+                </CardDescription>
+                <div className="mt-3 flex items-center justify-center gap-2">
+                  <Mail className="h-4 w-4 text-primary" />
+                  <a
+                    href="mailto:arpitm204@gmail.com"
+                    className="text-primary hover:underline font-medium"
+                  >
+                    arpitm204@gmail.com
+                  </a>
+                </div>
+              </CardHeader>
+            </Card>
+          </section>
+
+          <section data-ocid="terms.section">
+            <Card className="border-2">
+              <CardHeader className="text-center">
+                <div className="flex justify-center mb-3">
+                  <div className="p-3 bg-primary/10 rounded-full">
+                    <Shield className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+                <CardTitle className="text-2xl font-bold">
+                  Terms and Conditions
+                </CardTitle>
+                <CardDescription className="text-base">
+                  Please read these terms carefully before using Intri.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="pt-4">
-                <form
-                  onSubmit={handleContactSubmit}
-                  className="space-y-5"
-                  data-ocid="contact.dialog"
-                >
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="contact-name"
-                      className="flex items-center gap-2"
+              <CardContent>
+                <ul className="space-y-4">
+                  {TERMS.map((term, index) => (
+                    <li
+                      key={term.title}
+                      className="p-4 rounded-lg bg-muted/50 border border-border/50"
                     >
-                      <User className="h-4 w-4 text-muted-foreground" />
-                      Name
-                    </Label>
-                    <Input
-                      id="contact-name"
-                      data-ocid="contact.input"
-                      placeholder="Your full name"
-                      value={contactForm.name}
-                      onChange={(e) =>
-                        setContactForm((prev) => ({
-                          ...prev,
-                          name: e.target.value,
-                        }))
-                      }
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="contact-email"
-                      className="flex items-center gap-2"
-                    >
-                      <Mail className="h-4 w-4 text-muted-foreground" />
-                      Email
-                    </Label>
-                    <Input
-                      id="contact-email"
-                      type="email"
-                      data-ocid="contact.input"
-                      placeholder="your@email.com"
-                      value={contactForm.email}
-                      onChange={(e) =>
-                        setContactForm((prev) => ({
-                          ...prev,
-                          email: e.target.value,
-                        }))
-                      }
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="contact-message"
-                      className="flex items-center gap-2"
-                    >
-                      <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                      Message
-                    </Label>
-                    <Textarea
-                      id="contact-message"
-                      data-ocid="contact.textarea"
-                      placeholder="Write your message here..."
-                      rows={4}
-                      value={contactForm.message}
-                      onChange={(e) =>
-                        setContactForm((prev) => ({
-                          ...prev,
-                          message: e.target.value,
-                        }))
-                      }
-                      required
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={contactSubmitting}
-                    data-ocid="contact.submit_button"
-                  >
-                    {contactSubmitting ? "Sending..." : "Send Message"}
-                  </Button>
-                </form>
+                      <div className="flex items-start gap-3">
+                        <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center mt-0.5">
+                          {index + 1}
+                        </span>
+                        <div>
+                          <p className="font-semibold text-sm mb-1">
+                            {term.title}
+                          </p>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            {term.body}
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-4 text-xs text-muted-foreground text-center">
+                  By using Intri, you acknowledge that you have read and agree
+                  to these terms.
+                </p>
               </CardContent>
             </Card>
           </section>
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="border-t mt-16">
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-sm text-muted-foreground">
               © {new Date().getFullYear()} Built with ❤️ using{" "}
               <a
-                href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(
-                  window.location.hostname,
-                )}`}
+                href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:underline"
@@ -266,7 +274,15 @@ function App() {
                 caffeine.ai
               </a>
             </div>
-            <div className="flex gap-4">
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => setShowAdmin(true)}
+                className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+                data-ocid="admin.link"
+              >
+                Admin
+              </button>
               <a
                 href="https://twitter.com"
                 target="_blank"
