@@ -14,12 +14,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Loader2, RefreshCw, ShieldAlert } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { ContactMessage } from "../backend.d";
 import { useActor } from "../hooks/useActor";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
+import { AdminUsers } from "./AdminUsers";
 
 interface AdminMessagesProps {
   onBack: () => void;
@@ -96,7 +98,7 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back
             </Button>
-            <h1 className="text-xl font-bold">Admin — Contact Messages</h1>
+            <h1 className="text-xl font-bold">Admin Panel</h1>
           </div>
         </div>
       </header>
@@ -197,95 +199,114 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
           isAdmin === true && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-semibold">
-                    Contact Messages ({messages.length})
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    Logged in as admin:{" "}
-                    <span className="font-mono text-xs">
-                      {identity?.getPrincipal().toString()}
-                    </span>
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={fetchMessages}
-                    disabled={loading}
-                    data-ocid="admin.secondary_button"
-                  >
-                    {loading ? (
-                      <Loader2 className="h-4 w-4 animate-spin mr-1" />
-                    ) : (
-                      <RefreshCw className="h-4 w-4 mr-1" />
-                    )}
-                    Refresh
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => clear()}
-                    data-ocid="admin.secondary_button"
-                  >
-                    Log Out
-                  </Button>
-                </div>
+                <p className="text-sm text-muted-foreground">
+                  Logged in as admin:{" "}
+                  <span className="font-mono text-xs">
+                    {identity?.getPrincipal().toString()}
+                  </span>
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => clear()}
+                  data-ocid="admin.secondary_button"
+                >
+                  Log Out
+                </Button>
               </div>
 
-              {loading ? (
-                <div
-                  className="flex justify-center py-16"
-                  data-ocid="admin.loading_state"
-                >
-                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-                </div>
-              ) : messages.length === 0 ? (
-                <Card data-ocid="admin.empty_state">
-                  <CardContent className="py-16 text-center text-muted-foreground">
-                    No messages yet.
-                  </CardContent>
-                </Card>
-              ) : (
-                <Card data-ocid="admin.table">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Message</TableHead>
-                        <TableHead className="whitespace-nowrap">
-                          Date / Time
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {messages.map((msg, i) => (
-                        <TableRow
-                          key={String(msg.id)}
-                          data-ocid={`admin.item.${i + 1}`}
-                        >
-                          <TableCell className="font-medium whitespace-nowrap">
-                            {msg.name}
-                          </TableCell>
-                          <TableCell className="whitespace-nowrap">
-                            {msg.email}
-                          </TableCell>
-                          <TableCell className="max-w-xs">
-                            <p className="whitespace-pre-wrap break-words">
-                              {msg.message}
-                            </p>
-                          </TableCell>
-                          <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
-                            {formatDate(msg.timestamp)}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Card>
-              )}
+              <Tabs defaultValue="messages" data-ocid="admin.tab">
+                <TabsList className="mb-4">
+                  <TabsTrigger value="messages" data-ocid="admin.messages.tab">
+                    Contact Messages
+                  </TabsTrigger>
+                  <TabsTrigger value="users" data-ocid="admin.users.tab">
+                    User Profiles
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="messages">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-muted-foreground">
+                        {messages.length} message
+                        {messages.length !== 1 ? "s" : ""}
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={fetchMessages}
+                        disabled={loading}
+                        data-ocid="admin.messages.secondary_button"
+                      >
+                        {loading ? (
+                          <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                        ) : (
+                          <RefreshCw className="h-4 w-4 mr-1" />
+                        )}
+                        Refresh
+                      </Button>
+                    </div>
+
+                    {loading ? (
+                      <div
+                        className="flex justify-center py-16"
+                        data-ocid="admin.messages.loading_state"
+                      >
+                        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                      </div>
+                    ) : messages.length === 0 ? (
+                      <Card data-ocid="admin.messages.empty_state">
+                        <CardContent className="py-16 text-center text-muted-foreground">
+                          No messages yet.
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      <Card data-ocid="admin.messages.table">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Name</TableHead>
+                              <TableHead>Email</TableHead>
+                              <TableHead>Message</TableHead>
+                              <TableHead className="whitespace-nowrap">
+                                Date / Time
+                              </TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {messages.map((msg, i) => (
+                              <TableRow
+                                key={String(msg.id)}
+                                data-ocid={`admin.messages.item.${i + 1}`}
+                              >
+                                <TableCell className="font-medium whitespace-nowrap">
+                                  {msg.name}
+                                </TableCell>
+                                <TableCell className="whitespace-nowrap">
+                                  {msg.email}
+                                </TableCell>
+                                <TableCell className="max-w-xs">
+                                  <p className="whitespace-pre-wrap break-words">
+                                    {msg.message}
+                                  </p>
+                                </TableCell>
+                                <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                                  {formatDate(msg.timestamp)}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </Card>
+                    )}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="users">
+                  <AdminUsers />
+                </TabsContent>
+              </Tabs>
             </div>
           )}
       </main>

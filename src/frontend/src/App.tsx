@@ -7,14 +7,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Toaster } from "@/components/ui/sonner";
-import { Calculator, Lightbulb, Mail, Shield } from "lucide-react";
-import { useMemo, useState } from "react";
+import {
+  Calculator,
+  ChevronDown,
+  ChevronUp,
+  Lightbulb,
+  LogIn,
+  LogOut,
+  Mail,
+  Shield,
+} from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { SiGithub, SiLinkedin, SiX } from "react-icons/si";
 import { toast } from "sonner";
 import { AdminMessages } from "./components/AdminMessages";
 import { CalculatorActions } from "./components/CalculatorActions";
 import { CompanyInfoDisplay } from "./components/CompanyInfoDisplay";
 import { DcfInputsForm } from "./components/DcfInputsForm";
+import { ProfileForm } from "./components/ProfileForm";
 import { ResultsSection } from "./components/ResultsSection";
 import { runDevCheck } from "./features/dcf/devChecks";
 import {
@@ -23,20 +33,25 @@ import {
   VERIFICATION_INPUTS,
 } from "./features/dcf/presets";
 import { validateInputs } from "./features/dcf/validation";
+import { useActor } from "./hooks/useActor";
+import { useInternetIdentity } from "./hooks/useInternetIdentity";
 import { useQueryInputs } from "./hooks/useQueryInputs";
 
-const INTRI_IDEAS = [
-  "Eicher Motors",
-  "Dr. Reddy's",
-  "M&M",
-  "NMDC",
-  "Bajaj Finance",
-  "Reliance",
-  "Amara Raja Battery",
-  "CDSL",
-  "Adani Ports",
-  "Eternal",
-  "Adani Power",
+const INTRI_IDEAS: { name: string; details?: string }[] = [
+  {
+    name: "Dr. Reddy's",
+    details:
+      "At the time of article publishing, Dr. Reddy's share was trading at \u20b91,260. Our Intri Model suggests a Buy Price of \u20b91,584 \u2014 which means the share is currently trading at undervalue. The target price is \u20b92,343 (3\u20135 year horizon). As per our knowledge, Pharma sector stocks can brighten your portfolio. Pharma stocks are considered safe and innovation-based, making them a strong long-term bet.",
+  },
+  { name: "M&M" },
+  { name: "NMDC" },
+  { name: "Bajaj Finance" },
+  { name: "Reliance" },
+  { name: "Amara Raja Battery" },
+  { name: "CDSL" },
+  { name: "Adani Ports" },
+  { name: "Eternal" },
+  { name: "Adani Power" },
 ];
 
 const TERMS = [
@@ -46,7 +61,7 @@ const TERMS = [
   },
   {
     title: "No Liability",
-    body: "Intri and its creators are not liable for any losses, damages, or financial outcomes resulting from the use of this tool. All calculations are based on user-supplied data and standard valuation models — results may not reflect actual market conditions.",
+    body: "Intri and its creators are not liable for any losses, damages, or financial outcomes resulting from the use of this tool. All calculations are based on user-supplied data and standard valuation models \u2014 results may not reflect actual market conditions.",
   },
   {
     title: "Data Accuracy",
@@ -62,10 +77,175 @@ const TERMS = [
   },
 ];
 
+function LoginScreen() {
+  const { login, isLoggingIn, isInitializing } = useInternetIdentity();
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      <header className="border-b bg-card">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <Calculator className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold">Intri</h1>
+              <p className="text-sm text-muted-foreground">
+                Track and analyze company financial metrics
+              </p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="flex-1 flex items-center justify-center px-4 py-16">
+        <Card className="w-full max-w-md border-2 text-center">
+          <CardHeader>
+            <div className="flex justify-center mb-4">
+              <div className="p-4 bg-primary/10 rounded-full">
+                <LogIn className="h-8 w-8 text-primary" />
+              </div>
+            </div>
+            <CardTitle className="text-2xl font-bold">
+              Welcome to Intri
+            </CardTitle>
+            <CardDescription className="text-base">
+              Please login to access the Intrinsic Value Calculator.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Button
+              onClick={login}
+              disabled={isLoggingIn || isInitializing}
+              className="w-full"
+              size="lg"
+              data-ocid="login.primary_button"
+            >
+              {isLoggingIn ? "Logging in..." : "Login with Internet Identity"}
+            </Button>
+            <p className="text-xs text-muted-foreground">
+              Internet Identity is a secure, privacy-preserving login system. No
+              passwords required.
+            </p>
+          </CardContent>
+        </Card>
+      </main>
+
+      <footer className="border-t">
+        <div className="container mx-auto px-4 py-6 text-center">
+          <p className="text-sm text-muted-foreground">
+            &copy; {new Date().getFullYear()} Intri &mdash; Built with{" "}
+            <a
+              href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              caffeine.ai
+            </a>
+          </p>
+        </div>
+      </footer>
+
+      <Toaster />
+    </div>
+  );
+}
+
 function App() {
   const { inputs, updateInputs, copyShareableLink } = useQueryInputs();
   const errors = useMemo(() => validateInputs(inputs), [inputs]);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [expandedIdea, setExpandedIdea] = useState<string | null>(null);
+  const { identity, clear, isInitializing } = useInternetIdentity();
+  const { actor, isFetching: isActorFetching } = useActor();
+
+  // Profile gate state: null = unknown, false = needs profile, true = has profile
+  const [profileStatus, setProfileStatus] = useState<boolean | null>(null);
+
+  const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
+
+  useEffect(() => {
+    if (!isAuthenticated || !actor || isActorFetching) return;
+    let cancelled = false;
+    const checkProfile = async () => {
+      try {
+        const profile = await actor.getCallerUserProfile();
+        if (!cancelled) {
+          setProfileStatus(profile !== null);
+        }
+      } catch {
+        // On error, allow through
+        if (!cancelled) setProfileStatus(true);
+      }
+    };
+    checkProfile();
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuthenticated, actor, isActorFetching]);
+
+  // Show loading
+  if (isInitializing) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-muted-foreground text-sm">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show login
+  if (!isAuthenticated) {
+    return <LoginScreen />;
+  }
+
+  // Checking profile
+  if (profileStatus === null) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-muted-foreground text-sm">Loading profile...</div>
+        <Toaster />
+      </div>
+    );
+  }
+
+  // Show profile form
+  if (profileStatus === false) {
+    return (
+      <>
+        <div className="min-h-screen bg-background flex flex-col">
+          <header className="border-b bg-card">
+            <div className="container mx-auto px-4 py-6">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Calculator className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold">Intri</h1>
+                    <p className="text-sm text-muted-foreground">
+                      Track and analyze company financial metrics
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clear}
+                  className="flex items-center gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </Button>
+              </div>
+            </div>
+          </header>
+          <ProfileForm onComplete={() => setProfileStatus(true)} />
+        </div>
+        <Toaster />
+      </>
+    );
+  }
 
   const handleUseExample = () => {
     updateInputs(EXAMPLE_INPUTS);
@@ -78,12 +258,12 @@ function App() {
     setTimeout(() => {
       const result = runDevCheck(VERIFICATION_INPUTS);
       if (result.passed) {
-        toast.success("Dev Check Passed! ✅", {
+        toast.success("Dev Check Passed! \u2705", {
           description: result.message,
           duration: 5000,
         });
       } else {
-        toast.error("Dev Check Failed ❌", {
+        toast.error("Dev Check Failed \u274c", {
           description: result.message,
           duration: 5000,
         });
@@ -104,16 +284,28 @@ function App() {
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Calculator className="h-6 w-6 text-primary" />
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <Calculator className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold">Intri</h1>
+                <p className="text-sm text-muted-foreground">
+                  Track and analyze company financial metrics
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold">Intri</h1>
-              <p className="text-sm text-muted-foreground">
-                Track and analyze company financial metrics
-              </p>
-            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={clear}
+              className="flex items-center gap-2"
+              data-ocid="header.secondary_button"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </Button>
           </div>
         </div>
       </header>
@@ -172,14 +364,38 @@ function App() {
               <CardContent>
                 <ul className="space-y-2">
                   {INTRI_IDEAS.map((idea, index) => (
-                    <li
-                      key={idea}
-                      className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
-                    >
-                      <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">
-                        {index + 1}
-                      </span>
-                      <span className="font-medium">{idea}</span>
+                    <li key={idea.name}>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          idea.details
+                            ? setExpandedIdea(
+                                expandedIdea === idea.name ? null : idea.name,
+                              )
+                            : undefined
+                        }
+                        className={`w-full flex items-center gap-3 p-3 rounded-lg bg-muted/50 transition-colors text-left ${
+                          idea.details
+                            ? "hover:bg-muted cursor-pointer"
+                            : "cursor-default"
+                        }`}
+                      >
+                        <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">
+                          {index + 1}
+                        </span>
+                        <span className="font-medium flex-1">{idea.name}</span>
+                        {idea.details &&
+                          (expandedIdea === idea.name ? (
+                            <ChevronUp className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                          ))}
+                      </button>
+                      {idea.details && expandedIdea === idea.name && (
+                        <div className="mx-3 mt-1 mb-1 p-3 rounded-lg bg-primary/5 border border-primary/20 text-sm text-muted-foreground leading-relaxed">
+                          {idea.details}
+                        </div>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -264,7 +480,7 @@ function App() {
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} Built with ❤️ using{" "}
+              &copy; {new Date().getFullYear()} Built with \u2764\ufe0f using{" "}
               <a
                 href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
                 target="_blank"
