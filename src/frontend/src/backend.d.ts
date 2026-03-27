@@ -23,6 +23,13 @@ export interface ContactMessage {
     message: string;
     timestamp: bigint;
 }
+export interface VisitorDetails {
+    id: bigint;
+    name: string;
+    email: string;
+    mobile: string;
+    timestamp: bigint;
+}
 export interface DcfInputs {
     weightedAveCostOfCapital: number;
     sharesOutstanding: number;
@@ -47,6 +54,7 @@ export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     getAllContactMessages(): Promise<Array<ContactMessage>>;
     getAllUserProfiles(): Promise<Array<[Principal, UserProfile]>>;
+    getAllVisitorDetails(): Promise<Array<VisitorDetails>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getNumAllUserProfiles(): Promise<bigint | null>;
@@ -55,4 +63,5 @@ export interface backendInterface {
     processDcf(inputs: DcfInputs): Promise<DcfOutputs>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     submitContactMessage(name: string, email: string, message: string): Promise<void>;
+    submitVisitorDetails(name: string, email: string, mobile: string): Promise<void>;
 }

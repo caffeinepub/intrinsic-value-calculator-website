@@ -138,6 +138,8 @@ export interface backendInterface {
     processDcf(inputs: DcfInputs): Promise<DcfOutputs>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     submitContactMessage(name: string, email: string, message: string): Promise<void>;
+    submitVisitorDetails(name: string, email: string, mobile: string): Promise<void>;
+    getAllVisitorDetails(): Promise<Array<VisitorDetails>>;
 }
 import type { UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
@@ -307,6 +309,34 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.submitContactMessage(arg0, arg1, arg2);
+            return result;
+        }
+    }
+    async submitVisitorDetails(arg0: string, arg1: string, arg2: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.submitVisitorDetails(arg0, arg1, arg2);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.submitVisitorDetails(arg0, arg1, arg2);
+            return result;
+        }
+    }
+    async getAllVisitorDetails(): Promise<Array<VisitorDetails>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllVisitorDetails();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllVisitorDetails();
             return result;
         }
     }

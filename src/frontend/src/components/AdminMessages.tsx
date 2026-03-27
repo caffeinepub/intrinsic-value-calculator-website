@@ -22,14 +22,14 @@ import type { ContactMessage } from "../backend.d";
 import { useActor } from "../hooks/useActor";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import { AdminUsers } from "./AdminUsers";
+import { AdminVisitorDetails } from "./AdminVisitorDetails";
 
 interface AdminMessagesProps {
   onBack: () => void;
 }
 
 export function AdminMessages({ onBack }: AdminMessagesProps) {
-  const { login, clear, loginStatus, identity, isInitializing } =
-    useInternetIdentity();
+  const { login, clear, loginStatus, identity } = useInternetIdentity();
   const { actor, isFetching: isActorFetching } = useActor();
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
@@ -104,18 +104,7 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-5xl">
-        {/* Initializing */}
-        {isInitializing && (
-          <div
-            className="flex justify-center py-20"
-            data-ocid="admin.loading_state"
-          >
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-          </div>
-        )}
-
-        {/* Not logged in */}
-        {!isLoggedIn && !isInitializing && (
+        {!isLoggedIn && (
           <Card
             className="max-w-md mx-auto text-center"
             data-ocid="admin.panel"
@@ -145,7 +134,6 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
           </Card>
         )}
 
-        {/* Checking admin */}
         {isLoggedIn && (checkingAdmin || isActorFetching) && (
           <div
             className="flex justify-center py-20"
@@ -155,7 +143,6 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
           </div>
         )}
 
-        {/* Not admin */}
         {isLoggedIn &&
           !checkingAdmin &&
           !isActorFetching &&
@@ -192,7 +179,6 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
             </Card>
           )}
 
-        {/* Admin view */}
         {isLoggedIn &&
           !checkingAdmin &&
           !isActorFetching &&
@@ -215,8 +201,11 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
                 </Button>
               </div>
 
-              <Tabs defaultValue="messages" data-ocid="admin.tab">
+              <Tabs defaultValue="visitors" data-ocid="admin.tab">
                 <TabsList className="mb-4">
+                  <TabsTrigger value="visitors" data-ocid="admin.visitors.tab">
+                    Visitor Details
+                  </TabsTrigger>
                   <TabsTrigger value="messages" data-ocid="admin.messages.tab">
                     Contact Messages
                   </TabsTrigger>
@@ -224,6 +213,10 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
                     User Profiles
                   </TabsTrigger>
                 </TabsList>
+
+                <TabsContent value="visitors">
+                  <AdminVisitorDetails />
+                </TabsContent>
 
                 <TabsContent value="messages">
                   <div className="space-y-3">

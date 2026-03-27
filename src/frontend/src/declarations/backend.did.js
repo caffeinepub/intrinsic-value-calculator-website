@@ -20,6 +20,13 @@ export const ContactMessage = IDL.Record({
   'message' : IDL.Text,
   'timestamp' : IDL.Int,
 });
+export const VisitorDetails = IDL.Record({
+  'id' : IDL.Nat,
+  'name' : IDL.Text,
+  'email' : IDL.Text,
+  'mobile' : IDL.Text,
+  'timestamp' : IDL.Int,
+});
 export const UserProfile = IDL.Record({
   'mobileNumber' : IDL.Text,
   'lastName' : IDL.Text,
@@ -54,6 +61,7 @@ export const idlService = IDL.Service({
       [IDL.Vec(IDL.Tuple(IDL.Principal, UserProfile))],
       ['query'],
     ),
+  'getAllVisitorDetails' : IDL.Func([], [IDL.Vec(VisitorDetails)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getNumAllUserProfiles' : IDL.Func([], [IDL.Opt(IDL.Nat)], ['query']),
@@ -66,6 +74,7 @@ export const idlService = IDL.Service({
   'processDcf' : IDL.Func([DcfInputs], [DcfOutputs], ['query']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'submitContactMessage' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
+  'submitVisitorDetails' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
 });
 
 export const idlInitArgs = [];
@@ -81,6 +90,13 @@ export const idlFactory = ({ IDL }) => {
     'name' : IDL.Text,
     'email' : IDL.Text,
     'message' : IDL.Text,
+    'timestamp' : IDL.Int,
+  });
+  const VisitorDetails = IDL.Record({
+    'id' : IDL.Nat,
+    'name' : IDL.Text,
+    'email' : IDL.Text,
+    'mobile' : IDL.Text,
     'timestamp' : IDL.Int,
   });
   const UserProfile = IDL.Record({
@@ -121,6 +137,7 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(IDL.Tuple(IDL.Principal, UserProfile))],
         ['query'],
       ),
+    'getAllVisitorDetails' : IDL.Func([], [IDL.Vec(VisitorDetails)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getNumAllUserProfiles' : IDL.Func([], [IDL.Opt(IDL.Nat)], ['query']),
@@ -133,6 +150,7 @@ export const idlFactory = ({ IDL }) => {
     'processDcf' : IDL.Func([DcfInputs], [DcfOutputs], ['query']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'submitContactMessage' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
+    'submitVisitorDetails' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
   });
 };
 

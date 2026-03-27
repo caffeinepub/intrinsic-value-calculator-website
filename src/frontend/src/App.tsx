@@ -24,6 +24,7 @@ import { CalculatorActions } from "./components/CalculatorActions";
 import { CompanyInfoDisplay } from "./components/CompanyInfoDisplay";
 import { DcfInputsForm } from "./components/DcfInputsForm";
 import { ResultsSection } from "./components/ResultsSection";
+import { VisitorDetailsForm } from "./components/VisitorDetailsForm";
 import { runDevCheck } from "./features/dcf/devChecks";
 import {
   DEFAULT_INPUTS,
@@ -78,6 +79,9 @@ function App() {
   const errors = useMemo(() => validateInputs(inputs), [inputs]);
   const [showAdmin, setShowAdmin] = useState(false);
   const [expandedIdea, setExpandedIdea] = useState<string | null>(null);
+  const [registered, setRegistered] = useState(
+    () => localStorage.getItem("intri_registered") === "true",
+  );
 
   const handleUseExample = () => {
     updateInputs(EXAMPLE_INPUTS);
@@ -109,6 +113,43 @@ function App() {
         <AdminMessages onBack={() => setShowAdmin(false)} />
         <Toaster />
       </>
+    );
+  }
+
+  if (!registered) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <div className="p-3 bg-primary/10 rounded-full">
+                <Calculator className="h-8 w-8 text-primary" />
+              </div>
+            </div>
+            <h1 className="text-3xl font-bold">Intri</h1>
+            <p className="text-muted-foreground mt-2">
+              Please register to access the platform
+            </p>
+          </div>
+          <VisitorDetailsForm
+            onComplete={() => {
+              localStorage.setItem("intri_registered", "true");
+              setRegistered(true);
+            }}
+          />
+          <div className="mt-6 text-center">
+            <button
+              type="button"
+              onClick={() => setShowAdmin(true)}
+              className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+              data-ocid="admin.link"
+            >
+              Admin
+            </button>
+          </div>
+        </div>
+        <Toaster />
+      </div>
     );
   }
 

@@ -17,6 +17,13 @@ export interface ContactMessage {
   'message' : string,
   'timestamp' : bigint,
 }
+export interface VisitorDetails {
+  'id' : bigint,
+  'name' : string,
+  'email' : string,
+  'mobile' : string,
+  'timestamp' : bigint,
+}
 export interface DcfInputs {
   'weightedAveCostOfCapital' : number,
   'sharesOutstanding' : number,
@@ -49,6 +56,7 @@ export interface _SERVICE {
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'getAllContactMessages' : ActorMethod<[], Array<ContactMessage>>,
   'getAllUserProfiles' : ActorMethod<[], Array<[Principal, UserProfile]>>,
+  'getAllVisitorDetails' : ActorMethod<[], Array<VisitorDetails>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getNumAllUserProfiles' : ActorMethod<[], [] | [bigint]>,
@@ -57,6 +65,7 @@ export interface _SERVICE {
   'processDcf' : ActorMethod<[DcfInputs], DcfOutputs>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'submitContactMessage' : ActorMethod<[string, string, string], undefined>,
+  'submitVisitorDetails' : ActorMethod<[string, string, string], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

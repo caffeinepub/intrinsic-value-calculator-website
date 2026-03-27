@@ -19,6 +19,15 @@ actor {
     lastName : Text;
   };
 
+  // Visitor Details (no login required)
+  public type VisitorDetails = {
+    id : Nat;
+    name : Text;
+    email : Text;
+    mobile : Text;
+    timestamp : Int;
+  };
+
   // Contact Message Types
   public type ContactMessage = {
     id : Nat;
@@ -50,20 +59,43 @@ actor {
     adjustedValuation : Float;
   };
 
-  // Storage for User Profiles and Messages
-  var contactMessages = Map.empty<Nat, ContactMessage>();
-  var lastMessageId = 0;
+  // Storage - stable so data persists across upgrades/redeployments
+  stable var contactMessages = Map.empty<Nat, ContactMessage>();
+  stable var lastMessageId = 0;
 
-  let userProfiles = Map.empty<Principal, UserProfile>();
+  stable var visitorDetails = Map.empty<Nat, VisitorDetails>();
+  stable var lastVisitorId = 0;
+
+  stable var userProfiles = Map.empty<Principal, UserProfile>();
 
   // Authorization State
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
-  // Bootstrap: assign the owner's principal as admin directly into the role map
+  // Bootstrap: assign the owner's principal as admin
   let ownerPrincipal = Principal.fromText("h5jag-iyh7k-ejbeh-phjli-5yywu-svez3-vzqsp-2jaln-zohyd-jbdqp-7qe");
   accessControlState.userRoles.add(ownerPrincipal, #admin);
   accessControlState.adminAssigned := true;
+
+  // Visitor Details APIs (no auth required)
+  public shared func submitVisitorDetails(name : Text, email : Text, mobile : Text) : async () {
+    lastVisitorId += 1;
+    let entry : VisitorDetails = {
+      id = lastVisitorId;
+      name;
+      email;
+      mobile;
+      timestamp = Time.now();
+    };
+    visitorDetails.add(lastVisitorId, entry);
+  };
+
+  public query ({ caller }) func getAllVisitorDetails() : async [VisitorDetails] {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can fetch visitor details");
+    };
+    visitorDetails.values().toArray();
+  };
 
   // User Profile APIs
   public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
