@@ -78,7 +78,7 @@ actor {
   accessControlState.adminAssigned := true;
 
   // Admin PIN for PIN-based access
-  let ADMIN_PIN : Text = "1234";
+  let ADMIN_PIN : Text = "INTRI2024";
 
   // Visitor Details APIs (no auth required)
   public shared func submitVisitorDetails(name : Text, email : Text, mobile : Text) : async () {

@@ -22,6 +22,8 @@ import { toast } from "sonner";
 import type { ContactMessage, VisitorDetails } from "../backend.d";
 import { useActor } from "../hooks/useActor";
 
+const ADMIN_PIN = "INTRI2024";
+
 interface AdminMessagesProps {
   onBack: () => void;
 }
@@ -40,12 +42,23 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
   const rawActor = actor as any;
 
   const handleLogin = async () => {
-    if (!rawActor || isActorFetching) return;
+    if (pin !== ADMIN_PIN) {
+      toast.error("Incorrect PIN. Please try again.");
+      return;
+    }
+    if (!rawActor || isActorFetching) {
+      toast.error("Still connecting. Please wait a moment and try again.");
+      return;
+    }
     setLogging(true);
     try {
       const [visitorsResult, messagesResult] = await Promise.all([
-        rawActor.getAllVisitorDetailsWithPin(pin) as Promise<VisitorDetails[]>,
-        rawActor.getAllContactMessagesWithPin(pin) as Promise<ContactMessage[]>,
+        rawActor.getAllVisitorDetailsWithPin(ADMIN_PIN) as Promise<
+          VisitorDetails[]
+        >,
+        rawActor.getAllContactMessagesWithPin(ADMIN_PIN) as Promise<
+          ContactMessage[]
+        >,
       ]);
       const sortedVisitors = [...visitorsResult].sort((a, b) =>
         Number(b.timestamp - a.timestamp),
@@ -56,8 +69,13 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
       setVisitors(sortedVisitors);
       setMessages(sortedMessages);
       setIsLoggedIn(true);
-    } catch {
-      toast.error("Incorrect PIN. Please try again.");
+    } catch (err) {
+      const msg = (err as any)?.message || String(err);
+      if (msg.includes("Invalid admin PIN")) {
+        toast.error("Incorrect PIN. Please try again.");
+      } else {
+        toast.error("Connection error. Please try again in a moment.");
+      }
     } finally {
       setLogging(false);
     }
@@ -75,7 +93,7 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
     setLoadingVisitors(true);
     try {
       const result = (await rawActor.getAllVisitorDetailsWithPin(
-        pin,
+        ADMIN_PIN,
       )) as VisitorDetails[];
       const sorted = [...result].sort((a, b) =>
         Number(b.timestamp - a.timestamp),
@@ -93,7 +111,7 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
     setLoadingMessages(true);
     try {
       const result = (await rawActor.getAllContactMessagesWithPin(
-        pin,
+        ADMIN_PIN,
       )) as ContactMessage[];
       const sorted = [...result].sort((a, b) =>
         Number(b.timestamp - a.timestamp),
@@ -167,7 +185,7 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
               />
               <Button
                 onClick={handleLogin}
-                disabled={logging || !pin || isActorFetching}
+                disabled={logging || !pin}
                 className="w-full"
                 data-ocid="admin.primary_button"
               >
