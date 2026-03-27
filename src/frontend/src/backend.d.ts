@@ -53,8 +53,10 @@ export enum UserRole {
 export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     getAllContactMessages(): Promise<Array<ContactMessage>>;
+    getAllContactMessagesWithPin(pin: string): Promise<Array<ContactMessage>>;
     getAllUserProfiles(): Promise<Array<[Principal, UserProfile]>>;
     getAllVisitorDetails(): Promise<Array<VisitorDetails>>;
+    getAllVisitorDetailsWithPin(pin: string): Promise<Array<VisitorDetails>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getNumAllUserProfiles(): Promise<bigint | null>;

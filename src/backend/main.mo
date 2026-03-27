@@ -77,6 +77,9 @@ actor {
   accessControlState.userRoles.add(ownerPrincipal, #admin);
   accessControlState.adminAssigned := true;
 
+  // Admin PIN for PIN-based access
+  let ADMIN_PIN : Text = "1234";
+
   // Visitor Details APIs (no auth required)
   public shared func submitVisitorDetails(name : Text, email : Text, mobile : Text) : async () {
     lastVisitorId += 1;
@@ -95,6 +98,20 @@ actor {
       Runtime.trap("Unauthorized: Only admins can fetch visitor details");
     };
     visitorDetails.values().toArray();
+  };
+
+  public shared func getAllVisitorDetailsWithPin(pin : Text) : async [VisitorDetails] {
+    if (pin != ADMIN_PIN) {
+      Runtime.trap("Invalid admin PIN");
+    };
+    visitorDetails.values().toArray();
+  };
+
+  public shared func getAllContactMessagesWithPin(pin : Text) : async [ContactMessage] {
+    if (pin != ADMIN_PIN) {
+      Runtime.trap("Invalid admin PIN");
+    };
+    contactMessages.values().toArray();
   };
 
   // User Profile APIs

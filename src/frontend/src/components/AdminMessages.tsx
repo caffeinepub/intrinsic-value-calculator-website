@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -15,69 +16,95 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Loader2, RefreshCw, ShieldAlert } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { ArrowLeft, KeyRound, Loader2, LogOut, RefreshCw } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
-import type { ContactMessage } from "../backend.d";
+import type { ContactMessage, VisitorDetails } from "../backend.d";
 import { useActor } from "../hooks/useActor";
-import { useInternetIdentity } from "../hooks/useInternetIdentity";
-import { AdminUsers } from "./AdminUsers";
-import { AdminVisitorDetails } from "./AdminVisitorDetails";
 
 interface AdminMessagesProps {
   onBack: () => void;
 }
 
 export function AdminMessages({ onBack }: AdminMessagesProps) {
-  const { login, clear, loginStatus, identity } = useInternetIdentity();
   const { actor, isFetching: isActorFetching } = useActor();
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const [pin, setPin] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [logging, setLogging] = useState(false);
+  const [visitors, setVisitors] = useState<VisitorDetails[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [checkingAdmin, setCheckingAdmin] = useState(false);
+  const [loadingVisitors, setLoadingVisitors] = useState(false);
+  const [loadingMessages, setLoadingMessages] = useState(false);
 
-  const isLoggedIn = loginStatus === "success" && !!identity;
+  // Cast to any because the auto-generated backend.ts doesn't yet include the PIN methods
+  const rawActor = actor as any;
 
-  const fetchMessages = useCallback(async () => {
-    if (!actor) return;
-    setLoading(true);
+  const handleLogin = async () => {
+    if (!rawActor || isActorFetching) return;
+    setLogging(true);
     try {
-      const result = await actor.getAllContactMessages();
+      const [visitorsResult, messagesResult] = await Promise.all([
+        rawActor.getAllVisitorDetailsWithPin(pin) as Promise<VisitorDetails[]>,
+        rawActor.getAllContactMessagesWithPin(pin) as Promise<ContactMessage[]>,
+      ]);
+      const sortedVisitors = [...visitorsResult].sort((a, b) =>
+        Number(b.timestamp - a.timestamp),
+      );
+      const sortedMessages = [...messagesResult].sort((a, b) =>
+        Number(b.timestamp - a.timestamp),
+      );
+      setVisitors(sortedVisitors);
+      setMessages(sortedMessages);
+      setIsLoggedIn(true);
+    } catch {
+      toast.error("Incorrect PIN. Please try again.");
+    } finally {
+      setLogging(false);
+    }
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setPin("");
+    setVisitors([]);
+    setMessages([]);
+  };
+
+  const refreshVisitors = async () => {
+    if (!rawActor) return;
+    setLoadingVisitors(true);
+    try {
+      const result = (await rawActor.getAllVisitorDetailsWithPin(
+        pin,
+      )) as VisitorDetails[];
+      const sorted = [...result].sort((a, b) =>
+        Number(b.timestamp - a.timestamp),
+      );
+      setVisitors(sorted);
+    } catch {
+      toast.error("Failed to refresh visitor data.");
+    } finally {
+      setLoadingVisitors(false);
+    }
+  };
+
+  const refreshMessages = async () => {
+    if (!rawActor) return;
+    setLoadingMessages(true);
+    try {
+      const result = (await rawActor.getAllContactMessagesWithPin(
+        pin,
+      )) as ContactMessage[];
       const sorted = [...result].sort((a, b) =>
         Number(b.timestamp - a.timestamp),
       );
       setMessages(sorted);
     } catch {
-      toast.error("Failed to load messages.");
+      toast.error("Failed to refresh messages.");
     } finally {
-      setLoading(false);
+      setLoadingMessages(false);
     }
-  }, [actor]);
-
-  useEffect(() => {
-    if (!isLoggedIn || !actor || isActorFetching) {
-      if (!isLoggedIn) {
-        setIsAdmin(null);
-        setMessages([]);
-      }
-      return;
-    }
-    const check = async () => {
-      setCheckingAdmin(true);
-      try {
-        const result = await actor.isCallerAdmin();
-        setIsAdmin(result);
-        if (result) {
-          await fetchMessages();
-        }
-      } catch {
-        setIsAdmin(false);
-      } finally {
-        setCheckingAdmin(false);
-      }
-    };
-    check();
-  }, [isLoggedIn, actor, isActorFetching, fetchMessages]);
+  };
 
   const formatDate = (timestamp: bigint) => {
     const ms = Number(timestamp / BigInt(1_000_000));
@@ -99,209 +126,224 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
               Back
             </Button>
             <h1 className="text-xl font-bold">Admin Panel</h1>
+            {isLoggedIn && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="ml-auto"
+                data-ocid="admin.secondary_button"
+              >
+                <LogOut className="h-4 w-4 mr-1" />
+                Log Out
+              </Button>
+            )}
           </div>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-5xl">
         {!isLoggedIn && (
-          <Card
-            className="max-w-md mx-auto text-center"
-            data-ocid="admin.panel"
-          >
-            <CardHeader>
+          <Card className="max-w-md mx-auto" data-ocid="admin.panel">
+            <CardHeader className="text-center">
               <div className="flex justify-center mb-2">
-                <ShieldAlert className="h-10 w-10 text-muted-foreground" />
+                <KeyRound className="h-10 w-10 text-muted-foreground" />
               </div>
-              <CardTitle>Admin Login Required</CardTitle>
+              <CardTitle>Admin Access</CardTitle>
               <CardDescription>
-                Please log in with Internet Identity to access admin messages.
+                Enter the admin PIN to view registration data.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              <Input
+                type="password"
+                placeholder="Enter admin PIN"
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                autoComplete="current-password"
+                inputMode="text"
+                data-ocid="admin.input"
+              />
               <Button
-                onClick={login}
-                disabled={loginStatus === "logging-in"}
+                onClick={handleLogin}
+                disabled={logging || !pin || isActorFetching}
                 className="w-full"
                 data-ocid="admin.primary_button"
               >
-                {loginStatus === "logging-in" ? (
+                {logging ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
-                {loginStatus === "logging-in" ? "Logging in..." : "Log In"}
+                {logging ? "Verifying..." : "Access Admin Panel"}
               </Button>
             </CardContent>
           </Card>
         )}
 
-        {isLoggedIn && (checkingAdmin || isActorFetching) && (
-          <div
-            className="flex justify-center py-20"
-            data-ocid="admin.loading_state"
-          >
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-          </div>
-        )}
+        {isLoggedIn && (
+          <Tabs defaultValue="visitors" data-ocid="admin.tab">
+            <TabsList className="mb-4">
+              <TabsTrigger value="visitors" data-ocid="admin.visitors.tab">
+                Visitor Details
+              </TabsTrigger>
+              <TabsTrigger value="messages" data-ocid="admin.messages.tab">
+                Contact Messages
+              </TabsTrigger>
+            </TabsList>
 
-        {isLoggedIn &&
-          !checkingAdmin &&
-          !isActorFetching &&
-          isAdmin === false && (
-            <Card
-              className="max-w-md mx-auto text-center"
-              data-ocid="admin.error_state"
-            >
-              <CardHeader>
-                <div className="flex justify-center mb-2">
-                  <ShieldAlert className="h-10 w-10 text-destructive" />
-                </div>
-                <CardTitle>Access Restricted</CardTitle>
-                <CardDescription>
-                  This area is admin only. Your account does not have admin
-                  privileges.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <p className="text-sm text-muted-foreground">
-                  Logged in as:{" "}
-                  <span className="font-mono text-xs">
-                    {identity?.getPrincipal().toString()}
-                  </span>
-                </p>
-                <Button
-                  variant="outline"
-                  onClick={() => clear()}
-                  data-ocid="admin.secondary_button"
-                >
-                  Log Out
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-
-        {isLoggedIn &&
-          !checkingAdmin &&
-          !isActorFetching &&
-          isAdmin === true && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">
-                  Logged in as admin:{" "}
-                  <span className="font-mono text-xs">
-                    {identity?.getPrincipal().toString()}
-                  </span>
-                </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => clear()}
-                  data-ocid="admin.secondary_button"
-                >
-                  Log Out
-                </Button>
-              </div>
-
-              <Tabs defaultValue="visitors" data-ocid="admin.tab">
-                <TabsList className="mb-4">
-                  <TabsTrigger value="visitors" data-ocid="admin.visitors.tab">
-                    Visitor Details
-                  </TabsTrigger>
-                  <TabsTrigger value="messages" data-ocid="admin.messages.tab">
-                    Contact Messages
-                  </TabsTrigger>
-                  <TabsTrigger value="users" data-ocid="admin.users.tab">
-                    User Profiles
-                  </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="visitors">
-                  <AdminVisitorDetails />
-                </TabsContent>
-
-                <TabsContent value="messages">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm text-muted-foreground">
-                        {messages.length} message
-                        {messages.length !== 1 ? "s" : ""}
-                      </p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={fetchMessages}
-                        disabled={loading}
-                        data-ocid="admin.messages.secondary_button"
-                      >
-                        {loading ? (
-                          <Loader2 className="h-4 w-4 animate-spin mr-1" />
-                        ) : (
-                          <RefreshCw className="h-4 w-4 mr-1" />
-                        )}
-                        Refresh
-                      </Button>
-                    </div>
-
-                    {loading ? (
-                      <div
-                        className="flex justify-center py-16"
-                        data-ocid="admin.messages.loading_state"
-                      >
-                        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-                      </div>
-                    ) : messages.length === 0 ? (
-                      <Card data-ocid="admin.messages.empty_state">
-                        <CardContent className="py-16 text-center text-muted-foreground">
-                          No messages yet.
-                        </CardContent>
-                      </Card>
+            <TabsContent value="visitors">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-muted-foreground">
+                    {visitors.length} visitor{visitors.length !== 1 ? "s" : ""}
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={refreshVisitors}
+                    disabled={loadingVisitors}
+                    data-ocid="admin.visitors.secondary_button"
+                  >
+                    {loadingVisitors ? (
+                      <Loader2 className="h-4 w-4 animate-spin mr-1" />
                     ) : (
-                      <Card data-ocid="admin.messages.table">
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Name</TableHead>
-                              <TableHead>Email</TableHead>
-                              <TableHead>Message</TableHead>
-                              <TableHead className="whitespace-nowrap">
-                                Date / Time
-                              </TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {messages.map((msg, i) => (
-                              <TableRow
-                                key={String(msg.id)}
-                                data-ocid={`admin.messages.item.${i + 1}`}
-                              >
-                                <TableCell className="font-medium whitespace-nowrap">
-                                  {msg.name}
-                                </TableCell>
-                                <TableCell className="whitespace-nowrap">
-                                  {msg.email}
-                                </TableCell>
-                                <TableCell className="max-w-xs">
-                                  <p className="whitespace-pre-wrap break-words">
-                                    {msg.message}
-                                  </p>
-                                </TableCell>
-                                <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
-                                  {formatDate(msg.timestamp)}
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </Card>
+                      <RefreshCw className="h-4 w-4 mr-1" />
                     )}
-                  </div>
-                </TabsContent>
+                    Refresh
+                  </Button>
+                </div>
 
-                <TabsContent value="users">
-                  <AdminUsers />
-                </TabsContent>
-              </Tabs>
-            </div>
-          )}
+                {loadingVisitors ? (
+                  <div
+                    className="flex justify-center py-16"
+                    data-ocid="admin.visitors.loading_state"
+                  >
+                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                  </div>
+                ) : visitors.length === 0 ? (
+                  <Card data-ocid="admin.visitors.empty_state">
+                    <CardContent className="py-16 text-center text-muted-foreground">
+                      No visitor registrations yet.
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <Card data-ocid="admin.visitors.table">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Full Name</TableHead>
+                          <TableHead>Email</TableHead>
+                          <TableHead>Mobile</TableHead>
+                          <TableHead className="whitespace-nowrap">
+                            Date / Time
+                          </TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {visitors.map((v, i) => (
+                          <TableRow
+                            key={String(v.id)}
+                            data-ocid={`admin.visitors.item.${i + 1}`}
+                          >
+                            <TableCell className="font-medium whitespace-nowrap">
+                              {v.name}
+                            </TableCell>
+                            <TableCell className="whitespace-nowrap">
+                              {v.email}
+                            </TableCell>
+                            <TableCell className="whitespace-nowrap">
+                              {v.mobile}
+                            </TableCell>
+                            <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                              {formatDate(v.timestamp)}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Card>
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="messages">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-muted-foreground">
+                    {messages.length} message{messages.length !== 1 ? "s" : ""}
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={refreshMessages}
+                    disabled={loadingMessages}
+                    data-ocid="admin.messages.secondary_button"
+                  >
+                    {loadingMessages ? (
+                      <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                    ) : (
+                      <RefreshCw className="h-4 w-4 mr-1" />
+                    )}
+                    Refresh
+                  </Button>
+                </div>
+
+                {loadingMessages ? (
+                  <div
+                    className="flex justify-center py-16"
+                    data-ocid="admin.messages.loading_state"
+                  >
+                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                  </div>
+                ) : messages.length === 0 ? (
+                  <Card data-ocid="admin.messages.empty_state">
+                    <CardContent className="py-16 text-center text-muted-foreground">
+                      No messages yet.
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <Card data-ocid="admin.messages.table">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Email</TableHead>
+                          <TableHead>Message</TableHead>
+                          <TableHead className="whitespace-nowrap">
+                            Date / Time
+                          </TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {messages.map((msg, i) => (
+                          <TableRow
+                            key={String(msg.id)}
+                            data-ocid={`admin.messages.item.${i + 1}`}
+                          >
+                            <TableCell className="font-medium whitespace-nowrap">
+                              {msg.name}
+                            </TableCell>
+                            <TableCell className="whitespace-nowrap">
+                              {msg.email}
+                            </TableCell>
+                            <TableCell className="max-w-xs">
+                              <p className="whitespace-pre-wrap break-words">
+                                {msg.message}
+                              </p>
+                            </TableCell>
+                            <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                              {formatDate(msg.timestamp)}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Card>
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        )}
       </main>
     </div>
   );
