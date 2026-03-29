@@ -29,7 +29,7 @@ interface AdminMessagesProps {
 }
 
 export function AdminMessages({ onBack }: AdminMessagesProps) {
-  const { actor, isFetching: isActorFetching } = useActor();
+  const { actor } = useActor();
   const [pin, setPin] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [logging, setLogging] = useState(false);
@@ -38,20 +38,24 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
   const [loadingVisitors, setLoadingVisitors] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
 
-  // Cast to any because the auto-generated backend.ts doesn't yet include the PIN methods
-  const rawActor = actor as any;
-
   const handleLogin = async () => {
+    // Verify PIN on the frontend first
     if (pin !== ADMIN_PIN) {
       toast.error("Incorrect PIN. Please try again.");
       return;
     }
-    if (!rawActor || isActorFetching) {
-      toast.error("Still connecting. Please wait a moment and try again.");
+
+    if (!actor) {
+      toast.error(
+        "Still connecting to backend. Please wait a moment and try again.",
+      );
       return;
     }
+
     setLogging(true);
     try {
+      // Use typed actor directly — methods are now properly registered in the IDL
+      const rawActor = actor as any;
       const [visitorsResult, messagesResult] = await Promise.all([
         rawActor.getAllVisitorDetailsWithPin(ADMIN_PIN) as Promise<
           VisitorDetails[]
@@ -71,10 +75,11 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
       setIsLoggedIn(true);
     } catch (err) {
       const msg = (err as any)?.message || String(err);
+      console.error("Admin login error:", msg);
       if (msg.includes("Invalid admin PIN")) {
         toast.error("Incorrect PIN. Please try again.");
       } else {
-        toast.error("Connection error. Please try again in a moment.");
+        toast.error("Failed to load data. Please try again in a moment.");
       }
     } finally {
       setLogging(false);
@@ -89,9 +94,10 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
   };
 
   const refreshVisitors = async () => {
-    if (!rawActor) return;
+    if (!actor) return;
     setLoadingVisitors(true);
     try {
+      const rawActor = actor as any;
       const result = (await rawActor.getAllVisitorDetailsWithPin(
         ADMIN_PIN,
       )) as VisitorDetails[];
@@ -107,9 +113,10 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
   };
 
   const refreshMessages = async () => {
-    if (!rawActor) return;
+    if (!actor) return;
     setLoadingMessages(true);
     try {
+      const rawActor = actor as any;
       const result = (await rawActor.getAllContactMessagesWithPin(
         ADMIN_PIN,
       )) as ContactMessage[];
