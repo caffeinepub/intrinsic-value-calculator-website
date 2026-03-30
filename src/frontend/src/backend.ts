@@ -140,6 +140,8 @@ export interface backendInterface {
     submitContactMessage(name: string, email: string, message: string): Promise<void>;
     submitVisitorDetails(name: string, email: string, mobile: string): Promise<void>;
     getAllVisitorDetails(): Promise<Array<VisitorDetails>>;
+    getAllVisitorDetailsWithPin(pin: string): Promise<Array<VisitorDetails>>;
+    getAllContactMessagesWithPin(pin: string): Promise<Array<ContactMessage>>;
 }
 import type { UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
@@ -337,6 +339,35 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.getAllVisitorDetails();
+            return result;
+        }
+    }
+
+    async getAllVisitorDetailsWithPin(arg0: string): Promise<Array<any>> {
+        if (this.processError) {
+            try {
+                const result = await (this.actor as any).getAllVisitorDetailsWithPin(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await (this.actor as any).getAllVisitorDetailsWithPin(arg0);
+            return result;
+        }
+    }
+    async getAllContactMessagesWithPin(arg0: string): Promise<Array<any>> {
+        if (this.processError) {
+            try {
+                const result = await (this.actor as any).getAllContactMessagesWithPin(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await (this.actor as any).getAllContactMessagesWithPin(arg0);
             return result;
         }
     }

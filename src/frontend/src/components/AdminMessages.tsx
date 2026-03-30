@@ -54,13 +54,11 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
 
     setLogging(true);
     try {
-      // Use typed actor directly — methods are now properly registered in the IDL
-      const rawActor = actor as any;
       const [visitorsResult, messagesResult] = await Promise.all([
-        rawActor.getAllVisitorDetailsWithPin(ADMIN_PIN) as Promise<
+        (actor as any).getAllVisitorDetailsWithPin(ADMIN_PIN) as Promise<
           VisitorDetails[]
         >,
-        rawActor.getAllContactMessagesWithPin(ADMIN_PIN) as Promise<
+        (actor as any).getAllContactMessagesWithPin(ADMIN_PIN) as Promise<
           ContactMessage[]
         >,
       ]);

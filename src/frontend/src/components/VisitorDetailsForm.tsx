@@ -30,13 +30,23 @@ export function VisitorDetailsForm({ onComplete }: VisitorDetailsFormProps) {
       toast.error("Please fill in all fields.");
       return;
     }
-    if (!actor) {
-      toast.error("Connection not ready. Please try again.");
-      return;
-    }
     setSubmitting(true);
     try {
-      await actor.submitVisitorDetails(
+      // Wait up to 8 seconds for the actor to be ready
+      let currentActor = actor;
+      if (!currentActor) {
+        for (let i = 0; i < 16; i++) {
+          await new Promise((r) => setTimeout(r, 500));
+          currentActor = actor;
+          if (currentActor) break;
+        }
+      }
+      if (!currentActor) {
+        toast.error("Still connecting. Please wait a moment and try again.");
+        setSubmitting(false);
+        return;
+      }
+      await currentActor.submitVisitorDetails(
         name.trim(),
         email.trim(),
         mobile.trim(),
@@ -46,8 +56,11 @@ export function VisitorDetailsForm({ onComplete }: VisitorDetailsFormProps) {
       setEmail("");
       setMobile("");
       onComplete?.();
-    } catch {
-      toast.error("Submission failed. Please try again.");
+    } catch (err) {
+      console.error("submitVisitorDetails error:", err);
+      toast.error(
+        "Submission failed. Please check your connection and try again.",
+      );
     } finally {
       setSubmitting(false);
     }
