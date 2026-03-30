@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, KeyRound, Loader2, LogOut, RefreshCw } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { ContactMessage, VisitorDetails } from "../backend.d";
 import { useActor } from "../hooks/useActor";
@@ -30,6 +30,11 @@ interface AdminMessagesProps {
 
 export function AdminMessages({ onBack }: AdminMessagesProps) {
   const { actor } = useActor();
+  const actorRef = useRef(actor);
+  useEffect(() => {
+    actorRef.current = actor;
+  }, [actor]);
+
   const [pin, setPin] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [logging, setLogging] = useState(false);
@@ -38,30 +43,38 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
   const [loadingVisitors, setLoadingVisitors] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
 
-  const handleLogin = async () => {
-    // Verify PIN on the frontend first
-    if (pin !== ADMIN_PIN) {
-      toast.error("Incorrect PIN. Please try again.");
-      return;
+  const waitForActor = async () => {
+    if (actorRef.current) return actorRef.current;
+    for (let i = 0; i < 30; i++) {
+      await new Promise((r) => setTimeout(r, 500));
+      if (actorRef.current) return actorRef.current;
     }
+    return null;
+  };
 
-    if (!actor) {
-      toast.error(
-        "Still connecting to backend. Please wait a moment and try again.",
-      );
+  const handleLogin = async () => {
+    if (pin.trim() !== ADMIN_PIN) {
+      toast.error("Incorrect PIN. Please try again.");
       return;
     }
 
     setLogging(true);
     try {
+      const currentActor = await waitForActor();
+      if (!currentActor) {
+        toast.error("Cannot connect to server. Please refresh and try again.");
+        return;
+      }
+
       const [visitorsResult, messagesResult] = await Promise.all([
-        (actor as any).getAllVisitorDetailsWithPin(ADMIN_PIN) as Promise<
+        (currentActor as any).getAllVisitorDetailsWithPin(ADMIN_PIN) as Promise<
           VisitorDetails[]
         >,
-        (actor as any).getAllContactMessagesWithPin(ADMIN_PIN) as Promise<
-          ContactMessage[]
-        >,
+        (currentActor as any).getAllContactMessagesWithPin(
+          ADMIN_PIN,
+        ) as Promise<ContactMessage[]>,
       ]);
+
       const sortedVisitors = [...visitorsResult].sort((a, b) =>
         Number(b.timestamp - a.timestamp),
       );
@@ -72,12 +85,15 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
       setMessages(sortedMessages);
       setIsLoggedIn(true);
     } catch (err) {
-      const msg = (err as any)?.message || String(err);
+      const msg = String((err as any)?.message || err);
       console.error("Admin login error:", msg);
-      if (msg.includes("Invalid admin PIN")) {
+      if (
+        msg.toLowerCase().includes("invalid admin pin") ||
+        msg.toLowerCase().includes("invalid pin")
+      ) {
         toast.error("Incorrect PIN. Please try again.");
       } else {
-        toast.error("Failed to load data. Please try again in a moment.");
+        toast.error("Connection error. Please wait a moment and try again.");
       }
     } finally {
       setLogging(false);
@@ -92,11 +108,11 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
   };
 
   const refreshVisitors = async () => {
-    if (!actor) return;
+    const currentActor = await waitForActor();
+    if (!currentActor) return;
     setLoadingVisitors(true);
     try {
-      const rawActor = actor as any;
-      const result = (await rawActor.getAllVisitorDetailsWithPin(
+      const result = (await (currentActor as any).getAllVisitorDetailsWithPin(
         ADMIN_PIN,
       )) as VisitorDetails[];
       const sorted = [...result].sort((a, b) =>
@@ -111,11 +127,11 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
   };
 
   const refreshMessages = async () => {
-    if (!actor) return;
+    const currentActor = await waitForActor();
+    if (!currentActor) return;
     setLoadingMessages(true);
     try {
-      const rawActor = actor as any;
-      const result = (await rawActor.getAllContactMessagesWithPin(
+      const result = (await (currentActor as any).getAllContactMessagesWithPin(
         ADMIN_PIN,
       )) as ContactMessage[];
       const sorted = [...result].sort((a, b) =>
@@ -183,21 +199,23 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
                 placeholder="Enter admin PIN"
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                onKeyDown={(e) =>
+                  e.key === "Enter" && !logging && handleLogin()
+                }
                 autoComplete="current-password"
                 inputMode="text"
                 data-ocid="admin.input"
               />
               <Button
                 onClick={handleLogin}
-                disabled={logging || !pin}
+                disabled={logging || !pin.trim()}
                 className="w-full"
                 data-ocid="admin.primary_button"
               >
                 {logging ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
-                {logging ? "Verifying..." : "Access Admin Panel"}
+                {logging ? "Loading data..." : "Access Admin Panel"}
               </Button>
             </CardContent>
           </Card>
@@ -207,10 +225,10 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
           <Tabs defaultValue="visitors" data-ocid="admin.tab">
             <TabsList className="mb-4">
               <TabsTrigger value="visitors" data-ocid="admin.visitors.tab">
-                Visitor Details
+                Visitor Details ({visitors.length})
               </TabsTrigger>
               <TabsTrigger value="messages" data-ocid="admin.messages.tab">
-                Contact Messages
+                Contact Messages ({messages.length})
               </TabsTrigger>
             </TabsList>
 
@@ -218,7 +236,8 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-muted-foreground">
-                    {visitors.length} visitor{visitors.length !== 1 ? "s" : ""}
+                    {visitors.length} registered visitor
+                    {visitors.length !== 1 ? "s" : ""}
                   </p>
                   <Button
                     variant="outline"
@@ -254,6 +273,7 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
                     <Table>
                       <TableHeader>
                         <TableRow>
+                          <TableHead>#</TableHead>
                           <TableHead>Full Name</TableHead>
                           <TableHead>Email</TableHead>
                           <TableHead>Mobile</TableHead>
@@ -268,6 +288,9 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
                             key={String(v.id)}
                             data-ocid={`admin.visitors.item.${i + 1}`}
                           >
+                            <TableCell className="text-muted-foreground">
+                              {i + 1}
+                            </TableCell>
                             <TableCell className="font-medium whitespace-nowrap">
                               {v.name}
                             </TableCell>

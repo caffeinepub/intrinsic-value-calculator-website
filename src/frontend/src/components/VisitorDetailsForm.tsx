@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, UserPlus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useActor } from "../hooks/useActor";
 
@@ -18,11 +18,25 @@ interface VisitorDetailsFormProps {
 }
 
 export function VisitorDetailsForm({ onComplete }: VisitorDetailsFormProps) {
-  const { actor } = useActor();
+  const { actor, isFetching } = useActor();
+  const actorRef = useRef(actor);
+  useEffect(() => {
+    actorRef.current = actor;
+  }, [actor]);
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const waitForActor = async () => {
+    if (actorRef.current) return actorRef.current;
+    for (let i = 0; i < 30; i++) {
+      await new Promise((r) => setTimeout(r, 500));
+      if (actorRef.current) return actorRef.current;
+    }
+    return null;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,17 +46,9 @@ export function VisitorDetailsForm({ onComplete }: VisitorDetailsFormProps) {
     }
     setSubmitting(true);
     try {
-      // Wait up to 8 seconds for the actor to be ready
-      let currentActor = actor;
+      const currentActor = await waitForActor();
       if (!currentActor) {
-        for (let i = 0; i < 16; i++) {
-          await new Promise((r) => setTimeout(r, 500));
-          currentActor = actor;
-          if (currentActor) break;
-        }
-      }
-      if (!currentActor) {
-        toast.error("Still connecting. Please wait a moment and try again.");
+        toast.error("Cannot connect to server. Please refresh and try again.");
         setSubmitting(false);
         return;
       }
@@ -65,6 +71,8 @@ export function VisitorDetailsForm({ onComplete }: VisitorDetailsFormProps) {
       setSubmitting(false);
     }
   };
+
+  const isConnecting = isFetching && !actor;
 
   return (
     <section data-ocid="visitor-form.card">
@@ -122,13 +130,17 @@ export function VisitorDetailsForm({ onComplete }: VisitorDetailsFormProps) {
             <Button
               type="submit"
               className="w-full"
-              disabled={submitting || !actor}
+              disabled={submitting}
               data-ocid="visitor-form.submit_button"
             >
-              {submitting ? (
+              {submitting || isConnecting ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : null}
-              {submitting ? "Submitting..." : "Register"}
+              {submitting
+                ? "Submitting..."
+                : isConnecting
+                  ? "Connecting..."
+                  : "Register"}
             </Button>
           </form>
         </CardContent>
