@@ -22,8 +22,6 @@ import { toast } from "sonner";
 import type { ContactMessage, VisitorDetails } from "../backend.d";
 import { useActor } from "../hooks/useActor";
 
-const ADMIN_PIN = "INTRI2024";
-
 interface AdminMessagesProps {
   onBack: () => void;
 }
@@ -44,8 +42,10 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
   const [loadingMessages, setLoadingMessages] = useState(false);
 
   const waitForActor = async () => {
+    // First check the ref directly
     if (actorRef.current) return actorRef.current;
-    for (let i = 0; i < 30; i++) {
+    // Poll for up to 20 seconds
+    for (let i = 0; i < 40; i++) {
       await new Promise((r) => setTimeout(r, 500));
       if (actorRef.current) return actorRef.current;
     }
@@ -53,8 +53,9 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
   };
 
   const handleLogin = async () => {
-    if (pin.trim() !== ADMIN_PIN) {
-      toast.error("Incorrect PIN. Please try again.");
+    const trimmedPin = pin.trim();
+    if (!trimmedPin) {
+      toast.error("Please enter the admin PIN.");
       return;
     }
 
@@ -66,13 +67,14 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
         return;
       }
 
+      // Send PIN directly to backend — backend validates it
       const [visitorsResult, messagesResult] = await Promise.all([
-        (currentActor as any).getAllVisitorDetailsWithPin(ADMIN_PIN) as Promise<
+        currentActor.getAllVisitorDetailsWithPin(trimmedPin) as Promise<
           VisitorDetails[]
         >,
-        (currentActor as any).getAllContactMessagesWithPin(
-          ADMIN_PIN,
-        ) as Promise<ContactMessage[]>,
+        currentActor.getAllContactMessagesWithPin(trimmedPin) as Promise<
+          ContactMessage[]
+        >,
       ]);
 
       const sortedVisitors = [...visitorsResult].sort((a, b) =>
@@ -112,8 +114,8 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
     if (!currentActor) return;
     setLoadingVisitors(true);
     try {
-      const result = (await (currentActor as any).getAllVisitorDetailsWithPin(
-        ADMIN_PIN,
+      const result = (await currentActor.getAllVisitorDetailsWithPin(
+        pin.trim(),
       )) as VisitorDetails[];
       const sorted = [...result].sort((a, b) =>
         Number(b.timestamp - a.timestamp),
@@ -131,8 +133,8 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
     if (!currentActor) return;
     setLoadingMessages(true);
     try {
-      const result = (await (currentActor as any).getAllContactMessagesWithPin(
-        ADMIN_PIN,
+      const result = (await currentActor.getAllContactMessagesWithPin(
+        pin.trim(),
       )) as ContactMessage[];
       const sorted = [...result].sort((a, b) =>
         Number(b.timestamp - a.timestamp),
@@ -200,10 +202,9 @@ export function AdminMessages({ onBack }: AdminMessagesProps) {
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
                 onKeyDown={(e) =>
-                  e.key === "Enter" && !logging && handleLogin()
+                  e.key === "Enter" && !logging && pin.trim() && handleLogin()
                 }
                 autoComplete="current-password"
-                inputMode="text"
                 data-ocid="admin.input"
               />
               <Button
